@@ -1,0 +1,2610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brain Cannesdy 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@700&family=Nunito:wght@800;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#12102a;
+  --sidebar-bg:#0e0c22;
+  --sidebar-text:rgba(255,255,255,0.45);
+  --sidebar-active:#fff;
+  --gp:#f0b800;--gold:#d4a820;--silver:#8a9cb5;--bronze:#c07a3e;
+  --pink:#e84393;--teal:#5ce0d8;--yellow:#f5c842;
+  --holo-pink:#ff9de2;--holo-gold:#ffd76e;--holo-mint:#7efcdb;--holo-blue:#8eb8ff;
+  --rail-h:130px;--topbar-h:56px;--sidebar-w:210px;
+  --tr:0.22s cubic-bezier(0.4,0,0.2,1);
+  --font:'Inter',-apple-system,BlinkMacSystemFont,sans-serif
+}
+html,body{font-family:var(--font);background:var(--bg);color:#fff;overflow:hidden;height:100vh}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 30% 15%,rgba(142,184,255,.07) 0%,transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(255,157,226,.06) 0%,transparent 50%),radial-gradient(ellipse at 50% 50%,rgba(126,252,219,.04) 0%,transparent 45%);pointer-events:none;z-index:0}
+
+/* ── GATE (video entry) ── */
+#pw{position:fixed;inset:0;z-index:9999;background:#000;overflow:hidden;transition:opacity .75s ease,transform .75s ease}
+#pw.exiting{opacity:0;transform:scale(1.04);pointer-events:none}
+#pw.off{display:none}
+/* full-screen background video */
+#entry-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+/* dark overlay between video and content */
+#video-overlay{position:absolute;inset:0;background:rgba(0,0,0,.52);z-index:2}
+/* centered content overlay */
+.cc-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:10;padding:32px 24px 80px}
+.cc-headline{font-family:'DynaPuff',sans-serif;font-size:clamp(72px,13vw,200px);font-weight:700;color:#fff;letter-spacing:-.01em;line-height:1;text-align:center;user-select:none;margin-bottom:4px;text-shadow:0 4px 40px rgba(0,0,0,.5)}
+.cc-tagline{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.6);text-align:center}
+.cc-form-area{display:flex;flex-direction:column;align-items:center;gap:10px;width:min(300px,80vw);margin-top:2px}
+/* underline-only input */
+.cc-in{width:100%;padding:8px 4px;border:none;border-bottom:1.5px solid rgba(255,255,255,.35);border-radius:0;background:transparent;color:#fff;font-size:15px;text-align:center;letter-spacing:.5px;outline:none;transition:border-color .3s;font-family:var(--font)}
+.cc-in::placeholder{color:rgba(255,255,255,.4)}
+.cc-in:focus{border-bottom-color:rgba(255,255,255,.85)}
+.cc-btn{width:100%;padding:12px;border-radius:50px;border:none;cursor:pointer;background:linear-gradient(135deg,#e8a0c0,#b8d4f4,#e8a0c0);background-size:250% 250%;animation:btnShimmer 5s ease-in-out infinite;color:#3a1525;font-size:13px;font-weight:700;letter-spacing:1.5px;transition:opacity .2s,box-shadow .2s;box-shadow:0 4px 22px rgba(200,130,170,.3);font-family:var(--font);margin-top:6px}
+.cc-btn:hover{opacity:.9;box-shadow:0 4px 32px rgba(200,130,170,.48)}
+.cc-btn:disabled{opacity:.6;cursor:default}
+@keyframes btnShimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.cc-err{color:#ff8ab0;font-size:11px;display:none;text-align:center}
+.cc-err.on{display:block}
+.cc-disclaimer{font-size:9px;color:rgba(255,255,255,.35);text-align:center;letter-spacing:.2px;line-height:1.5;margin-top:-2px}
+.cc-socials{display:flex;gap:14px;margin-top:4px}
+.cc-socials a{color:rgba(255,255,255,.35);text-decoration:none;font-size:10px;letter-spacing:.8px;transition:color .3s}
+.cc-socials a:hover{color:rgba(255,255,255,.75)}
+/* cyan triangular bookmark corner */
+.cc-bookmark{position:absolute;bottom:0;right:0;width:120px;height:120px;background:#22d3ee;clip-path:polygon(100% 0,100% 100%,0 100%);z-index:20;display:flex;align-items:flex-end;justify-content:flex-end;transition:filter .25s;text-decoration:none}
+.cc-bookmark:hover{filter:brightness(1.1)}
+.cc-bookmark-icon{width:36px;height:auto;margin:0 17px 17px 0;filter:brightness(0) invert(1) drop-shadow(0 1px 4px rgba(0,80,100,.25))}
+/* wisp canvas */
+#wisp-canvas{position:absolute;inset:0;pointer-events:none;z-index:3;filter:blur(1.5px)}
+
+/* ── BRAIN CANNESDY LOGO (sidebar only) ── */
+.bc-logo-sm{display:block;width:174px;max-width:100%;height:auto;filter:drop-shadow(0 2px 10px rgba(255,157,226,.2));margin:0 auto}
+.sb-logo{padding:16px 14px 8px;display:flex;justify-content:center}
+
+/* ── TOPBAR SEARCH ── */
+.tb-search-wrap{position:relative;margin-left:8px}
+.tb-search{width:240px;padding:8px 14px 8px 34px;border-radius:50px;border:2px solid rgba(142,184,255,.3);background:rgba(142,184,255,.05);color:#fff;font-size:13px;outline:none;transition:all .25s;font-family:var(--font)}
+.tb-search::placeholder{color:rgba(142,184,255,.4)}
+.tb-search:focus{width:320px;border-color:var(--holo-pink);background:rgba(255,157,226,.06);box-shadow:0 0 18px rgba(255,157,226,.15)}
+.tb-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:rgba(142,184,255,.55);font-size:14px;pointer-events:none}
+.tb-surprise{padding:6px 14px;border-radius:50px;border:1px solid rgba(255,157,226,.25);background:rgba(255,157,226,.06);color:rgba(255,255,255,.7);cursor:pointer;font-size:11px;font-weight:600;letter-spacing:.3px;transition:all var(--tr);font-family:var(--font);white-space:nowrap}
+.tb-surprise:hover{background:rgba(255,157,226,.15);color:#fff;border-color:rgba(255,157,226,.45)}
+/* search results dropdown anchored to topbar */
+.tb-results{position:absolute;top:calc(100% + 6px);left:0;width:380px;background:rgba(14,12,34,.97);border-radius:12px;border:1px solid rgba(255,255,255,.08);max-height:400px;overflow-y:auto;display:none;backdrop-filter:blur(20px);z-index:100;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.tb-results.on{display:block}
+.tb-results::-webkit-scrollbar{width:6px}
+.tb-results::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px}
+.sr-item{display:flex;align-items:center;gap:12px;padding:10px 14px;cursor:pointer;transition:background .15s;border-bottom:1px solid rgba(255,255,255,.04)}
+.sr-item:last-child{border-bottom:none}
+.sr-item:hover,.sr-item.focused{background:rgba(255,255,255,.07)}
+.sr-thumb{width:48px;height:36px;border-radius:5px;background-size:contain;background-position:center;background-repeat:no-repeat;background-color:rgba(255,255,255,.05);flex-shrink:0}
+.sr-info{flex:1;min-width:0}
+.sr-title{font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sr-meta{font-size:10px;color:rgba(255,255,255,.3);margin-top:1px}
+.sr-badge{padding:2px 7px;border-radius:50px;font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;flex-shrink:0;color:#fff}
+.sr-badge.gp{background:var(--gp)}.sr-badge.gold{background:var(--gold)}.sr-badge.silver{background:var(--silver)}.sr-badge.bronze{background:var(--bronze)}
+.sr-empty{padding:18px;text-align:center;color:rgba(255,255,255,.3);font-size:12px}
+/* holographic shimmer for grid cards */
+@keyframes holoShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes holoBorder{0%{border-color:rgba(142,184,255,.2)}33%{border-color:rgba(255,157,226,.2)}66%{border-color:rgba(126,252,219,.2)}100%{border-color:rgba(142,184,255,.2)}}
+/* grid card active highlight for arrow nav */
+.grid-card.arrow-focus{border-color:var(--holo-pink) !important;box-shadow:0 0 20px rgba(255,157,226,.2),0 0 40px rgba(142,184,255,.1)}
+
+/* ── APP SHELL ── */
+#app{display:flex;height:100vh;opacity:0;transition:opacity .5s}
+#app.on{opacity:1}
+
+/* ── SIDEBAR ── */
+#sb{width:var(--sidebar-w);flex-shrink:0;background:var(--sidebar-bg);display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;border-right:1px solid rgba(255,255,255,0.06)}
+#sb::-webkit-scrollbar{display:none}
+.sb-logo{padding:20px 14px 10px;display:flex;justify-content:center}
+.sb-yr{padding:0 18px 16px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.25);border-bottom:1px solid rgba(255,255,255,0.05);margin-bottom:10px}
+.sb-sec{padding:10px 18px 5px;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.2);font-weight:600}
+.sb-cat{padding:8px 18px;font-size:12.5px;font-weight:500;color:var(--sidebar-text);cursor:pointer;transition:all var(--tr);border-left:2px solid transparent;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-cat:hover{color:var(--sidebar-active);background:rgba(255,255,255,0.03)}
+.sb-cat.on{color:var(--sidebar-active);font-weight:700;border-left-color:var(--holo-pink);background:rgba(255,157,226,0.06)}
+.sb-cat.cs{opacity:.3;cursor:default;pointer-events:none}
+.sb-div{height:1px;background:rgba(255,255,255,0.05);margin:6px 18px}
+.sb-cnt{padding:5px 18px;font-size:10px;color:rgba(255,255,255,0.2);margin-top:2px}
+
+/* ── MAIN ── */
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+
+/* ── TOPBAR ── */
+#topbar{min-height:var(--topbar-h);flex-shrink:0;display:flex;align-items:center;gap:6px;padding:8px 20px;background:rgba(255,255,255,0.02);border-bottom:1px solid rgba(255,255,255,0.06);flex-wrap:wrap;position:relative;z-index:10}
+.fb{padding:6px 14px;border-radius:50px;border:1px solid rgba(255,255,255,0.1);cursor:pointer;font-size:12px;font-weight:600;letter-spacing:.3px;background:transparent;color:rgba(255,255,255,0.4);transition:all var(--tr)}
+.fb:hover{color:#fff;border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.05)}
+.fb.on{border-color:transparent;color:#fff}
+.fb[data-t="all"].on{background:rgba(255,255,255,.12)}
+.fb[data-t="Grand Prix"].on{background:var(--gp)}
+.fb[data-t="Gold"].on{background:var(--gold)}
+.fb[data-t="Silver"].on{background:var(--silver)}
+.fb[data-t="Bronze"].on{background:var(--bronze)}
+.tb-count{font-size:11px;color:rgba(255,255,255,0.25);letter-spacing:.5px;margin-left:auto}
+.tb-hint{font-size:10px;color:rgba(255,255,255,0.18);display:flex;gap:8px;align-items:center}
+.kk{background:rgba(255,255,255,0.08);border-radius:3px;padding:2px 5px;font-family:monospace;font-size:9px;color:rgba(255,255,255,0.4)}
+
+/* ── STAGE (hero + rail) ── */
+#stage{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
+
+/* ── HERO ── */
+#hero{flex:1;position:relative;overflow:hidden;background:#111;cursor:pointer}
+#hero-img{position:absolute;inset:0;background-size:contain;background-position:center;background-repeat:no-repeat;transition:background-image .15s}
+#hero-grad{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.3) 45%,rgba(0,0,0,.05) 100%)}
+#hero-info{position:absolute;bottom:0;left:0;right:0;padding:24px 32px 20px}
+#hero-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:50px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px}
+#hero-badge.gp{background:var(--gp);color:#fff}
+#hero-badge.gold{background:var(--gold);color:#fff}
+#hero-badge.silver{background:var(--silver);color:#fff}
+#hero-badge.bronze{background:var(--bronze);color:#fff}
+#hero-title{font-size:clamp(22px,3vw,38px);font-weight:800;line-height:1.15;letter-spacing:-0.5px;margin-bottom:6px;text-shadow:0 2px 12px rgba(0,0,0,.5)}
+#hero-meta{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:14px;display:flex;gap:16px;flex-wrap:wrap}
+#hero-meta strong{color:rgba(255,255,255,.85);font-weight:600}
+#hero-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.ha{padding:9px 18px;border-radius:50px;font-size:12px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:opacity var(--tr);border:none;cursor:pointer}
+.ha:hover{opacity:.8}
+.ha.p{background:var(--pink);color:#fff}
+.ha.s{background:rgba(255,255,255,.12);color:#fff}
+.ha.more{background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+#hero-tags{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+.htag{padding:4px 10px;border-radius:4px;font-size:10px;font-weight:600;background:rgba(255,255,255,.08);color:rgba(255,255,255,.5);letter-spacing:.3px}
+
+/* nav arrows */
+.nav-arr{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;background:rgba(255,255,255,.1);backdrop-filter:blur(8px);transition:all var(--tr);z-index:10}
+.nav-arr:hover{background:rgba(255,255,255,.2);transform:translateY(-50%) scale(1.08)}
+.nav-arr:disabled{opacity:.2;cursor:default}
+#arr-l{left:16px}
+#arr-r{right:16px}
+
+/* empty hero */
+#hero-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:rgba(255,255,255,.25)}
+#hero-empty .big{font-size:64px;opacity:.15}
+#hero-empty p{font-size:14px}
+
+/* ── THUMBNAIL RAIL ── */
+#rail-wrap{height:var(--rail-h);flex-shrink:0;background:rgba(0,0,0,.5);border-top:1px solid rgba(255,255,255,.06);position:relative}
+#rail{display:flex;gap:8px;padding:10px 12px;height:100%;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;scroll-behavior:smooth}
+#rail::-webkit-scrollbar{display:none}
+.thumb{flex-shrink:0;width:168px;height:108px;border-radius:9px;cursor:pointer;position:relative;overflow:hidden;background-size:contain;background-position:center;background-repeat:no-repeat;background-color:rgba(0,0,0,.3);transition:all var(--tr);opacity:.45;border:2px solid transparent}
+.thumb:hover{opacity:.8;transform:translateY(-2px)}
+.thumb.on{opacity:1;border-width:2px}
+.thumb.on.gp{border-color:var(--gp)}
+.thumb.on.gold{border-color:var(--gold)}
+.thumb.on.silver{border-color:var(--silver)}
+.thumb.on.bronze{border-color:var(--bronze)}
+.thumb-badge{position:absolute;top:7px;left:7px;padding:2px 7px;border-radius:50px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#fff}
+.thumb-badge.gp{background:var(--gp)}
+.thumb-badge.gold{background:var(--gold)}
+.thumb-badge.silver{background:var(--silver)}
+.thumb-badge.bronze{background:var(--bronze)}
+.thumb-name{position:absolute;bottom:0;left:0;right:0;padding:5px 7px 6px;background:linear-gradient(to top,rgba(0,0,0,.85),transparent);font-size:9.5px;font-weight:600;color:rgba(255,255,255,.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.thumb-grad-lbl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:rgba(255,255,255,.5);padding:8px;text-align:center;line-height:1.2}
+
+/* rail end-fade */
+#rail-wrap::after{content:'';position:absolute;right:0;top:0;bottom:0;width:40px;background:linear-gradient(to right,transparent,rgba(0,0,0,.5));pointer-events:none}
+
+/* ── DETAIL MODAL ── */
+#modal{position:fixed;inset:0;z-index:200;background:rgba(8,6,18,.82);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:24px}
+#modal.on{display:flex}
+#mdl{background:linear-gradient(160deg,#16132e,#12102a);border-radius:20px;max-width:1000px;width:95%;max-height:92vh;overflow-y:auto;position:relative;box-shadow:0 40px 100px rgba(0,0,0,.6),0 0 60px rgba(142,184,255,.04);border:1px solid rgba(255,255,255,.08);animation:pop .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{from{transform:scale(.93) translateY(18px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+.mdl-img{width:100%;aspect-ratio:4/3;background-size:contain;background-position:center;background-repeat:no-repeat;background-color:rgba(8,6,18,.8);border-radius:20px 20px 0 0;position:relative;overflow:hidden;cursor:crosshair}
+.mdl-video-wrap{width:100%;aspect-ratio:16/9;border-radius:20px 20px 0 0;overflow:hidden;background:#000;display:none}
+.mdl-video-wrap iframe{width:100%;height:100%;border:none;display:block}
+.mdl-video-fallback{font-size:11px;color:rgba(255,255,255,.35);text-decoration:none;padding:6px 12px;border-radius:50px;border:1px solid rgba(255,255,255,.12);transition:all .2s;letter-spacing:.2px}
+.mdl-video-fallback:hover{color:rgba(255,255,255,.65);border-color:rgba(255,255,255,.28)}
+.mdl-tb{position:absolute;top:14px;left:14px;padding:5px 12px;border-radius:50px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#fff}
+.mdl-body{padding:30px 36px 36px}
+.mdl-ttl{font-size:28px;font-weight:800;line-height:1.2;margin-bottom:12px}
+.mdl-meta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.07)}
+.mdl-m{font-size:12.5px;color:rgba(255,255,255,.4)}
+.mdl-m strong{color:rgba(255,255,255,.8);font-weight:600}
+.mdl-desc{font-size:15px;line-height:1.75;color:rgba(255,255,255,.6);margin-bottom:24px}
+.mdl-acts{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+/* share */
+.mdl-share{padding:9px 16px;border-radius:50px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:rgba(255,255,255,.65);cursor:pointer;font-size:12px;font-weight:600;letter-spacing:.3px;transition:all var(--tr);display:inline-flex;align-items:center;gap:6px;font-family:var(--font)}
+.mdl-share:hover{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.25)}
+.mdl-share.copied{border-color:rgba(126,252,219,.4);color:#7efcdb;background:rgba(126,252,219,.08)}
+.gc-share{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;border:none;background:rgba(0,0,0,.4);color:rgba(255,255,255,.6);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;opacity:0;transition:all var(--tr);backdrop-filter:blur(6px);z-index:2}
+.grid-card:hover .gc-share{opacity:1}
+.gc-share:hover{background:rgba(255,255,255,.15);color:#fff}
+.mdl-close{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;border:none;background:rgba(0,0,0,.5);color:#fff;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background var(--tr);backdrop-filter:blur(6px);z-index:5}
+.mdl-close:hover{background:rgba(0,0,0,.8)}
+.mdl-nav{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,.1);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;background:rgba(255,255,255,.06);backdrop-filter:blur(8px);transition:all .2s;z-index:10}
+.mdl-nav:hover{background:rgba(255,255,255,.15);transform:translateY(-50%) scale(1.08);border-color:rgba(255,157,226,.25)}
+.mdl-nav-l{left:max(12px, calc(50% - 530px))}
+.mdl-nav-r{right:max(12px, calc(50% - 530px))}
+.mdl-counter{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font-size:11px;color:rgba(255,255,255,.35);letter-spacing:1px;z-index:10}
+.mdl-tier-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:13px;font-weight:600;letter-spacing:.5px;margin-right:6px}
+.mdl-tier-badge.gp{background:linear-gradient(135deg,#ffd76e,#ffbe40,#ffd76e);color:#12102a}
+.mdl-tier-badge.gold{background:linear-gradient(135deg,#f5c842,#e0b020,#f5d060);color:#12102a}
+.mdl-tier-badge.silver{background:linear-gradient(135deg,#d0d0e0,#a0a8b8,#c8c8d8);color:#12102a}
+.mdl-tier-badge.bronze{background:linear-gradient(135deg,#d88a48,#b06828,#d88a48);color:#fff}
+
+/* ── GRADIENTS ── */
+/* ── MAGNIFIER ── */
+.mdl-magnifier{display:none}
+#mdl-img-inner{position:absolute;inset:0;background-size:contain;background-position:center;background-repeat:no-repeat;transform-origin:center center;will-change:transform}
+/* zoom hint pill */
+.mdl-zoom-hint{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(255,157,226,.18);color:rgba(255,157,226,.95);border:1px solid rgba(255,157,226,.35);padding:5px 16px;border-radius:20px;font-size:11px;pointer-events:none;backdrop-filter:blur(8px);z-index:4;letter-spacing:.4px;transition:all .2s;white-space:nowrap;font-weight:600;box-shadow:0 2px 12px rgba(255,157,226,.15)}
+.mdl-zoom-hint.active{color:var(--holo-mint);background:rgba(126,252,219,.14);border-color:rgba(126,252,219,.35);box-shadow:0 2px 12px rgba(126,252,219,.15)}
+
+/* iridescent chrome gradients */
+.g1{background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)}
+.g2{background:linear-gradient(135deg,#2d1b69,#11998e)}
+.g3{background:linear-gradient(135deg,#c94b4b,#4b134f)}
+.g4{background:linear-gradient(135deg,#f7971e,#ffd200)}
+.g5{background:linear-gradient(135deg,#00b09b,#96c93d)}
+.g6{background:linear-gradient(135deg,#8360c3,#2ebf91)}
+.g7{background:linear-gradient(135deg,#f953c6,#b91d73)}
+.g8{background:linear-gradient(135deg,#4e54c8,#8f94fb)}
+.g9{background:linear-gradient(135deg,#f83600,#f9d423)}
+.g10{background:linear-gradient(135deg,#0f2027,#203a43,#2c5364)}
+.g11{background:linear-gradient(135deg,#654ea3,#eaafc8)}
+.g12{background:linear-gradient(135deg,#134e5e,#71b280)}
+.g13{background:linear-gradient(135deg,#373b44,#4286f4)}
+.g14{background:linear-gradient(135deg,#cb2d3e,#ef473a)}
+.g15{background:linear-gradient(135deg,#1d976c,#93f9b9)}
+.g16{background:linear-gradient(135deg,#6a3093,#a044ff)}
+.g17{background:linear-gradient(135deg,#f46b45,#eea849)}
+.g18{background:linear-gradient(135deg,#2980b9,#6dd5fa)}
+.g19{background:linear-gradient(135deg,#141e30,#243b55)}
+.g20{background:linear-gradient(135deg,#e96c5a,#fad961)}
+
+/* ── VIEW TOGGLE ── */
+.view-toggle{display:flex;gap:2px;background:rgba(255,255,255,.06);border-radius:8px;padding:2px;margin-left:12px}
+.vt-btn{padding:5px 10px;border-radius:6px;border:none;cursor:pointer;font-size:14px;background:transparent;color:rgba(255,255,255,.35);transition:all var(--tr);line-height:1}
+.vt-btn:hover{color:rgba(255,255,255,.7)}
+.vt-btn.on{background:rgba(255,255,255,.12);color:#fff}
+
+/* ── GRID VIEW ── */
+#grid{display:block;flex:1;overflow-y:auto;overflow-x:hidden;padding:20px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.1) transparent}
+#grid::-webkit-scrollbar{width:6px}
+#grid::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px}
+#grid.on{display:block}
+/* grid is now the only view */
+#stage.grid-mode #grid{display:block}
+
+.grid-inner{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.grid-card{border-radius:12px;overflow:hidden;cursor:pointer;background:rgba(255,255,255,.04);backdrop-filter:blur(6px);transition:all .3s;border:2px solid rgba(255,255,255,.06);position:relative}
+.grid-card:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(142,184,255,.12),0 4px 16px rgba(255,157,226,.08);border-color:rgba(255,157,226,.2);animation:holoBorder 3s ease-in-out infinite}
+.grid-card.on{border-width:2px;border-color:transparent}
+.gc-img{width:100%;aspect-ratio:4/3;background-size:contain;background-position:center;background-repeat:no-repeat;background-color:rgba(8,6,18,.7)}
+.gc-body{padding:12px 14px 14px}
+.gc-badge{display:inline-block;padding:2px 8px;border-radius:50px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#fff;margin-bottom:8px}
+.gc-badge.gp{background:var(--gp)}
+.gc-badge.gold{background:var(--gold)}
+.gc-badge.silver{background:var(--silver)}
+.gc-badge.bronze{background:var(--bronze)}
+.gc-title{font-size:14px;font-weight:700;line-height:1.3;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gc-meta{font-size:11px;color:rgba(255,255,255,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+</style>
+</head>
+<body tabindex="-1">
+
+<!-- GATE: VIDEO ENTRY -->
+<div id="pw">
+  <!-- looping background video (Vimeo) -->
+  <iframe id="entry-video" src="https://player.vimeo.com/video/1183153037?background=1&autoplay=1&loop=1&muted=1&byline=0&title=0" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+  <!-- dark overlay -->
+  <div id="video-overlay"></div>
+  <!-- wisp particle canvas -->
+  <canvas id="wisp-canvas"></canvas>
+
+  <!-- lower-third overlay: headline + form -->
+  <div class="cc-overlay">
+    <h1 class="cc-headline">Brain Cannesdy</h1>
+    <p class="cc-tagline">Your insider guide to Cannes Lions 2025</p>
+    <div class="cc-form-area">
+      <form style="width:100%;display:flex;flex-direction:column;gap:10px" onsubmit="unlock(event)">
+        <input type="email" class="cc-in" id="pwi" placeholder="your@email.com" autocomplete="email">
+        <div class="cc-err" id="pwe"></div>
+        <button type="submit" class="cc-btn" id="pw-submit-btn">Subscribe &amp; Enter &rarr;</button>
+      </form>
+      <p class="cc-disclaimer">Get updates from Fantasy Brands. No spam, ever.</p>
+      <div class="cc-socials">
+        <a href="https://www.tiktok.com/@playfantasybrands" target="_blank">TikTok</a>
+        <a href="https://www.instagram.com/playfantasybrands" target="_blank">Instagram</a>
+        <a href="https://www.youtube.com/@playfantasybrands_media" target="_blank">YouTube</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- cyan triangular bookmark — Fantasy Brands -->
+  <a class="cc-bookmark" href="https://playfantasybrands.com" target="_blank">
+    <img class="cc-bookmark-icon" src="https://images.squarespace-cdn.com/content/v1/678044f1997c5c7ba5aaf2a7/20db060d-9c85-44d0-a8ee-6ea5f38a7cec/Head_Color_Edit.png" alt="Fantasy Brands">
+  </a>
+</div>
+
+<!-- APP -->
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <nav id="sb">
+    <div class="sb-logo">
+      <img class="bc-logo-sm" src="Brain-Cannesdy-Logo-Horizontal-White.png" alt="Brain Cannesdy">
+    </div>
+    <div class="sb-yr">Cannes 2025</div>
+    <div class="sb-sec">Categories</div>
+    <div class="sb-cat on" onclick="selCat(this)">All</div>
+    <div class="sb-cat" onclick="selCat(this)">Brand Experience &amp; Activation</div>
+    <div class="sb-cat" onclick="selCat(this)">Design</div>
+    <div class="sb-cat cs">Film</div>
+    <div class="sb-cat cs">Digital Craft</div>
+    <div class="sb-cat cs">Entertainment</div>
+    <div class="sb-cat cs">Entertainment for Gaming</div>
+    <div class="sb-cat cs">Entertainment for Music</div>
+    <div class="sb-cat cs">Entertainment for Sport</div>
+    <div class="sb-div"></div>
+    <div class="sb-cat cs">Creative Commerce</div>
+    <div class="sb-cat cs">Creative Data</div>
+    <div class="sb-cat cs">Creative B2B</div>
+    <div class="sb-cat cs">Creative Business Transformation</div>
+    <div class="sb-cat cs">Creative Effectiveness</div>
+    <div class="sb-cat cs">Creative Strategy</div>
+    <div class="sb-div"></div>
+    <div class="sb-cat cs">Audio &amp; Radio</div>
+    <div class="sb-cat cs">Direct</div>
+    <div class="sb-cat cs">Film Craft</div>
+    <div class="sb-cat cs">Industry Craft</div>
+    <div class="sb-cat cs">Innovation</div>
+    <div class="sb-cat cs">Luxury</div>
+    <div class="sb-cat" onclick="selCat(this)">Media</div>
+    <div class="sb-cat cs">Outdoor</div>
+    <div class="sb-cat cs">PR</div>
+    <div class="sb-cat cs">Print &amp; Publishing</div>
+    <div class="sb-cat cs">Social &amp; Creator</div>
+    <div class="sb-div"></div>
+    <div class="sb-sec">Special Lions</div>
+    <div class="sb-cat cs">Glass: The Lion for Change</div>
+    <div class="sb-cat cs">Grand Prix for Good</div>
+    <div class="sb-cat cs">Health &amp; Wellness</div>
+    <div class="sb-cat cs">Pharma</div>
+    <div class="sb-cat cs">Sustainable Development Goals</div>
+    <div class="sb-div"></div>
+    <div class="sb-sec">Top Honors</div>
+    <div class="sb-cat cs">Dan Wieden Titanium</div>
+    <div style="height:20px"></div>
+  </nav>
+
+  <!-- MAIN -->
+  <div id="main">
+
+    <!-- TOPBAR -->
+    <div id="topbar">
+      <button class="fb on" data-t="all" onclick="setTier(this)">All</button>
+      <button class="fb" data-t="Grand Prix" onclick="setTier(this)">&#127942; Grand Prix</button>
+      <button class="fb" data-t="Gold" onclick="setTier(this)">Gold</button>
+      <button class="fb" data-t="Silver" onclick="setTier(this)">Silver</button>
+      <button class="fb" data-t="Bronze" onclick="setTier(this)">Bronze</button>
+      <span class="tb-count" id="cnt"></span>
+      <div class="tb-search-wrap">
+        <span class="tb-search-icon">&#128269;</span>
+        <input class="tb-search" id="tb-q" type="text" placeholder="Search winners..." autocomplete="off" oninput="tbSearch(this.value)" onkeydown="tbSearchKey(event)">
+        <div class="tb-results" id="tb-results"></div>
+      </div>
+      <button class="tb-surprise" onclick="surpriseMe()" title="View a random winner [R]">&#127922; Surprise Me <span class="kk" style="opacity:.55">R</span></button>
+    </div>
+
+    <!-- GRID -->
+    <div id="grid">
+      <div class="grid-inner" id="grid-inner"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="modal" onclick="closeMdl(event)">
+  <button class="mdl-nav mdl-nav-l" id="mdl-prev" onclick="event.stopPropagation();mdlGo(-1)" title="Previous">&#8592;</button>
+  <div id="mdl">
+    <button class="mdl-close" onclick="closeMdl()">&#10005;</button>
+    <div class="mdl-img" id="mdl-img" onmousemove="magMove(event)" onmouseleave="magHide()" onclick="toggleZoom(event)"><div id="mdl-img-inner"></div><div class="mdl-tb" id="mdl-tb"></div><div class="mdl-magnifier" id="magnifier"></div><div class="mdl-zoom-hint" id="mdl-zoom-prompt">Click image to zoom</div></div>
+    <div class="mdl-body">
+      <div class="mdl-ttl" id="mdl-ttl"></div>
+      <div class="mdl-meta" id="mdl-meta"></div>
+      <div class="mdl-desc" id="mdl-desc"></div>
+      <div class="mdl-acts" id="mdl-acts"></div>
+    </div>
+  </div>
+  <button class="mdl-nav mdl-nav-r" id="mdl-next" onclick="event.stopPropagation();mdlGo(1)" title="Next">&#8594;</button>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// DATA
+// To add an image: paste the filespin URL into imgUrl: ""
+// e.g. imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/abc123"
+// ─────────────────────────────────────────────
+const DATA = {
+
+  "Brand Experience & Activation": [
+
+    // GRAND PRIX,
+    {id:1,tier:"Grand Prix",campaign:"Caption with Intention",
+     brand:"Academy of Motion Picture Arts & Sciences / Chicago Hearing Society",
+     agency:"FCB Chicago",country:"United States",grad:"g1",
+     desc:"A revolutionary captioning design system using color, movement, and typography to convey emotion and identity for the Deaf and Hard of Hearing community.",
+     tags:["Media/Entertainment", "United States"],
+     youtubeId:"F48khKZhKHM",
+     videoUrl:"https://www.youtube.com/results?search_query=Caption+with+Intention+Academy+of+Motion+Picture+Arts+%26+Sciences+%2F+Chicago+Hearing+Society+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/ae51c3c9f04d452e914dba0555d8b029?format=webp"},
+
+    // GOLD,
+    {id:2,tier:"Gold",campaign:"ADS Cover Rents",
+     brand:"Brahma",
+     agency:"Africa Creative DDB Sao Paulo",country:"Brazil",grad:"g2",
+     desc:"Converted Brahma\\'s Carnival advertising budget into direct rent subsidies for Brazilians struggling with rising housing costs, generating record engagement during Brazil\\'s most culturally significant season.",
+     tags:["Guerrilla Marketing", "Brazil"],
+     youtubeId:"8R2TckoklzM",
+     videoUrl:"https://www.youtube.com/results?search_query=ADS+Cover+Rents+Brahma+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/17a255fb4a7d40d79616736a9ee7914c?format=webp"},
+    {id:3,tier:"Gold",campaign:"Drops of Hope",
+     brand:"Kimberly-Clark",
+     agency:"FCB New York",country:"United States",grad:"g3",
+     desc:"Repurposed incontinence pads as health diagnostic tools for women in rural \\'health deserts,\\' testing urine for biomarkers to transform an everyday product into a life-saving screening device.",
+     tags:["Consumer Goods", "United States"],
+     youtubeId:"MnF0kip489Y",
+     videoUrl:"https://www.youtube.com/results?search_query=Drops+of+Hope+Kimberly-Clark+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/6b9aa5b716a6476ca0f016a3c2a0dd62?format=webp"},
+    {id:3,tier:"Gold",campaign:"Drops of Hope",
+     brand:"Kimberly-Clark",
+     agency:"FCB New York",country:"United States",grad:"g3",
+     desc:"Repurposed incontinence pads as health diagnostic tools for women in rural \\'health deserts,\\' testing urine for biomarkers to transform an everyday product into a life-saving screening device.",
+     tags:["Consumer Goods", "United States"],
+     youtubeId:"MnF0kip489Y",
+     videoUrl:"https://www.youtube.com/results?search_query=Drops+of+Hope+Kimberly-Clark+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/b6b3814255234c3596fcb99868c0fbb7?format=webp"},
+    {id:4,tier:"Gold",campaign:"Fictional Insurance",
+     brand:"RCN/Prime",
+     agency:"DDB Colombia Bogota",country:"Colombia",grad:"g4",
+     desc:"Offered real insurance coverage for fictional risks from popular TV dramas \u2014 viewers could \\'insure\\' against plot disasters, merging entertainment and financial life into an immersive activation.",
+     tags:["Customer Acquisition", "Colombia"],
+     youtubeId:"OctiVcwaiXI",
+     videoUrl:"https://www.youtube.com/results?search_query=Fictional+Insurance+RCN%2FPrime+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/8466955db96a4c52b6813e12a8c63226?format=webp"},
+    {id:5,tier:"Gold",campaign:"Gulf of Mexico (Bar)",
+     brand:"Tecate",
+     agency:"LePub Mexico City",country:"Mexico",grad:"g5",
+     desc:"Responded to geopolitical tensions by opening \\'The Gulf of Mexico Bar\\' on the U.S.\u2013Mexico border \u2014 reclaiming the name with Mexican pride, humour, and massive earned media across both countries.",
+     tags:["Local Brand", "Mexico"],
+     youtubeId:"TFbAS7weMR8",
+     videoUrl:"https://www.youtube.com/results?search_query=Gulf+of+Mexico+(Bar)+Tecate+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/afa88aa8421b41a18c68b9863bb6926c?format=webp"},
+    {id:6,tier:"Gold",campaign:"Lessons of Shame",
+     brand:"World Vision",
+     agency:"Havas Costa Rica",country:"Costa Rica",grad:"g6",
+     desc:"Confronted the shame that prevents communities from seeking help for child poverty, reframing shame from a barrier into a catalyst for change and mobilising support across Latin America.",
+     tags:["Not-for-Profit", "Costa Rica"],
+     youtubeId:"YrNH2-6vqZo",
+     videoUrl:"https://www.youtube.com/results?search_query=Lessons+of+Shame+World+Vision+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/71112ff9b2324f9b8f9338c809483684?format=webp"},
+    {id:7,tier:"Gold",campaign:"Lucky Yatra",
+     brand:"Indian Railways",
+     agency:"FCB India Mumbai",country:"India",grad:"g7",
+     desc:"Reimagined Indian Railways by introducing gamification into everyday train travel \u2014 passengers discovered surprise rewards built into their journeys, transforming routine commutes into moments of wonder.",
+     tags:["Customer Acquisition", "India"],
+     youtubeId:"IYJlZRbvMEw",
+     videoUrl:"https://www.youtube.com/results?search_query=Lucky+Yatra+Indian+Railways+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/2e252d74f69d4889b7886d241255186a?format=webp"},
+    {id:8,tier:"Gold",campaign:"Price Packs",
+     brand:"Penny",
+     agency:"Serviceplan Germany",country:"Germany",grad:"g8",
+     desc:"Redesigned product packaging to boldly display price comparisons, turning the pack itself into a transparency tool that helped shoppers fight inflation at point of sale.",
+     tags:["Market Disruption", "Germany"],
+     youtubeId:"cnAXR4lk6R0",
+     videoUrl:"https://www.youtube.com/results?search_query=Price+Packs+Penny+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/67b6df2a0fe64deeb274c91d50040c54?format=webp"},
+    {id:9,tier:"Gold",campaign:"The Kimberly Price",
+     brand:"Plaza Vea",
+     agency:"Fahrenheit DDB Lima",country:"Peru",grad:"g9",
+     desc:"Exposed the \\'pink tax\\' by relabeling inflated gender-based price premiums as \\'The Kimberly Price\\' directly on shelf tags at Plaza Vea supermarkets, sparking national conversation in Peru.",
+     tags:["Social Engagement", "Peru"],
+     youtubeId:"pPAGka7S4_o",
+     videoUrl:"https://www.youtube.com/results?search_query=The+Kimberly+Price+Plaza+Vea+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/dd37e163320440a58d69763c047eec03?format=webp"},
+    {id:10,tier:"Gold",campaign:"Winter Takes on Colors",
+     brand:"McDonald's Polska",
+     agency:"DDB Warsaw",country:"Poland",grad:"g10",
+     desc:"Repackaged the returning Drwala Burger with a winter color system that turned seasonal scarcity into a design event \u2014 making the limited-time offer feel like a cultural moment.",
+     tags:["Customer Retail", "Poland"],
+     youtubeId:"qcSHtBgAB6o",
+     videoUrl:"https://www.youtube.com/results?search_query=Winter+Takes+on+Colors+McDonald's+Polska+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/4ff9778738a146549164d3153acb8808?format=webp"},
+
+    // SILVER,
+    {id:11,tier:"Silver",campaign:"855-How-to-Quit-(Opioids)",
+     brand:"Anzen Health",
+     agency:"Serviceplan Germany",country:"Germany",grad:"g11",
+     desc:"Created a real helpline number (855-HOW-TO-QUIT) that connected opioid users to recovery resources, transforming advertising into a direct lifeline for those struggling with addiction.",
+     tags:["Healthcare", "Germany"],
+     youtubeId:"I_xvPLZ9DDk",
+     videoUrl:"https://www.youtube.com/results?search_query=855-How-to-Quit-(Opioids)+Anzen+Health+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/650a86946acf45c9946d15c4d5f10c86?format=webp"},
+    {id:1,tier:"Silver",campaign:"Caption with Intention",
+     brand:"Academy of Motion Picture Arts & Sciences / Chicago Hearing Society",
+     agency:"FCB Chicago",country:"United States",grad:"g1",
+     desc:"A revolutionary captioning design system using color, movement, and typography to convey emotion and identity for the Deaf and Hard of Hearing community.",
+     tags:["Media/Entertainment", "United States"],
+     youtubeId:"F48khKZhKHM",
+     videoUrl:"https://www.youtube.com/results?search_query=Caption+with+Intention+Academy+of+Motion+Picture+Arts+%26+Sciences+%2F+Chicago+Hearing+Society+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/ae51c3c9f04d452e914dba0555d8b029?format=webp"},
+    {id:12,tier:"Silver",campaign:"Clandestination",
+     brand:"ProColombia",
+     agency:"DDB Colombia Bogota",country:"Colombia",grad:"g12",
+     desc:"ProColombia created secret, invitation-only travel experiences that revealed hidden gems of Colombian culture and geography to select international visitors.",
+     tags:["Brand-Owned Experiences", "Colombia"],
+     youtubeId:"C5hcv9fi0VQ",
+     videoUrl:"https://www.youtube.com/results?search_query=Clandestination+ProColombia+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/082d90b5df624d84b427b48c82cd3dce?format=webp"},
+    {id:3,tier:"Silver",campaign:"Drops of Hope",
+     brand:"Kimberly-Clark",
+     agency:"FCB New York",country:"United States",grad:"g3",
+     desc:"Repurposed incontinence pads as health diagnostic tools for women in rural \\'health deserts,\\' testing urine for biomarkers to transform an everyday product into a life-saving screening device.",
+     tags:["Consumer Goods", "United States"],
+     youtubeId:"MnF0kip489Y",
+     videoUrl:"https://www.youtube.com/results?search_query=Drops+of+Hope+Kimberly-Clark+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/7a3d4cfbc07f4dd9b273dbdd4d3cdd28?format=webp"},
+    {id:4,tier:"Silver",campaign:"Fictional Insurance",
+     brand:"RCN/Prime",
+     agency:"DDB Colombia Bogota",country:"Colombia",grad:"g4",
+     desc:"Offered real insurance coverage for fictional risks from popular TV dramas \u2014 viewers could \\'insure\\' against plot disasters, merging entertainment and financial life into an immersive activation.",
+     tags:["Customer Acquisition", "Colombia"],
+     youtubeId:"OctiVcwaiXI",
+     videoUrl:"https://www.youtube.com/results?search_query=Fictional+Insurance+RCN%2FPrime+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/8466955db96a4c52b6813e12a8c63226?format=webp"},
+    {id:13,tier:"Silver",campaign:"Fishermen Storytellers",
+     brand:"Corona",
+     agency:"Africa Creative DDB Sao Paulo",country:"Brazil",grad:"g13",
+     desc:"Corona transformed local fishermen into brand storytellers, sharing their authentic ocean tales that aligned with Corona\\'s sunset beach lifestyle positioning.",
+     tags:["Live Brand Experience", "Brazil"],
+     youtubeId:"LDbcqtL9zP8",
+     videoUrl:"https://www.youtube.com/results?search_query=Fishermen+Storytellers+Corona+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/ab9557517f1d4976963059cf5434ae7a?format=webp"},
+    {id:5,tier:"Silver",campaign:"Gulf of Mexico (Bar)",
+     brand:"Tecate",
+     agency:"LePub Mexico City",country:"Mexico",grad:"g5",
+     desc:"Responded to geopolitical tensions by opening \\'The Gulf of Mexico Bar\\' on the U.S.\u2013Mexico border \u2014 reclaiming the name with Mexican pride, humour, and massive earned media across both countries.",
+     tags:["Local Brand", "Mexico"],
+     youtubeId:"TFbAS7weMR8",
+     videoUrl:"https://www.youtube.com/results?search_query=Gulf+of+Mexico+(Bar)+Tecate+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/afa88aa8421b41a18c68b9863bb6926c?format=webp"},
+    {id:14,tier:"Silver",campaign:"Haaland Payback Time",
+     brand:"Clash of Clans",
+     agency:"DAVID New York",country:"United States",grad:"g14",
+     desc:"Launched Norwegian soccer star Erling Haaland as the first real person in Clash of Clans, with the Payback Time Challenge letting rivals raid Haaland\\'s custom village.",
+     tags:["Media/Entertainment", "United States"],
+     youtubeId:"TcQ--NtSQ9s",
+     videoUrl:"https://www.youtube.com/results?search_query=Haaland+Payback+Time+Clash+of+Clans+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/e56e744cd3594eceb82733246e9035b2?format=webp"},
+    {id:15,tier:"Silver",campaign:"Harmoniser",
+     brand:"Twix",
+     agency:"adam&eveDDB London",country:"United Kingdom",grad:"g15",
+     desc:"Used WhatsApp voice messages and AI to turn the classic Twix left-vs-right debate into a harmonised duet \u2014 turning a brand gimmick into a participatory viral experience.",
+     tags:["Use of Humour", "United Kingdom"],
+     youtubeId:"OFY3DkMtpEk",
+     videoUrl:"https://www.youtube.com/results?search_query=Harmoniser+Twix+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/09704408a9dd4b39b4da5f3d1f5195a7?format=webp"},
+    {id:16,tier:"Silver",campaign:"IKEA Hidden Tags",
+     brand:"IKEA",
+     agency:"Uzina Lisbon",country:"Portugal",grad:"g16",
+     desc:"Embedded secret QR codes inside IKEA product packaging that unlocked surprise stories, sustainability data, and hidden discounts \u2014 transforming furniture unpacking into unexpected discovery.",
+     tags:["Customer Acquisition", "Portugal"],
+     youtubeId:"oKWkHqlt7yA",
+     videoUrl:"https://www.youtube.com/results?search_query=IKEA+Hidden+Tags+IKEA+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/237ade5924eb407898bf58d19f58a52a?format=webp"},
+    {id:6,tier:"Silver",campaign:"Lessons of Shame",
+     brand:"World Vision",
+     agency:"Havas Costa Rica",country:"Costa Rica",grad:"g6",
+     desc:"Confronted the shame that prevents communities from seeking help for child poverty, reframing shame from a barrier into a catalyst for change and mobilising support across Latin America.",
+     tags:["Not-for-Profit", "Costa Rica"],
+     youtubeId:"YrNH2-6vqZo",
+     videoUrl:"https://www.youtube.com/results?search_query=Lessons+of+Shame+World+Vision+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/71112ff9b2324f9b8f9338c809483684?format=webp"},
+    {id:17,tier:"Silver",campaign:"Life Donor Card",
+     brand:"Mastercard",
+     agency:"MRM Germany Frankfurt",country:"Germany",grad:"g17",
+     desc:"Mastercard\\'s initiative letting customers opt-in to donate their unused loyalty points toward life-saving medical treatments, turning everyday spending into charitable impact.",
+     tags:["Corporate Purpose", "Germany"],
+     youtubeId:"pe-7cdkH2dA",
+     videoUrl:"https://www.youtube.com/results?search_query=Life+Donor+Card+Mastercard+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/5801ee4249af49b0aa23167f0d131de4?format=webp"},
+    {id:18,tier:"Silver",campaign:"Olympic Games Opening Ceremony Paris 2024",
+     brand:"Paris 2024",
+     agency:"Paname 24 Paris",country:"France",grad:"g18",
+     desc:"The spectacular Paris 2024 Opening Ceremony along the Seine \u2014 a groundbreaking brand experience that reimagined what an Olympic opening could be.",
+     tags:["Corporate Purpose", "France"],
+     youtubeId:"t8o4ulxT1Cc",
+     videoUrl:"https://www.youtube.com/results?search_query=Olympic+Games+Opening+Ceremony+Paris+2024+Paris+2024+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/60aa1888e5b6444381b060dc1801de84?format=webp"},
+    {id:8,tier:"Silver",campaign:"Price Packs",
+     brand:"Penny",
+     agency:"Serviceplan Germany",country:"Germany",grad:"g8",
+     desc:"Redesigned product packaging to boldly display price comparisons, turning the pack itself into a transparency tool that helped shoppers fight inflation at point of sale.",
+     tags:["Market Disruption", "Germany"],
+     youtubeId:"cnAXR4lk6R0",
+     videoUrl:"https://www.youtube.com/results?search_query=Price+Packs+Penny+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/67b6df2a0fe64deeb274c91d50040c54?format=webp"},
+    {id:19,tier:"Silver",campaign:"Progresso Soup Drops",
+     brand:"Progresso",
+     agency:"Edelman Chicago",country:"United States",grad:"g19",
+     desc:"A guerrilla stunt where giant cans of Progresso soup appeared to have \\'dropped\\' from the sky into unexpected urban locations, creating viral social moments.",
+     tags:["Guerrilla Marketing", "United States"],
+     youtubeId:"zEQhgXoMsdY",
+     videoUrl:"https://www.youtube.com/results?search_query=Progresso+Soup+Drops+Progresso+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/8a8d409a0e954a6b8f0df7b07bba8cc9?format=webp"},
+    {id:20,tier:"Silver",campaign:"Pub Succession",
+     brand:"Heineken",
+     agency:"LePub Milan / Publicis Dublin",country:"Italy",grad:"g20",
+     desc:"Heineken launched a global search for someone named McLoughlin to take over a 155-year-old Irish pub on Achill Island, driving over 1 billion impressions across 128 countries.",
+     tags:["Brand-Owned Experiences", "Italy"],
+     youtubeId:"Cu0FLBdZrcM",
+     videoUrl:"https://www.youtube.com/results?search_query=Pub+Succession+Heineken+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/a8d4e72bb1ce47508dcea8db73d16b01?format=webp"},
+    {id:21,tier:"Silver",campaign:"Public Money ATM",
+     brand:"Mastercard",
+     agency:"McCann Poland Warsaw",country:"Poland",grad:"g21",
+     desc:"Mastercard installed ATMs in public spaces that dispensed information about how tax money is spent, making government spending transparent and tangible for citizens.",
+     tags:["Digital Installations", "Poland"],
+     youtubeId:"laOOyNw0dyI",
+     videoUrl:"https://www.youtube.com/results?search_query=Public+Money+ATM+Mastercard+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/faa00cc4c0b94e1ea53f6e9be2461987?format=webp"},
+    {id:22,tier:"Silver",campaign:"Recipe for Change",
+     brand:"Arla",
+     agency:"FP7 McCann Dubai",country:"United Arab Emirates",grad:"g22",
+     desc:"Arla\\'s Puck cheese brand challenged traditional gender roles in Middle Eastern kitchens, using cooking as a catalyst for cultural conversation about equality and shared domestic responsibility.",
+     tags:["Market Disruption", "United Arab Emirates"],
+     videoUrl:"https://www.youtube.com/results?search_query=Recipe+for+Change+Arla+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/945d141f6a13498e8ad127f4cbbf0caf?format=webp"},
+    {id:23,tier:"Silver",campaign:"RooBadge",
+     brand:"Volkswagen",
+     agency:"DDB Sydney",country:"Australia",grad:"g23",
+     desc:"Replaced Volkswagen's chrome front badge with a radar-transparent version, allowing the car's collision-avoidance sensors to function properly \u2014 a safety-first redesign of a 70-year-old icon.",
+     tags:["Automotive", "Australia"],
+     videoUrl:"https://www.youtube.com/results?search_query=RooBadge+Volkswagen+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/fcd0be35220a46cbbcee1dada7201da9?format=webp"},
+    {id:24,tier:"Silver",campaign:"Spreadbeats",
+     brand:"Spotify",
+     agency:"FCB New York",country:"United States",grad:"g24",
+     desc:"Turned a Microsoft Excel spreadsheet into an immersive audio-visual experience, demonstrating Spotify's emotional power to media planners in a format they use every day.",
+     tags:["Consumer Services/B2B", "United States"],
+     youtubeId:"Z_lbVlhO9HE",
+     videoUrl:"https://www.youtube.com/results?search_query=Spreadbeats+Spotify+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/3ad6c6826a8c471190e7d97b6003c486?format=webp"},
+    {id:25,tier:"Silver",campaign:"The Athletes Code",
+     brand:"Powerade",
+     agency:"Ogilvy New York",country:"United States",grad:"g25",
+     desc:"Powerade decoded the hidden mental patterns behind athletic performance, revealing what separates elite athletes through data-driven brand experience activations.",
+     tags:["Corporate Purpose", "United States"],
+     youtubeId:"z7EwJIUlr-g",
+     videoUrl:"https://www.youtube.com/results?search_query=The+Athletes+Code+Powerade+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/fb3c12787a614e6380d825b91a317ee9?format=webp"},
+    {id:9,tier:"Silver",campaign:"The Kimberly Price",
+     brand:"Plaza Vea",
+     agency:"Fahrenheit DDB Lima",country:"Peru",grad:"g9",
+     desc:"Exposed the \\'pink tax\\' by relabeling inflated gender-based price premiums as \\'The Kimberly Price\\' directly on shelf tags at Plaza Vea supermarkets, sparking national conversation in Peru.",
+     tags:["Social Engagement", "Peru"],
+     youtubeId:"pPAGka7S4_o",
+     videoUrl:"https://www.youtube.com/results?search_query=The+Kimberly+Price+Plaza+Vea+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/bf4eb691b7e04919bfdbea7a218c286a?format=webp"},
+    {id:9,tier:"Silver",campaign:"The Kimberly Price",
+     brand:"Plaza Vea",
+     agency:"Fahrenheit DDB Lima",country:"Peru",grad:"g9",
+     desc:"Exposed the \\'pink tax\\' by relabeling inflated gender-based price premiums as \\'The Kimberly Price\\' directly on shelf tags at Plaza Vea supermarkets, sparking national conversation in Peru.",
+     tags:["Social Engagement", "Peru"],
+     youtubeId:"pPAGka7S4_o",
+     videoUrl:"https://www.youtube.com/results?search_query=The+Kimberly+Price+Plaza+Vea+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/dc69ba18c3b64ddfa564f09dc300d7e0?format=webp"},
+    {id:26,tier:"Silver",campaign:"Time to Live",
+     brand:"Australian Cancer Research Foundation",
+     agency:"The Ministry for Communication & The Arts",country:"Australia",grad:"g26",
+     desc:"Reframed the cancer experience by shifting focus from survival statistics to quality of life during treatment, mobilising donations for better, less harmful treatments.",
+     tags:["Breakthrough on a Budget", "Australia"],
+     youtubeId:"z2T-Rh838GA",
+     videoUrl:"https://www.youtube.com/results?search_query=Time+to+Live+Australian+Cancer+Research+Foundation+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/837e21468aac4c1e902d0113ac141af1?format=webp"},
+
+    // BRONZE,
+    {id:27,tier:"Bronze",campaign:"Acko Tailor Test",
+     brand:"Acko",
+     agency:"Leo Mumbai",country:"India",grad:"g27",
+     desc:"Acko health insurance partnered with street tailors to offer free health check-ups while customers waited for alterations, bringing healthcare to unexpected touchpoints.",
+     tags:["Corporate Purpose", "India"],
+     youtubeId:"alezIXsk0So",
+     videoUrl:"https://www.youtube.com/results?search_query=Acko+Tailor+Test+Acko+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/a8a20a31dcb844ebad5ef04afca8370b?format=webp"},
+    {id:28,tier:"Bronze",campaign:"Airbnb Icons",
+     brand:"Airbnb",
+     agency:"Weber Shandwick San Francisco",country:"United States",grad:"g28",
+     desc:"Airbnb Icons let guests stay in extraordinary locations inspired by cultural moments \u2014 from the Barbie Dreamhouse to the UP house \u2014 blending hospitality with fandom.",
+     tags:["Sponsorship", "United States"],
+     youtubeId:"uUDgTwzWz5U",
+     videoUrl:"https://www.youtube.com/results?search_query=Airbnb+Icons+Airbnb+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/db51bea9a01d40108f74e1fa9bd7ad3f?format=webp"},
+    {id:29,tier:"Bronze",campaign:"Bad Luck Reverser",
+     brand:"Refisal",
+     agency:"VML New York / NAME Bogota",country:"Colombia",grad:"g29",
+     desc:"Transformed Refisal salt sample packs into good luck charms for Colombian football fans, turning a pantry staple into a culturally resonant brand moment.",
+     tags:["Social Behaviour", "Colombia"],
+     youtubeId:"4OaN00EWwWg",
+     videoUrl:"https://www.youtube.com/results?search_query=Bad+Luck+Reverser+Refisal+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/7e95f656b693443d8d4e60f0a4c9b853?format=webp"},
+    {id:30,tier:"Bronze",campaign:"Building Futures",
+     brand:"MRV",
+     agency:"DM9 Sao Paulo",country:"Brazil",grad:"g30",
+     desc:"MRV Construction created immersive experiences showing future homeowners what their communities would look like, turning real estate into an aspirational brand journey.",
+     tags:["Corporate Purpose", "Brazil"],
+     videoUrl:"https://www.youtube.com/results?search_query=Building+Futures+MRV+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/68d1cb58e31142a3ad6142f7ac03f65e?format=webp"},
+    {id:31,tier:"Bronze",campaign:"Camdom",
+     brand:"Billy Boy",
+     agency:"Innocean Berlin",country:"Germany",grad:"g31",
+     desc:"A phone case that blocked the camera lens as a playful reminder to be present and protected during intimate moments, turning a tech accessory into a safe sex message.",
+     tags:["Healthcare", "Germany"],
+     youtubeId:"95RGWYXNq70",
+     videoUrl:"https://www.youtube.com/results?search_query=Camdom+Billy+Boy+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/abab04c347304d2a9a3b75bd9d3a0a79?format=webp"},
+    {id:1,tier:"Bronze",campaign:"Caption with Intention",
+     brand:"Academy of Motion Picture Arts & Sciences / Chicago Hearing Society",
+     agency:"FCB Chicago",country:"United States",grad:"g1",
+     desc:"A revolutionary captioning design system using color, movement, and typography to convey emotion and identity for the Deaf and Hard of Hearing community.",
+     tags:["Media/Entertainment", "United States"],
+     youtubeId:"F48khKZhKHM",
+     videoUrl:"https://www.youtube.com/results?search_query=Caption+with+Intention+Academy+of+Motion+Picture+Arts+%26+Sciences+%2F+Chicago+Hearing+Society+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/d5e8778a86514f2bb1586343132de626?format=webp"},
+    {id:32,tier:"Bronze",campaign:"Certified Toasters",
+     brand:"Goodman Fielder",
+     agency:"DDB New Zealand Auckland",country:"New Zealand",grad:"g32",
+     desc:"Vogel\\'s bread brand certified specific toaster models as \\'Vogel\\'s Approved\\' for optimal toast quality, turning a mundane appliance into a brand experience moment.",
+     tags:["Customer Acquisition", "New Zealand"],
+     youtubeId:"5NNhDRF-BUY",
+     videoUrl:"https://www.youtube.com/results?search_query=Certified+Toasters+Goodman+Fielder+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/063b28ff666842b6ba0f2b6972cdd489?format=webp"},
+    {id:33,tier:"Bronze",campaign:"Choose Uber",
+     brand:"Heetch",
+     agency:"BETC Paris",country:"France",grad:"g33",
+     desc:"Heetch\\'s cheeky campaign encouraged riders to \\'Choose Uber\\' while subtly demonstrating why Heetch offered the superior experience in key moments.",
+     tags:["Customer Acquisition", "France"],
+     youtubeId:"O9A5do-GRG4",
+     videoUrl:"https://www.youtube.com/results?search_query=Choose+Uber+Heetch+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/fd2b448479ca41b7aa08b7d8a4bd8749?format=webp"},
+    {id:34,tier:"Bronze",campaign:"Coupon Rain",
+     brand:"Mercado Livre",
+     agency:"GUT Sao Paulo",country:"Brazil",grad:"g34",
+     desc:"Hid discount codes inside confetti at a Brazilian football championship and activated geo-targeted coupons when it rained, combining weather data with live event energy.",
+     tags:["Retail Promotions", "Brazil"],
+     youtubeId:"RXw_xdHILoU",
+     videoUrl:"https://www.youtube.com/results?search_query=Coupon+Rain+Mercado+Livre+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/da2a035ff121404d908607d3ef09dfd2?format=webp"},
+    {id:35,tier:"Bronze",campaign:"Eye Test Menu",
+     brand:"Titan Company Limited",
+     agency:"Ogilvy Bangalore",country:"India",grad:"g35",
+     desc:"Designed restaurant menus that double as vision screening tools, using calibrated type sizes to help diners self-diagnose eyesight problems and drive foot traffic to Titan eyewear stores.",
+     tags:["Brand-Owned Experiences", "India"],
+     youtubeId:"_GNOgJWpfK8",
+     videoUrl:"https://www.youtube.com/results?search_query=Eye+Test+Menu+Titan+Company+Limited+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/423282a302ed4fe187b1a0b7b5eb8284?format=webp"},
+    {id:36,tier:"Bronze",campaign:"Followers Store",
+     brand:"New Balance",
+     agency:"LePub Sao Paulo",country:"Brazil",grad:"g36",
+     desc:"New Balance opened a store where the currency was social media followers \u2014 the more followers you unfollowed, the bigger the discount, promoting digital detox.",
+     tags:["Retail Promotions", "Brazil"],
+     youtubeId:"uYskstOPF4U",
+     videoUrl:"https://www.youtube.com/results?search_query=Followers+Store+New+Balance+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/3f6078e96a9a4e17acada7c2ad04d652?format=webp"},
+    {id:37,tier:"Bronze",campaign:"Hagelchup",
+     brand:"Kraft-Heinz",
+     agency:"GUT Amsterdam",country:"Netherlands",grad:"g37",
+     desc:"Heinz combined ketchup with hagelslag (Dutch chocolate sprinkles) in a limited edition that celebrated Netherlands culture with a delightfully weird product mash-up.",
+     tags:["Launch/Relaunch", "Netherlands"],
+     youtubeId:"9HpJtpvtrhs",
+     videoUrl:"https://www.youtube.com/results?search_query=Hagelchup+Kraft-Heinz+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/8e35da4f41d24cfba9b2b339c1dd1325?format=webp"},
+    {id:15,tier:"Bronze",campaign:"Harmoniser",
+     brand:"Twix",
+     agency:"adam&eveDDB London",country:"United Kingdom",grad:"g15",
+     desc:"Used WhatsApp voice messages and AI to turn the classic Twix left-vs-right debate into a harmonised duet \u2014 turning a brand gimmick into a participatory viral experience.",
+     tags:["Use of Humour", "United Kingdom"],
+     youtubeId:"OFY3DkMtpEk",
+     videoUrl:"https://www.youtube.com/results?search_query=Harmoniser+Twix+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/09704408a9dd4b39b4da5f3d1f5195a7?format=webp"},
+    {id:38,tier:"Bronze",campaign:"Lap of Legends",
+     brand:"AB InBev - Michelob Ultra",
+     agency:"FCB New York",country:"United States",grad:"g38",
+     desc:"Michelob Ultra used AI and holographic technology to let fans race against legendary athletes in an immersive brand experience at sporting events.",
+     tags:["Tech-Led Brand Experience", "United States"],
+     youtubeId:"0C3VQ6MwfIE",
+     videoUrl:"https://www.youtube.com/results?search_query=Lap+of+Legends+AB+InBev+-+Michelob+Ultra+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/f6e7f0cb16774f6cb600e22c0c3bdfde?format=webp"},
+    {id:39,tier:"Bronze",campaign:"Lynx with Catnip",
+     brand:"AXE/Lynx",
+     agency:"Lola MullenLowe Madrid",country:"Spain",grad:"g39",
+     desc:"AXE/Lynx launched a deodorant with actual catnip extract, creating viral content as cats went wild for the scent in a playful product launch activation.",
+     tags:["Launch/Relaunch", "Spain"],
+     youtubeId:"CHHeZrjP87w",
+     videoUrl:"https://www.youtube.com/results?search_query=Lynx+with+Catnip+AXE%2FLynx+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/ea3dd481097345ee8090654d39e8e874?format=webp"},
+    {id:40,tier:"Bronze",campaign:"Mommyphone",
+     brand:"Laboratoire Gallia",
+     agency:"BETC Paris",country:"France",grad:"g40",
+     desc:"Tackled postpartum isolation through medication packaging that included a pre-programmed phone connecting new mothers to medical support and community resources.",
+     tags:["Healthcare", "France"],
+     videoUrl:"https://www.youtube.com/results?search_query=Mommyphone+Laboratoire+Gallia+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/ad05d5ee96d64b4bbff51d2ad0b8ea59?format=webp"},
+    {id:41,tier:"Bronze",campaign:"Other Hand",
+     brand:"Cheetos | PepsiCo",
+     agency:"Goodby Silverstein & Partners",country:"United States",grad:"g41",
+     desc:"Created a brand typeface designed entirely with the non-dominant hand \u2014 messy, imperfect, and distinctly Cheetos \u2014 embodying the truth that Cheetos changes how you interact with the world.",
+     tags:["Consumer Goods", "United States"],
+     youtubeId:"5xRoKPmsEDI",
+     videoUrl:"https://www.youtube.com/results?search_query=Other+Hand+Cheetos+|+PepsiCo+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/c26e38ccd1ea4f2eae3e55a7d0c74a7c?format=webp"},
+    {id:41,tier:"Bronze",campaign:"Other Hand",
+     brand:"Cheetos | PepsiCo",
+     agency:"Goodby Silverstein & Partners",country:"United States",grad:"g41",
+     desc:"Created a brand typeface designed entirely with the non-dominant hand \u2014 messy, imperfect, and distinctly Cheetos \u2014 embodying the truth that Cheetos changes how you interact with the world.",
+     tags:["Consumer Goods", "United States"],
+     youtubeId:"5xRoKPmsEDI",
+     videoUrl:"https://www.youtube.com/results?search_query=Other+Hand+Cheetos+|+PepsiCo+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/5fbcea0cb26e47f685f6856daa7051fb?format=webp"},
+    {id:42,tier:"Bronze",campaign:"Prize on the Bone",
+     brand:"KFC",
+     agency:"DM9 Sao Paulo",country:"Brazil",grad:"g42",
+     desc:"KFC turned chicken bones into lottery tickets \u2014 customers could scan their bones after eating to win prizes, adding gamification to every meal.",
+     tags:["Launch/Relaunch", "Brazil"],
+     youtubeId:"h4Kl5THlsYw",
+     videoUrl:"https://www.youtube.com/results?search_query=Prize+on+the+Bone+KFC+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/32ef7021bdbd4c4392fa51fb240d45e6?format=webp"},
+    {id:43,tier:"Bronze",campaign:"Report This Ad",
+     brand:"Veris",
+     agency:"Paradais DDB Guayaquil",country:"Ecuador",grad:"g43",
+     desc:"Veris mental health institution hijacked the \\'Report This Ad\\' button on social media, turning an ignored UI element into a gateway to mental health resources.",
+     tags:["Guerrilla Marketing", "Ecuador"],
+     videoUrl:"https://www.youtube.com/results?search_query=Report+This+Ad+Veris+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/acbb86d466734cc4890607c8d8d33696?format=webp"},
+    {id:44,tier:"Bronze",campaign:"Returning Creativity",
+     brand:"Crayola",
+     agency:"Dentsu Creative New York",country:"United States",grad:"g44",
+     desc:"Crayola invited adults to return their childhood creativity by picking up crayons again, creating brand experiences that celebrated the joy of unstructured creative play.",
+     tags:["360 Integrated", "United States"],
+     youtubeId:"p8IHkizfvVE",
+     videoUrl:"https://www.youtube.com/results?search_query=Returning+Creativity+Crayola+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/17be9285972743a1b234168fb6440ddb?format=webp"},
+    {id:45,tier:"Bronze",campaign:"Shades of Red",
+     brand:"Coca-Cola",
+     agency:"DAVID Madrid",country:"Spain",grad:"g45",
+     desc:"Coca-Cola celebrated the infinite variations of its iconic red across cultures and contexts, turning color itself into a brand experience.",
+     tags:["Single-Market", "Spain"],
+     youtubeId:"7kRgxEIhX38",
+     videoUrl:"https://www.youtube.com/results?search_query=Shades+of+Red+Coca-Cola+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/6823017bae93485e8872b6f02baedf4b?format=webp"},
+    {id:46,tier:"Bronze",campaign:"Sights of Tomorrow",
+     brand:"Letzte Generation Austria",
+     agency:"Demner Merlicek & Bergmann Vienna",country:"Austria",grad:"g46",
+     desc:"Letzte Generation Austria created haunting visual experiences showing what Austrian landmarks would look like under climate change, making the future viscerally present.",
+     tags:["Breakthrough on a Budget", "Austria"],
+     youtubeId:"cjnTY_qX2wM",
+     videoUrl:"https://www.youtube.com/results?search_query=Sights+of+Tomorrow+Letzte+Generation+Austria+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/a542046c9e4a4704b0c1f7f075a95f4c?format=webp"},
+    {id:47,tier:"Bronze",campaign:"SupportBelt",
+     brand:"Ford",
+     agency:"VML Detroit",country:"United States",grad:"g47",
+     desc:"The first commercial seatbelt accessory designed for mastectomy patients \u2014 a contoured foam pad that alleviates painful chest pressure, offered free through Ford dealers.",
+     tags:["Automotive", "United States"],
+     youtubeId:"BU0WI3A9bKQ",
+     videoUrl:"https://www.youtube.com/results?search_query=SupportBelt+Ford+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/325a5a7b867c43a7a400829c3a94a862?format=webp"},
+    {id:48,tier:"Bronze",campaign:"Thanks for Coke-Creating",
+     brand:"Coca-Cola",
+     agency:"VML New York",country:"United States",grad:"g48",
+     desc:"Celebrated the countless unofficial, locally adapted Coca-Cola logos created by fans worldwide, acknowledging the brand as a shared cultural canvas.",
+     tags:["Social Behaviour", "United States"],
+     youtubeId:"gFQUmcwgoMg",
+     videoUrl:"https://www.youtube.com/results?search_query=Thanks+for+Coke-Creating+Coca-Cola+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/e2d391a076394851ad0376152ece61bb?format=webp"},
+    {id:25,tier:"Bronze",campaign:"The Athletes Code",
+     brand:"Powerade",
+     agency:"Ogilvy New York",country:"United States",grad:"g25",
+     desc:"Powerade decoded the hidden mental patterns behind athletic performance, revealing what separates elite athletes through data-driven brand experience activations.",
+     tags:["Corporate Purpose", "United States"],
+     youtubeId:"z7EwJIUlr-g",
+     videoUrl:"https://www.youtube.com/results?search_query=The+Athletes+Code+Powerade+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/fb3c12787a614e6380d825b91a317ee9?format=webp"},
+    {id:49,tier:"Bronze",campaign:"The Final Exam",
+     brand:"Change the Ref",
+     agency:"Energy BBDO Chicago",country:"United States",grad:"g49",
+     desc:"Change the Ref\\'s powerful activation confronting gun violence in schools through an unforgettable brand experience that forced audiences to reckon with the crisis.",
+     tags:["Not-for-Profit", "United States"],
+     youtubeId:"Ljsstj4eiko",
+     videoUrl:"https://www.youtube.com/results?search_query=The+Final+Exam+Change+the+Ref+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/ccce75b37e6345528c0db780024c9818?format=webp"},
+    {id:50,tier:"Bronze",campaign:"The Flame That Wasn't a Flame",
+     brand:"EDF",
+     agency:"BETC Paris",country:"France",grad:"g50",
+     desc:"EDF powered the Paris Olympics cauldron using clean energy that produced no actual flame \u2014 a stunning media moment that transformed an absence into the most powerful symbol of sustainable progress at the Games.",
+     tags:["Live Brand Experience", "France"],
+     videoUrl:"https://www.youtube.com/results?search_query=The+Flame+That+Wasn't+a+Flame+EDF+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/309901ab87bb4eabaa1bae30d983f38c?format=webp"},
+    {id:51,tier:"Bronze",campaign:"The Meal",
+     brand:"McDonald's",
+     agency:"Leo London",country:"United Kingdom",grad:"g51",
+     desc:"The Meal by McDonald's \u2014 a Bronze-winning media campaign from United Kingdom.",
+     tags:["Corporate Purpose", "United Kingdom"],
+     youtubeId:"YEPttzbn0Z0",
+     videoUrl:"https://www.youtube.com/results?search_query=The+Meal+McDonald's+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/5e2b835a636345e0a9110a3076d31dca?format=webp"},
+    {id:52,tier:"Bronze",campaign:"The Parental Leave Mortgage",
+     brand:"Nordea",
+     agency:"Nord DDB Stockholm",country:"Sweden",grad:"g52",
+     desc:"Nordea created a mortgage product that paused payments during parental leave, removing financial stress from new parents and championing family values.",
+     tags:["Customer Acquisition", "Sweden"],
+     youtubeId:"9xzGRtPDwCU",
+     videoUrl:"https://www.youtube.com/results?search_query=The+Parental+Leave+Mortgage+Nordea+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/a8b9edfd44de47b893b950770030cf54?format=webp"},
+    {id:53,tier:"Bronze",campaign:"The Social Feed",
+     brand:"Hungerstation",
+     agency:"VML Dubai",country:"United Arab Emirates",grad:"g53",
+     desc:"Turned social media food photography into a live ordering experience \u2014 users could tap food images in their feed to instantly order the dish from a real restaurant.",
+     tags:["Social Engagement", "United Arab Emirates"],
+     youtubeId:"pPJWz8RBsoo",
+     videoUrl:"https://www.youtube.com/results?search_query=The+Social+Feed+Hungerstation+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/eb0ad333e56946e5a9a52aed1980943d?format=webp"},
+    {id:54,tier:"Bronze",campaign:"Worst Children's Library",
+     brand:"Samsung",
+     agency:"DDB New Zealand Auckland",country:"New Zealand",grad:"g54",
+     desc:"Worst Children's Library by Samsung \u2014 a Bronze-winning media campaign from New Zealand.",
+     tags:["Social Behaviour", "New Zealand"],
+     youtubeId:"2B2-joqRoHc",
+     videoUrl:"https://www.youtube.com/results?search_query=Worst+Children's+Library+Samsung+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/24a4ad960f3c4ac8a1a86823848e8d17?format=webp"}
+  ],
+
+  "Design": [
+
+    // GRAND PRIX,
+    {id:201,tier:"Grand Prix",campaign:"Caption with Intention",
+     brand:"Academy of Motion Picture Arts & Sciences / Chicago Hearing Society",
+     agency:"FCB Chicago",country:"United States",grad:"g201",
+     desc:"A revolutionary captioning design system using color, movement, and typography to convey emotion and identity for the Deaf and Hard of Hearing community.",
+     tags:["Inclusive Design", "United States"],
+     youtubeId:"F48khKZhKHM",
+     videoUrl:"https://www.youtube.com/results?search_query=Caption+with+Intention+Academy+of+Motion+Picture+Arts+%26+Sciences+%2F+Chicago+Hearing+Society+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/1a22539ff6e94e288d6a3aa1a3a9ace5?format=webp"},
+
+    // GOLD,
+    {id:202,tier:"Gold",campaign:"AirPods Pro 2 Hearing Aid Feature",
+     brand:"Apple",
+     agency:"Apple",country:"United States",grad:"g202",
+     desc:"Transformed consumer earbuds into FDA-approved hearing aids through software, making hearing assistance accessible to millions without the stigma or cost of traditional medical devices.",
+     tags:["Product Design", "United States"],
+     youtubeId:"OzScknoWq6U",
+     videoUrl:"https://www.youtube.com/results?search_query=AirPods+Pro+2+Hearing+Aid+Feature+Apple+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/d124f3704bf34fe8a63e19e8325d9220?format=webp"},
+    {id:203,tier:"Gold",campaign:"Nigrum Corpus",
+     brand:"Idomed",
+     agency:"Artplan",country:"Brazil",grad:"g203",
+     desc:"A medical reference book designed entirely in black \u2014 challenging the whitewashed depictions of symptoms and conditions in medical literature to improve diagnosis for people with darker skin tones.",
+     tags:["Books", "Brazil"],
+     youtubeId:"RCK4iiCB2P0",
+     videoUrl:"https://www.youtube.com/results?search_query=Nigrum+Corpus+Idomed+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/83e9fc2a93254c029a34755ff3c96853?format=webp"},
+    {id:204,tier:"Gold",campaign:"CarrefourSA - Ghost Town",
+     brand:"CarrefourSA",
+     agency:"TBWA\\Istanbul",country:"Turkey",grad:"g204",
+     desc:"Transformed a real ghost town abandoned after a mine disaster into a fully operational Carrefour supermarket, giving isolated residents access to affordable goods and drawing global attention to their plight.",
+     tags:["Brand Environment & Experience Design", "Turkey"],
+     youtubeId:"0tKFbogECr4",
+     videoUrl:"https://www.youtube.com/results?search_query=CarrefourSA+-+Ghost+Town+CarrefourSA+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/a8b0865217084e348df3921cebc7c41f?format=webp"},
+    {id:205,tier:"Gold",campaign:"Spreadbeats",
+     brand:"Spotify",
+     agency:"FCB New York",country:"United States",grad:"g205",
+     desc:"Turned a Microsoft Excel spreadsheet into an immersive audio-visual experience, demonstrating Spotify's emotional power to media planners in a format they use every day.",
+     tags:["Design-Driven Effectiveness", "United States"],
+     youtubeId:"Z_lbVlhO9HE",
+     videoUrl:"https://www.youtube.com/results?search_query=Spreadbeats+Spotify+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/4ebdb10e5b80456a925dc283ac7e501a?format=webp"},
+
+    // SILVER,
+    {id:205,tier:"Silver",campaign:"Spreadbeats",
+     brand:"Spotify",
+     agency:"FCB New York",country:"United States",grad:"g205",
+     desc:"Turned a Microsoft Excel spreadsheet into an immersive audio-visual experience, demonstrating Spotify's emotional power to media planners in a format they use every day.",
+     tags:["Design-Driven Effectiveness", "United States"],
+     youtubeId:"Z_lbVlhO9HE",
+     videoUrl:"https://www.youtube.com/results?search_query=Spreadbeats+Spotify+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/1cc1b629542a4d1db92e5b0d90116de7?format=webp"},
+    {id:206,tier:"Silver",campaign:"Price Packs",
+     brand:"Penny",
+     agency:"Serviceplan Germany",country:"Germany",grad:"g206",
+     desc:"Redesigned product packaging to boldly display price comparisons, turning the pack itself into a transparency tool that helped shoppers fight inflation at point of sale.",
+     tags:["Design-Driven Effectiveness", "Germany"],
+     youtubeId:"cnAXR4lk6R0",
+     videoUrl:"https://www.youtube.com/results?search_query=Price+Packs+Penny+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/67b6df2a0fe64deeb274c91d50040c54?format=webp"},
+    {id:207,tier:"Silver",campaign:"The Shakespeare BIC",
+     brand:"BIC",
+     agency:"VML",country:"Brazil",grad:"g207",
+     desc:"Recreated Shakespeare's First Folio using only BIC Crystal pens, demonstrating the pen's legendary reliability and precision through one of literature's most ambitious writing challenges.",
+     tags:["Special Editions & Bespoke Items", "Brazil"],
+     youtubeId:"5ngNVTeyi4g",
+     videoUrl:"https://www.youtube.com/results?search_query=The+Shakespeare+BIC+BIC+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/352257f3d008491e95e0ccbdfe8a4469?format=webp"},
+    {id:208,tier:"Silver",campaign:"Sounds of the Land",
+     brand:"Billboard Arabia",
+     agency:"SRMG Labs",country:"Saudi Arabia",grad:"g208",
+     desc:"Converted the sonic landscapes of Saudi Arabia's diverse regions into original music, celebrating the country's cultural geography through an audio design system tied to physical terrain.",
+     tags:["Promotional Items/Promotional Printed Media", "Saudi Arabia"],
+     youtubeId:"gD1XqvQaMR0",
+     videoUrl:"https://www.youtube.com/results?search_query=Sounds+of+the+Land+Billboard+Arabia+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/19a407ae77ab4664baed61135cc5ae9f?format=webp"},
+    {id:209,tier:"Silver",campaign:"Code My Crown",
+     brand:"Dove",
+     agency:"Edelman",country:"United Kingdom",grad:"g209",
+     desc:"Built an open-source hair texture library for coders and designers, so that digital products \u2014 from avatars to emojis \u2014 could finally represent Black and mixed-heritage hair accurately.",
+     tags:["Inclusive Design", "United Kingdom"],
+     youtubeId:"stQ442QJ9pg",
+     videoUrl:"https://www.youtube.com/results?search_query=Code+My+Crown+Dove+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/dc773a5191b947ea85626af886046a69?format=webp"},
+    {id:210,tier:"Silver",campaign:"1837 Tiffany Blue Conservation",
+     brand:"Tiffany & Co.",
+     agency:"L&C",country:"United States",grad:"g210",
+     desc:"Trademarked the exact Pantone shade of the endangered Spix's Macaw to legally protect the bird's iconic blue color, tying brand heritage to wildlife conservation in an unprecedented design act.",
+     tags:["Sustainability-Focused Design", "United States"],
+     youtubeId:"npGswWNcZC8",
+     videoUrl:"https://www.youtube.com/results?search_query=1837+Tiffany+Blue+Conservation+Tiffany+%26+Co.+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/a9e8fdb5892d441587b7c4c55eb3d5fb?format=webp"},
+    {id:211,tier:"Silver",campaign:"Fixables",
+     brand:"Philips",
+     agency:"LePub",country:"Netherlands",grad:"g211",
+     desc:"Redesigned Philips personal care products to be modular and self-repairable, shipping with replacement parts and repair guides to extend product life and reduce electronic waste.",
+     tags:["Sustainability-Focused Design", "Netherlands"],
+     youtubeId:"grgsxQjK0B4",
+     videoUrl:"https://www.youtube.com/results?search_query=Fixables+Philips+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/9e978f653c5c45cf903985a90708656d?format=webp"},
+    {id:212,tier:"Silver",campaign:"Airquity",
+     brand:"Ear Switch",
+     agency:"Havas Lynx",country:"United Kingdom",grad:"g212",
+     desc:"A breath-powered switch device designed for people with severe motor disabilities, enabling them to control digital interfaces using airflow \u2014 transforming accessibility hardware design.",
+     tags:["Innovation in Design", "United Kingdom"],
+     videoUrl:"https://www.youtube.com/results?search_query=Airquity+Ear+Switch+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/14dd689fdcf14ce4a777dc6c4aad2522?format=webp"},
+    {id:213,tier:"Silver",campaign:"The 100% Home Compostable Sticker",
+     brand:"Zespri",
+     agency:"Grey",country:"Brazil",grad:"g213",
+     desc:"Replaced plastic produce stickers \u2014 the last non-compostable part of fruit \u2014 with a fully compostable version made from natural materials, eliminating a hidden source of microplastic contamination.",
+     tags:["Innovation in Design", "Brazil"],
+     videoUrl:"https://www.youtube.com/results?search_query=The+100%+Home+Compostable+Sticker+Zespri+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/b852cca2fa1a4002b499bc5cf7f064f1?format=webp"},
+    {id:214,tier:"Silver",campaign:"Self-Packing Cheese",
+     brand:"Nestl\u00e9",
+     agency:"Ogilvy Colombia",country:"Colombia",grad:"g214",
+     desc:"Engineered a cheese slice that wraps itself during the manufacturing process, eliminating the need for plastic individual packaging while keeping the product fresh.",
+     tags:["Innovation in Design", "Colombia"],
+     videoUrl:"https://www.youtube.com/results?search_query=Self-Packing+Cheese+Nestl\u00e9+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/897a79315f0b4bf2a5afd35d6e3217ac?format=webp"},
+
+    // BRONZE,
+    {id:215,tier:"Bronze",campaign:"Forest Carbon - In Tune with Nature",
+     brand:"Forest Carbon",
+     agency:"Design Bridge and Partners",country:"Singapore",grad:"g215",
+     desc:"A brand identity built around the acoustic signatures of healthy forests, using sound data visualized as design elements to make carbon offset work tangible and emotionally resonant.",
+     tags:["Rebrand/Refresh of an Existing Brand", "Singapore"],
+     videoUrl:"https://www.youtube.com/results?search_query=Forest+Carbon+-+In+Tune+with+Nature+Forest+Carbon+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/760f7006f943444ab3c918192eebdfad?format=webp"},
+    {id:216,tier:"Bronze",campaign:"Imperia - Genius of Form and Substance",
+     brand:"Imperia",
+     agency:"Imperia & Monferrina",country:"Italy",grad:"g216",
+     desc:"A brand refresh for an Italian pasta machine maker that honored 100 years of craft manufacturing, translating engineering precision into a refined visual identity rooted in material and form.",
+     tags:["Rebrand/Refresh of an Existing Brand", "Italy"],
+     youtubeId:"tS0qNXl9a4U",
+     videoUrl:"https://www.youtube.com/results?search_query=Imperia+-+Genius+of+Form+and+Substance+Imperia+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/145b3050646d4642adeb6588b0db97cf?format=webp"},
+    {id:217,tier:"Bronze",campaign:"FC25",
+     brand:"EA Sports FC",
+     agency:"Uncommon Creative Studio",country:"United Kingdom",grad:"g217",
+     desc:"A full visual rebrand of the EA Sports FC franchise, ditching FIFA legacy aesthetics for a bold, fashion-forward design system that repositioned the game as a cultural product beyond sports.",
+     tags:["Rebrand/Refresh of an Existing Brand", "United Kingdom"],
+     youtubeId:"tmIsp44QoIA",
+     videoUrl:"https://www.youtube.com/results?search_query=FC25+EA+Sports+FC+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/5d4639fd2bc1430db0604b45d23a8ed6?format=webp"},
+    {id:206,tier:"Bronze",campaign:"Price Packs",
+     brand:"Penny",
+     agency:"Serviceplan Germany",country:"Germany",grad:"g206",
+     desc:"Redesigned product packaging to boldly display price comparisons, turning the pack itself into a transparency tool that helped shoppers fight inflation at point of sale.",
+     tags:["Design-Driven Effectiveness", "Germany"],
+     youtubeId:"cnAXR4lk6R0",
+     videoUrl:"https://www.youtube.com/results?search_query=Price+Packs+Penny+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/67b6df2a0fe64deeb274c91d50040c54?format=webp"},
+    {id:218,tier:"Bronze",campaign:"Mattel Creations Not Wheels",
+     brand:"Mattel Creations",
+     agency:"Mattel",country:"United States",grad:"g218",
+     desc:"A limited-edition Hot Wheels x MSCHF collaboration that reimagined the iconic die-cast car as high art, blurring the line between toy design and collectible culture.",
+     tags:["Product Design", "United States"],
+     youtubeId:"2uWOMMH9PLk",
+     videoUrl:"https://www.youtube.com/results?search_query=Mattel+Creations+Not+Wheels+Mattel+Creations+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/558c6e807d6740a6a711540be7529132?format=webp"},
+    {id:219,tier:"Bronze",campaign:"Winter Takes on Colors",
+     brand:"McDonald's Polska",
+     agency:"DDB Warsaw",country:"Poland",grad:"g219",
+     desc:"Repackaged the returning Drwala Burger with a winter color system that turned seasonal scarcity into a design event \u2014 making the limited-time offer feel like a cultural moment.",
+     tags:["Brand Environment & Experience Design", "Poland"],
+     youtubeId:"qcSHtBgAB6o",
+     videoUrl:"https://www.youtube.com/results?search_query=Winter+Takes+on+Colors+McDonald's+Polska+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/0bcb01dc0d92499c8033fe42497178ff?format=webp"},
+    {id:220,tier:"Bronze",campaign:"Justice by Her Type",
+     brand:"Families Surviving Feminicides Collective",
+     agency:"Garnier BBDO",country:"Costa Rica",grad:"g220",
+     desc:"Created a typeface built from the handwriting of femicide victims, turning their final words into a living memorial and a tool for legal advocacy and public awareness.",
+     tags:["Design-Driven Effectiveness", "Costa Rica"],
+     videoUrl:"https://www.youtube.com/results?search_query=Justice+by+Her+Type+Families+Surviving+Feminicides+Collective+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/09f9e036aeb845c58e96f2c55d8dd7f9?format=webp"},
+    {id:221,tier:"Bronze",campaign:"Sad Kama-Chan",
+     brand:"Bar B Q Plaza",
+     agency:"Grey Thailand",country:"Thailand",grad:"g221",
+     desc:"A restaurant mascot redesigned to look visibly sad when the restaurant is empty, using emotional character design as a real-time marketing signal to drive foot traffic.",
+     tags:["Design-Driven Effectiveness", "Thailand"],
+     youtubeId:"h7MYlQFAKMg",
+     videoUrl:"https://www.youtube.com/results?search_query=Sad+Kama-Chan+Bar+B+Q+Plaza+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/b1a090f7c816487f8dcee01d4c656df9?format=webp"},
+    {id:222,tier:"Bronze",campaign:"Packed Full of History",
+     brand:"Samsung Australia",
+     agency:"Clemenger BBDO",country:"Australia",grad:"g222",
+     desc:"Replaced Samsung's standard packaging with archival photographs from Australian cultural history, turning every unboxing into a moment of national storytelling.",
+     tags:["Special Editions & Bespoke Items", "Australia"],
+     youtubeId:"I0W4kYosSXU",
+     videoUrl:"https://www.youtube.com/results?search_query=Packed+Full+of+History+Samsung+Australia+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/1403dc4c3f49430e95623bac41b290a1?format=webp"},
+    {id:223,tier:"Bronze",campaign:"Eye Test Menu",
+     brand:"Titan Company Limited",
+     agency:"Ogilvy",country:"India",grad:"g223",
+     desc:"Designed restaurant menus that double as vision screening tools, using calibrated type sizes to help diners self-diagnose eyesight problems and drive foot traffic to Titan eyewear stores.",
+     tags:["Posters", "India"],
+     youtubeId:"_GNOgJWpfK8",
+     videoUrl:"https://www.youtube.com/results?search_query=Eye+Test+Menu+Titan+Company+Limited+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/e1437e92753d4a789ee8e1f1be1c30ba?format=webp"},
+    {id:224,tier:"Bronze",campaign:"Rice of Glory",
+     brand:"Super Extra Rice",
+     agency:"Maruri",country:"Ecuador",grad:"g224",
+     desc:"Printed the names of Ecuador's World Cup players onto rice packaging, turning a pantry staple into a collectible celebration of national sporting pride.",
+     tags:["Promotional Items/Promotional Printed Media", "Ecuador"],
+     videoUrl:"https://www.youtube.com/results?search_query=Rice+of+Glory+Super+Extra+Rice+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/4023e98735c5497cb6e2d7dea5c76318?format=webp"},
+    {id:225,tier:"Bronze",campaign:"Workwear for Kids",
+     brand:"SOS Children's Villages",
+     agency:"Nord DDB",country:"Sweden",grad:"g225",
+     desc:"Designed a line of child-sized workwear that mirrored adult uniforms, highlighting child labor through wearable design and driving donations to SOS Children's Villages.",
+     tags:["Promotional Items/Promotional Printed Media", "Sweden"],
+     videoUrl:"https://www.youtube.com/results?search_query=Workwear+for+Kids+SOS+Children's+Villages+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/eeb72dfd60ee48fa902e472badb2512e?format=webp"},
+    {id:226,tier:"Bronze",campaign:"Project Voice",
+     brand:"Google",
+     agency:"Google",country:"Japan",grad:"g226",
+     desc:"Developed a speech synthesis system trained on the voices of ALS patients before they lose the ability to speak, preserving their unique vocal identity for future communication.",
+     tags:["Inclusive Design", "Japan"],
+     youtubeId:"SqqroFfqKRc",
+     videoUrl:"https://www.youtube.com/results?search_query=Project+Voice+Google+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/afc236f1ded24f46a0b77a8e8bbb969b?format=webp"},
+    {id:227,tier:"Bronze",campaign:"RooBadge",
+     brand:"Volkswagen",
+     agency:"DDB Sydney",country:"Australia",grad:"g227",
+     desc:"Replaced Volkswagen's chrome front badge with a radar-transparent version, allowing the car's collision-avoidance sensors to function properly \u2014 a safety-first redesign of a 70-year-old icon.",
+     tags:["Innovation in Design", "Australia"],
+     videoUrl:"https://www.youtube.com/results?search_query=RooBadge+Volkswagen+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/2d6b647363d9454ea677267064f19ea9?format=webp"},
+    {id:228,tier:"Bronze",campaign:"Signs from Heaven",
+     brand:"Pangu Cloud",
+     agency:"Ogilvy",country:"China",grad:"g228",
+     desc:"Used an AI weather prediction model to identify atmospheric patterns that match traditional Chinese symbols of fortune, alerting users when the sky itself forms an auspicious sign.",
+     tags:["Design for Behavioural Change", "China"],
+     videoUrl:"https://www.youtube.com/results?search_query=Signs+from+Heaven+Pangu+Cloud+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/09dbff10bf5e4eaeae2d578fe9cc19b0?format=webp"},
+    {id:211,tier:"Bronze",campaign:"Fixables",
+     brand:"Philips",
+     agency:"LePub",country:"Netherlands",grad:"g211",
+     desc:"Redesigned Philips personal care products to be modular and self-repairable, shipping with replacement parts and repair guides to extend product life and reduce electronic waste.",
+     tags:["Sustainability-Focused Design", "Netherlands"],
+     youtubeId:"grgsxQjK0B4",
+     videoUrl:"https://www.youtube.com/results?search_query=Fixables+Philips+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/9e978f653c5c45cf903985a90708656d?format=webp"}
+  ],
+
+  "Media": [
+
+    // GRAND PRIX,
+    {id:301,tier:"Grand Prix",campaign:"Dove Real Beauty Redefined for the AI Era",
+     brand:"Dove",
+     agency:"Mindshare",country:"United States",grad:"g301",
+     desc:"Dove partnered with Mindshare to counter AI-generated beauty distortions, using precision media targeting to insert Real Beauty content into the exact digital spaces where unrealistic AI imagery was proliferating.",
+     tags:["Media Insights & Strategy", "United States"],
+     videoUrl:"https://www.youtube.com/results?search_query=Dove+Real+Beauty+Redefined+for+the+AI+Era+Dove+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/da693fd61fc74ddfbb3525f638cd77c6?format=webp"},
+
+    // GOLD,
+    {id:302,tier:"Gold",campaign:"Can't Unsee It",
+     brand:"Heinz Ketchup & Mustard",
+     agency:"Rethink",country:"Canada",grad:"g302",
+     desc:"Heinz ran a brilliant media campaign showing food images that, once you notice the missing Heinz, you can never unsee \u2014 proving the brand's irreplaceable place at the table through pure visual suggestion.",
+     tags:["Consumer Goods", "Canada"],
+     youtubeId:"itiHi3WYcSs",
+     videoUrl:"https://www.youtube.com/results?search_query=Can't+Unsee+It+Heinz+Ketchup+%26+Mustard+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/3db7ec7e31b7459bafa082009489d40e?format=webp"},
+    {id:303,tier:"Gold",campaign:"Vaseline Verified",
+     brand:"Unilever",
+     agency:"Ogilvy",country:"Singapore",grad:"g303",
+     desc:"Vaseline tackled the flood of misleading skincare content online by launching a verification program that debunked misinformation with dermatologist-backed facts, reestablishing trust in a category overrun by pseudoscience.",
+     tags:["Healthcare", "Singapore"],
+     youtubeId:"ApwxlBruV90",
+     videoUrl:"https://www.youtube.com/results?search_query=Vaseline+Verified+Unilever+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/faf0755b0d4e4594ad93cb75d6288e3d?format=webp"},
+    {id:304,tier:"Gold",campaign:"Redditor Edit",
+     brand:"Skoda",
+     agency:"PHD",country:"United Kingdom",grad:"g304",
+     desc:"\u0160koda tapped Reddit's notoriously skeptical community by letting real Redditors edit and critique their own ad \u2014 turning a platform known for tearing down brands into an unlikely stage for authentic automotive storytelling.",
+     tags:["Automotive", "United Kingdom"],
+     youtubeId:"KmLMtKsmwqA",
+     videoUrl:"https://www.youtube.com/results?search_query=Redditor+Edit+Skoda+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/fa18cc31eca84cf2a41f8d9f4a3e8e89?format=webp"},
+    {id:305,tier:"Gold",campaign:"Coupon Rain",
+     brand:"Mercado Livre",
+     agency:"GUT",country:"Brazil",grad:"g305",
+     desc:"Hid discount codes inside confetti at a Brazilian football championship and activated geo-targeted coupons when it rained, combining weather data with live event energy.",
+     tags:["Travel, Leisure, Retail, Restaurants & Fast-Food Chains", "Brazil"],
+     youtubeId:"RXw_xdHILoU",
+     videoUrl:"https://www.youtube.com/results?search_query=Coupon+Rain+Mercado+Livre+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/5418c22c9d864f579ce966a3f138628e?format=webp"},
+    {id:306,tier:"Gold",campaign:"The Final Exam",
+     brand:"Change the Ref",
+     agency:"Energy BBDO",country:"United States",grad:"g306",
+     desc:"Change the Ref\\'s powerful activation confronting gun violence in schools through an unforgettable brand experience that forced audiences to reckon with the crisis.",
+     tags:["Not-for-Profit / Charity / Government", "United States"],
+     youtubeId:"Ljsstj4eiko",
+     videoUrl:"https://www.youtube.com/results?search_query=The+Final+Exam+Change+the+Ref+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/615e3a15eabf457d91d317468a12d825?format=webp"},
+    {id:307,tier:"Gold",campaign:"Streaming Bars",
+     brand:"Heineken",
+     agency:"LePub",country:"Brazil",grad:"g307",
+     desc:"Heineken identified the precise moment viewers are most likely to grab a beer \u2014 the opening credits \u2014 and bought ad slots timed to that exact pause, making Heineken synonymous with the ritual of settling in to watch.",
+     tags:["Use of Screens & Audio Visual Platforms", "Brazil"],
+     youtubeId:"0izbOb7N73g",
+     videoUrl:"https://www.youtube.com/results?search_query=Streaming+Bars+Heineken+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/d0be42343a2e4aaea76238ca95dfcbab?format=webp"},
+    {id:308,tier:"Gold",campaign:"\"Raise Your Banners\"",
+     brand:"HBO",
+     agency:"Giant Spoon",country:"United States",grad:"g308",
+     desc:"To launch House of the Dragon Season 2, HBO blanketed real-world locations with house banners from the show, staging a full-scale medieval takeover of modern cities that blurred the line between Westeros and reality.",
+     tags:["Large-Scale Media", "United States"],
+     youtubeId:"S-r_T-LZBR0",
+     videoUrl:"https://www.youtube.com/results?search_query=\"Raise+Your+Banners\"+HBO+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/8568fb79e86c4ae994a024b682498651?format=webp"},
+    {id:309,tier:"Gold",campaign:"Retro Influencers",
+     brand:"Skol",
+     agency:"GUT",country:"Brazil",grad:"g309",
+     desc:"Skol resurrected vintage Brazilian celebrities as AI-generated 'retro influencers,' partnering with real modern creators to bridge generations and reimagine classic beer culture for a social-native audience.",
+     tags:["Use of Social Platforms", "Brazil"],
+     videoUrl:"https://www.youtube.com/results?search_query=Retro+Influencers+Skol+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/8d30857fd8bf46f3ab1b9c9b3d0a50fa?format=webp"},
+    {id:310,tier:"Gold",campaign:"The Rewards Bag",
+     brand:"Tata",
+     agency:"VML",country:"Uruguay",grad:"g310",
+     desc:"Tata transformed shopping bags into personalized retail media, delivering targeted offers to consumers at the peak moment of purchase intent.",
+     tags:["Retail Media", "Uruguay"],
+     youtubeId:"RzJQ1TVItHI",
+     videoUrl:"https://www.youtube.com/results?search_query=The+Rewards+Bag+Tata+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/9d355715dd4d4857a2f82df5c502290b?format=webp"},
+    {id:311,tier:"Gold",campaign:"Fictional Insurance",
+     brand:"RCN/Prime",
+     agency:"DDB Colombia",country:"Colombia",grad:"g311",
+     desc:"Offered real insurance coverage for fictional risks from popular TV dramas \u2014 viewers could \\'insure\\' against plot disasters, merging entertainment and financial life into an immersive activation.",
+     tags:["Use of Brand or Product Integration into a Programme or Platform", "Colombia"],
+     youtubeId:"OctiVcwaiXI",
+     videoUrl:"https://www.youtube.com/results?search_query=Fictional+Insurance+RCN%2FPrime+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/9f879201572d4cb9aa1e14e89b6a4f2f?format=webp"},
+    {id:312,tier:"Gold",campaign:"First Ever Live Commercial Crossover",
+     brand:"Rocket",
+     agency:"Zenith",country:"United States",grad:"g312",
+     desc:"Rocket engineered the first-ever live commercial that crossed between two simultaneous broadcast events, creating a moment of genuine surprise that millions experienced in real time and couldn't stop talking about.",
+     tags:["Media Execution", "United States"],
+     youtubeId:"oF6A79XVZsc",
+     videoUrl:"https://www.youtube.com/results?search_query=First+Ever+Live+Commercial+Crossover+Rocket+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/c8c6d973823e408c926f4de68327d5df?format=webp"},
+    {id:313,tier:"Gold",campaign:"Waitrose Sweet Suspicion - A Deliciously Festive Whodunnit",
+     brand:"Waitrose & Partners",
+     agency:"Manning Gottlieb OMD",country:"United Kingdom",grad:"g313",
+     desc:"Waitrose launched an elaborate Christmas whodunnit across TV, print, and social \u2014 a multi-platform mystery that had Britain guessing the culprit all holiday season, making the brand the centerpiece of festive conversation.",
+     tags:["Use of Channel Integration", "United Kingdom"],
+     youtubeId:"4_BtosdFfbk",
+     videoUrl:"https://www.youtube.com/results?search_query=Waitrose+Sweet+Suspicion+-+A+Deliciously+Festive+Whodunnit+Waitrose+%26+Partners+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/e69c489d848f46d9939d454b8fb7ec2f?format=webp"},
+
+    // SILVER,
+    {id:314,tier:"Silver",campaign:"Sweet Suspicion",
+     brand:"Waitrose",
+     agency:"Saatchi & Saatchi",country:"United Kingdom",grad:"g314",
+     desc:"Waitrose turned their Christmas campaign into a suspenseful whodunnit mystery across multiple media platforms, keeping audiences guessing throughout the holiday season and making the brand impossible to ignore.",
+     tags:["Travel, Leisure, Retail, Restaurants & Fast-Food Chains", "United Kingdom"],
+     youtubeId:"4_BtosdFfbk",
+     videoUrl:"https://www.youtube.com/results?search_query=Sweet+Suspicion+Waitrose+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/d5a5f996a09d495dac5d5cdbef7ae33f?format=webp"},
+    {id:315,tier:"Silver",campaign:"Bring Korea to the World",
+     brand:"Netflix",
+     agency:"Netflix",country:"United States",grad:"g315",
+     desc:"Netflix deployed a global media blitz built around Korean cultural pride, using Squid Game Season 2 to position Korean storytelling not as a niche phenomenon but as the defining pop culture export of the era.",
+     tags:["Media/Entertainment", "United States"],
+     youtubeId:"NZRnLh1U5HM",
+     videoUrl:"https://www.youtube.com/results?search_query=Bring+Korea+to+the+World+Netflix+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/7e4fdab3938d4931a5578f05baa5aa36?format=webp"},
+    {id:316,tier:"Silver",campaign:"Dirty Mouth Sponsorship",
+     brand:"CIF",
+     agency:"Droga5, Part of Accenture Song",country:"Brazil",grad:"g316",
+     desc:"CIF Cleanser sponsored some of Brazil's raunchiest radio content \u2014 then used its cleaning powers as the perfect metaphor for washing out the filth, making the brand's sponsorship the punchline and the product demonstration simultaneously.",
+     tags:["Use of Audio Platforms", "Brazil"],
+     youtubeId:"DlylpwndJuU",
+     videoUrl:"https://www.youtube.com/results?search_query=Dirty+Mouth+Sponsorship+CIF+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/0ff1db8d50484b829f35337ea95810d1/storyboard_000008.jpg?format=webp"},
+    {id:317,tier:"Silver",campaign:"Speed Coupons",
+     brand:"Mercado Livre",
+     agency:"GUT",country:"Brazil",grad:"g317",
+     desc:"Mercado Livre planted high-speed outdoor billboards near traffic cameras \u2014 coupons visible for only the split second drivers looked up \u2014 rewarding the attentive and turning commuter frustration into a scavenger hunt.",
+     tags:["Use of Outdoor", "Brazil"],
+     youtubeId:"l3Sxq8LCXZA",
+     videoUrl:"https://www.youtube.com/results?search_query=Speed+Coupons+Mercado+Livre+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/24e11754184a42ce8f0744b5d9f56d7a?format=webp"},
+    {id:318,tier:"Silver",campaign:"Takeoff Takeover",
+     brand:"Cathay Pacific",
+     agency:"LEO",country:"India",grad:"g318",
+     desc:"Cathay Pacific commandeered departure screens, boarding gates, and airport real estate at key Indian airports to surround travelers at their most receptive moment: the anticipation before a flight.",
+     tags:["Use of Outdoor", "India"],
+     videoUrl:"https://www.youtube.com/results?search_query=Takeoff+Takeover+Cathay+Pacific+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/a6416f5b55ed4d7ca12d09d85560d5a3?format=webp"},
+    {id:319,tier:"Silver",campaign:"Gulf of Mexico (Bar)",
+     brand:"Tecate",
+     agency:"LePub",country:"Mexico",grad:"g319",
+     desc:"Responded to geopolitical tensions by opening \\'The Gulf of Mexico Bar\\' on the U.S.\u2013Mexico border \u2014 reclaiming the name with Mexican pride, humour, and massive earned media across both countries.",
+     tags:["Use of Events & Stunts", "Mexico"],
+     youtubeId:"TFbAS7weMR8",
+     videoUrl:"https://www.youtube.com/results?search_query=Gulf+of+Mexico+(Bar)+Tecate+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/afa88aa8421b41a18c68b9863bb6926c?format=webp"},
+    {id:320,tier:"Silver",campaign:"Kleenex Score",
+     brand:"Kimberly-Clark",
+     agency:"VML",country:"United States",grad:"g320",
+     desc:"Kleenex built a real-time 'tearjerker score' for emotional movie moments and synced it with streaming platforms, letting viewers know exactly when to have a tissue ready \u2014 and cementing Kleenex as the brand of genuine feeling.",
+     tags:["Use of Digital Platforms", "United States"],
+     videoUrl:"https://www.youtube.com/results?search_query=Kleenex+Score+Kimberly-Clark+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/b71f0dff73f3455abef2899f0b1aeb49?format=webp"},
+    {id:321,tier:"Silver",campaign:"Maccie",
+     brand:"McDonald's",
+     agency:"TBWA\\Neboko",country:"Netherlands",grad:"g321",
+     desc:"McDonald's Netherlands launched 'Maccie,' a playful mobile experience built around the brand's affectionate Dutch nickname \u2014 deepening local affinity by embracing the informal language fans already used every day.",
+     tags:["Use of Mobile", "Netherlands"],
+     videoUrl:"https://www.youtube.com/results?search_query=Maccie+McDonald's+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/16832e372e2c49889fda6d5d3168015d?format=webp"},
+    {id:322,tier:"Silver",campaign:"Navy Subreddit Hunt",
+     brand:"U.S. Navy",
+     agency:"VML",country:"United States",grad:"g322",
+     desc:"The U.S. Navy hid recruiting messages inside niche subreddits frequented by exactly the kind of curious, tech-savvy young people they wanted to enlist \u2014 a covert media strategy that proved more effective than any billboard.",
+     tags:["Use of Social Platforms", "United States"],
+     youtubeId:"1qkvD-Vpqp4",
+     videoUrl:"https://www.youtube.com/results?search_query=Navy+Subreddit+Hunt+U.S.+Navy+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/acedbde3eb964175b899c5e90a584d7a?format=webp"},
+    {id:301,tier:"Silver",campaign:"Dove Real Beauty Redefined for the AI Era",
+     brand:"Dove",
+     agency:"Mindshare",country:"United States",grad:"g301",
+     desc:"Dove partnered with Mindshare to counter AI-generated beauty distortions, using precision media targeting to insert Real Beauty content into the exact digital spaces where unrealistic AI imagery was proliferating.",
+     tags:["Media Insights & Strategy", "United States"],
+     youtubeId:"8vYoL8nga-A",
+     videoUrl:"https://www.youtube.com/results?search_query=Dove+Real+Beauty+Redefined+for+the+AI+Era+Dove+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/da693fd61fc74ddfbb3525f638cd77c6?format=webp"},
+    {id:323,tier:"Silver",campaign:"Preserved Promos",
+     brand:"Ziploc",
+     agency:"VML",country:"United States",grad:"g323",
+     desc:"Ziploc placed promotional offers inside its own bags \u2014 discoverable only after purchase \u2014 turning the product itself into a media channel and rewarding loyal users with deals that felt like hidden treasures.",
+     tags:["Retail Media", "United States"],
+     youtubeId:"CYF3rvwSY78",
+     videoUrl:"https://www.youtube.com/results?search_query=Preserved+Promos+Ziploc+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/8223f25b769b40e3b665c4ec19e2e12c?format=webp"},
+    {id:324,tier:"Silver",campaign:"The 26th Minute",
+     brand:"Dublin Samaritans",
+     agency:"Droga5, Part of Accenture Song",country:"Ireland",grad:"g324",
+     desc:"Dublin Samaritans discovered that suicide rates peak at the 26-minute mark of popular TV dramas and bought ad slots at precisely that moment \u2014 meeting vulnerable viewers when they needed to hear that help was available.",
+     tags:["Audience Insights", "Ireland"],
+     videoUrl:"https://www.youtube.com/results?search_query=The+26th+Minute+Dublin+Samaritans+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/4972357db5c14f0b84fd31512fa3d28c?format=webp"},
+    {id:303,tier:"Silver",campaign:"Vaseline Verified",
+     brand:"Unilever",
+     agency:"Ogilvy",country:"Singapore",grad:"g303",
+     desc:"Vaseline tackled the flood of misleading skincare content online by launching a verification program that debunked misinformation with dermatologist-backed facts, reestablishing trust in a category overrun by pseudoscience.",
+     tags:["Healthcare", "Singapore"],
+     youtubeId:"ApwxlBruV90",
+     videoUrl:"https://www.youtube.com/results?search_query=Vaseline+Verified+Unilever+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/faf0755b0d4e4594ad93cb75d6288e3d?format=webp"},
+    {id:325,tier:"Silver",campaign:"Report This Ad",
+     brand:"Veris",
+     agency:"Paradais DDB",country:"Ecuador",grad:"g325",
+     desc:"Veris mental health institution hijacked the \\'Report This Ad\\' button on social media, turning an ignored UI element into a gateway to mental health resources.",
+     tags:["Audience Insights", "Ecuador"],
+     videoUrl:"https://www.youtube.com/results?search_query=Report+This+Ad+Veris+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/acbb86d466734cc4890607c8d8d33696?format=webp"},
+    {id:326,tier:"Silver",campaign:"Football Is for Food",
+     brand:"Uber Eats",
+     agency:"Special",country:"United States",grad:"g326",
+     desc:"Uber Eats hijacked football's biggest broadcast moments to remind viewers that the real reason they're watching is the food \u2014 positioning ordering as the true ritual of game day, not just a side activity.",
+     tags:["Use of Brand or Product Integration into a Programme or Platform", "United States"],
+     youtubeId:"81ahl1QYMp0",
+     videoUrl:"https://www.youtube.com/results?search_query=Football+Is+for+Food+Uber+Eats+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/5ce0f137b7254d7aa885d7e83850f046?format=webp"},
+    {id:327,tier:"Silver",campaign:"Thanks for Coke-Creating",
+     brand:"Coca-Cola",
+     agency:"VML",country:"United States",grad:"g327",
+     desc:"Celebrated the countless unofficial, locally adapted Coca-Cola logos created by fans worldwide, acknowledging the brand as a shared cultural canvas.",
+     tags:["Co-Creation of Branded IP", "United States"],
+     youtubeId:"gFQUmcwgoMg",
+     videoUrl:"https://www.youtube.com/results?search_query=Thanks+for+Coke-Creating+Coca-Cola+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/e2d391a076394851ad0376152ece61bb?format=webp"},
+    {id:328,tier:"Silver",campaign:"Export Ultra Cold Call Back Service",
+     brand:"Export Ultra",
+     agency:"Carat",country:"New Zealand",grad:"g328",
+     desc:"Export Ultra created a hotline that let New Zealand beer fans call in to be called back at the exact moment their beer reached optimal coldness \u2014 a brilliantly absurd piece of local brand loyalty engineering.",
+     tags:["Local Brand", "New Zealand"],
+     youtubeId:"EMZYDpxI_KI",
+     videoUrl:"https://www.youtube.com/results?search_query=Export+Ultra+Cold+Call+Back+Service+Export+Ultra+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/933648a57dec4e89a455851927c51e15?format=webp"},
+    {id:329,tier:"Silver",campaign:"Legacy Lager",
+     brand:"Legacy Australia",
+     agency:"VML",country:"Australia",grad:"g329",
+     desc:"Legacy Australia, a charity supporting families of fallen soldiers, launched a limited beer to fund its mission \u2014 using media strategy to make purchasing the lager feel like a direct act of remembrance and solidarity.",
+     tags:["Social Behaviour", "Australia"],
+     videoUrl:"https://www.youtube.com/results?search_query=Legacy+Lager+Legacy+Australia+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/ba35a566f4064244b364f68bf3a55633?format=webp"},
+    {id:330,tier:"Silver",campaign:"Health Is",
+     brand:"BUPA",
+     agency:"Initiative Media",country:"United Kingdom",grad:"g330",
+     desc:"Bupa reframed health insurance as more than illness coverage by celebrating the full, living definition of 'health' \u2014 the adventures, the connections, the ordinary moments \u2014 positioning the brand as a partner in life, not just medicine.",
+     tags:["Corporate Purpose & Social Responsibility", "United Kingdom"],
+     videoUrl:"https://www.youtube.com/results?search_query=Health+Is+BUPA+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/97b8e88790d047b79a07f2461478c324?format=webp"},
+    {id:331,tier:"Silver",campaign:"Code My Crown",
+     brand:"Dove",
+     agency:"Edelman",country:"United Kingdom",grad:"g331",
+     desc:"Built an open-source hair texture library for coders and designers, so that digital products \u2014 from avatars to emojis \u2014 could finally represent Black and mixed-heritage hair accurately.",
+     tags:["Cultural Engagement", "United Kingdom"],
+     youtubeId:"stQ442QJ9pg",
+     videoUrl:"https://www.youtube.com/results?search_query=Code+My+Crown+Dove+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/dc773a5191b947ea85626af886046a69?format=webp"},
+    {id:332,tier:"Silver",campaign:"Pub Succession",
+     brand:"Heineken",
+     agency:"LePub",country:"Italy",grad:"g332",
+     desc:"Heineken launched a global search for someone named McLoughlin to take over a 155-year-old Irish pub on Achill Island, driving over 1 billion impressions across 128 countries.",
+     tags:["Cultural Engagement", "Italy"],
+     youtubeId:"Cu0FLBdZrcM",
+     videoUrl:"https://www.youtube.com/results?search_query=Pub+Succession+Heineken+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/a8d4e72bb1ce47508dcea8db73d16b01?format=webp"},
+    {id:333,tier:"Silver",campaign:"The Flame That Wasn't a Flame",
+     brand:"EDF",
+     agency:"Havas Media",country:"France",grad:"g333",
+     desc:"EDF powered the Paris Olympics cauldron using clean energy that produced no actual flame \u2014 a stunning media moment that transformed an absence into the most powerful symbol of sustainable progress at the Games.",
+     tags:["Media Planning", "France"],
+     videoUrl:"https://www.youtube.com/results?search_query=The+Flame+That+Wasn't+a+Flame+EDF+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/179b9d045d1a44c7b9cf08ed801fec37?format=webp"},
+
+    // BRONZE,
+    {id:334,tier:"Bronze",campaign:"Ad-Free Movies",
+     brand:"Budweiser",
+     agency:"Africa Creative DDB",country:"Brazil",grad:"g334",
+     desc:"Budweiser partnered with Brazilian streaming platforms to offer genuinely ad-free movie nights \u2014 using the absence of advertising as the most compelling ad of all, and rewarding loyal beer drinkers with uninterrupted cinema.",
+     tags:["Consumer Goods", "Brazil"],
+     videoUrl:"https://www.youtube.com/results?search_query=Ad-Free+Movies+Budweiser+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/7bea5da12c704fafb1e98229f26e85bb?format=webp"},
+    {id:335,tier:"Bronze",campaign:"Eye Test Menu",
+     brand:"Titan Company Limited",
+     agency:"Ogilvy",country:"India",grad:"g335",
+     desc:"Designed restaurant menus that double as vision screening tools, using calibrated type sizes to help diners self-diagnose eyesight problems and drive foot traffic to Titan eyewear stores.",
+     tags:["Healthcare", "India"],
+     youtubeId:"_GNOgJWpfK8",
+     videoUrl:"https://www.youtube.com/results?search_query=Eye+Test+Menu+Titan+Company+Limited+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/423282a302ed4fe187b1a0b7b5eb8284?format=webp"},
+    {id:326,tier:"Bronze",campaign:"Football Is for Food",
+     brand:"Uber Eats",
+     agency:"Special",country:"United States",grad:"g326",
+     desc:"Uber Eats hijacked football's biggest broadcast moments to remind viewers that the real reason they're watching is the food \u2014 positioning ordering as the true ritual of game day, not just a side activity.",
+     tags:["Use of Brand or Product Integration into a Programme or Platform", "United States"],
+     youtubeId:"81ahl1QYMp0",
+     videoUrl:"https://www.youtube.com/results?search_query=Football+Is+for+Food+Uber+Eats+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/5ce0f137b7254d7aa885d7e83850f046?format=webp"},
+    {id:336,tier:"Bronze",campaign:"Bait Boards",
+     brand:"Mercado Ads",
+     agency:"GUT",country:"Argentina",grad:"g336",
+     desc:"Mercado Ads placed fishing-themed ads at bait-and-tackle shops and marinas \u2014 hyper-targeted small-scale placements that proved even the most niche retail context could deliver powerful B2B media results.",
+     tags:["Consumer Services/Business to Business", "Argentina"],
+     videoUrl:"https://www.youtube.com/results?search_query=Bait+Boards+Mercado+Ads+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/bc04feaabcbe49b28af976437c42b692/storyboard_000008.jpg?format=webp"},
+    {id:337,tier:"Bronze",campaign:"Sleep with Rain",
+     brand:"AT&T Business",
+     agency:"Critical Mass",country:"Canada",grad:"g337",
+     desc:"AT&T Business sponsored ambient rainfall audio content that millions of people play to fall asleep, embedding the brand into the quietest, most trusted moments of the day with a media buy as unconventional as it was effective.",
+     tags:["Consumer Services/Business to Business", "Canada"],
+     videoUrl:"https://www.youtube.com/results?search_query=Sleep+with+Rain+AT%26T+Business+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/d0260b381fef4eeeb8801c1df7cf7a2d?format=webp"},
+    {id:338,tier:"Bronze",campaign:"Ink of Democracy",
+     brand:"The Times of India",
+     agency:"Havas",country:"India",grad:"g338",
+     desc:"The Times of India ran its election appeal campaign printed in the indelible blue ink used to mark voters' fingers on polling day \u2014 turning the physical act of reading the newspaper into a symbolic pledge to vote.",
+     tags:["Use of Print", "India"],
+     videoUrl:"https://www.youtube.com/results?search_query=Ink+of+Democracy+The+Times+of+India+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/1e8aea61826944b9a3dd3ed2db299576?format=webp"},
+    {id:339,tier:"Bronze",campaign:"Boxed Ads",
+     brand:"Mercado Libre",
+     agency:"GUT",country:"Argentina",grad:"g339",
+     desc:"Mercado Libre turned its own delivery boxes into premium out-of-home media \u2014 wrapping packages in high-impact ads that travelled through neighbourhoods, apartment lobbies, and homes as mobile billboards no one could ignore.",
+     tags:["Use of Outdoor", "Argentina"],
+     videoUrl:"https://www.youtube.com/results?search_query=Boxed+Ads+Mercado+Libre+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/7fbdb5c2391043e18032480b6a5a068b?format=webp"},
+    {id:340,tier:"Bronze",campaign:"Heinz Roller Shutter",
+     brand:"Heinz",
+     agency:"Kraft Heinz",country:"China",grad:"g340",
+     desc:"Heinz transformed the corrugated steel roller shutters of Shanghai storefronts into giant ketchup-splattered canvases \u2014 making closed shops into a city-wide outdoor gallery that stopped pedestrians cold.",
+     tags:["Small-Scale Media", "China"],
+     videoUrl:"https://www.youtube.com/results?search_query=Heinz+Roller+Shutter+Heinz+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/12442b60aad54ce89573c747a787164d?format=webp"},
+    {id:341,tier:"Bronze",campaign:"The Meal",
+     brand:"McDonald's",
+     agency:"LEO",country:"United Kingdom",grad:"g341",
+     desc:"McDonald's UK created a standalone emotional short film \u2014 not branded as an ad \u2014 that circulated as genuine content online before revealing itself as a Happy Meal campaign, collapsing the distance between storytelling and selling.",
+     tags:["Small-Scale Media", "United Kingdom"],
+     youtubeId:"YEPttzbn0Z0",
+     videoUrl:"https://www.youtube.com/results?search_query=The+Meal+McDonald's+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/5e2b835a636345e0a9110a3076d31dca?format=webp"},
+    {id:342,tier:"Bronze",campaign:"W1ng Cod3s",
+     brand:"Volaris Airlines",
+     agency:"Havas Hoy",country:"Mexico",grad:"g342",
+     desc:"Mexican budget airline Volaris hid discount codes inside actual chicken wings \u2014 purchasable at partner restaurants \u2014 turning a snack into a treasure hunt and making the act of eating inseparable from booking a flight.",
+     tags:["Large-Scale Media", "Mexico"],
+     videoUrl:"https://www.youtube.com/results?search_query=W1ng+Cod3s+Volaris+Airlines+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/e0c228ff0e134ebea6c5d9ba0440fe7a?format=webp"},
+    {id:343,tier:"Bronze",campaign:"Airbnb Up-House",
+     brand:"Airbnb",
+     agency:"Weber Shandwick",country:"United States",grad:"g343",
+     desc:"Airbnb recreated the floating house from Pixar's *Up* as a real, bookable Airbnb Experience, generating global media coverage and proving the brand could turn cinematic fantasy into a literally liveable moment.",
+     tags:["Large-Scale Media", "United States"],
+     videoUrl:"https://www.youtube.com/results?search_query=Airbnb+Up-House+Airbnb+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/2b13b666d8054d2b91c39276aa026ac6?format=webp"},
+    {id:344,tier:"Bronze",campaign:"Touchboards Discount",
+     brand:"Ita\u00fa Unibanco",
+     agency:"Africa Creative DDB",country:"Brazil",grad:"g344",
+     desc:"Ita\u00fa Unibanco placed digital discount boards on the touchlines of Brazilian football matches \u2014 activating offers in real time based on in-game events, making the bank feel as dynamic and alive as the sport itself.",
+     tags:["Use of Events & Stunts", "Brazil"],
+     videoUrl:"https://www.youtube.com/results?search_query=Touchboards+Discount+Ita\u00fa+Unibanco+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/e14b84bfe13a475898db5ad4b54d8a97?format=webp"},
+    {id:345,tier:"Bronze",campaign:"Re-Commerce Atacama",
+     brand:"VTEX",
+     agency:"Artplan",country:"Brazil",grad:"g345",
+     desc:"VTEX launched a re-commerce platform specifically to recover and resell fashion items discarded in Chile's Atacama Desert \u2014 one of the world's most visible symbols of fast fashion waste \u2014 turning an environmental crisis into a retail innovation.",
+     tags:["Use of Digital Platforms", "Brazil"],
+     videoUrl:"https://www.youtube.com/results?search_query=Re-Commerce+Atacama+VTEX+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/029792253daf49f2b2f5cce5c082ba68?format=webp"},
+    {id:346,tier:"Bronze",campaign:"Airbnb Icons",
+     brand:"Airbnb",
+     agency:"Weber Shandwick",country:"United States",grad:"g346",
+     desc:"Airbnb Icons let guests stay in extraordinary locations inspired by cultural moments \u2014 from the Barbie Dreamhouse to the UP house \u2014 blending hospitality with fandom.",
+     tags:["Use of Digital Platforms", "United States"],
+     youtubeId:"uUDgTwzWz5U",
+     videoUrl:"https://www.youtube.com/results?search_query=Airbnb+Icons+Airbnb+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/db51bea9a01d40108f74e1fa9bd7ad3f?format=webp"},
+    {id:347,tier:"Bronze",campaign:"Reshaping Rugby: The World's First TikTok Final",
+     brand:"2Degrees",
+     agency:"TBWA\\New Zealand",country:"New Zealand",grad:"g347",
+     desc:"New Zealand telco 2degrees partnered with the domestic rugby league to broadcast its championship final exclusively on TikTok \u2014 the first major sporting final streamed on the platform, proving mobile-first audiences don't need traditional broadcast.",
+     tags:["Use of Mobile", "New Zealand"],
+     videoUrl:"https://www.youtube.com/results?search_query=Reshaping+Rugby:+The+World's+First+TikTok+Final+2Degrees+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/2a4269c3a4f744c88133f4bc79e63794?format=webp"},
+    {id:348,tier:"Bronze",campaign:"One Second Ads",
+     brand:"Budweiser",
+     agency:"Africa Creative DDB",country:"Brazil",grad:"g348",
+     desc:"Budweiser bought the shortest possible ad slots across Brazilian TV \u2014 single-second spots \u2014 and used them to prove that a brand strong enough needs only a flash to register, turning media minimalism into a bold statement of brand confidence.",
+     tags:["Use of Social Platforms", "Brazil"],
+     videoUrl:"https://www.youtube.com/results?search_query=One+Second+Ads+Budweiser+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/7bea5da12c704fafb1e98229f26e85bb?format=webp"},
+    {id:349,tier:"Bronze",campaign:"Just Joking",
+     brand:"Sandy Hook Promise",
+     agency:"PHD",country:"United States",grad:"g349",
+     desc:"Sandy Hook Promise used influencer culture's own language \u2014 the 'just joking' defense \u2014 to expose how early warning signs of violence are dismissed, partnering with creators to deliver an uncomfortable truth through familiar formats.",
+     tags:["Innovative Use of Influencers/Creators", "United States"],
+     videoUrl:"https://www.youtube.com/results?search_query=Just+Joking+Sandy+Hook+Promise+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/c71743fc60654f52936a39391c93e6b7?format=webp"},
+    {id:350,tier:"Bronze",campaign:"Garuda Rakshak",
+     brand:"DSP Mutual Funds",
+     agency:"Dentsu Creative",country:"India",grad:"g350",
+     desc:"DSP Mutual Funds built 'Garuda Rakshak,' a gamified mobile experience that used AR and emerging tech to educate Indian investors about financial protection \u2014 making complex fund concepts viscerally engaging for first-time investors.",
+     tags:["New Realities & Emerging Tech", "India"],
+     videoUrl:"https://www.youtube.com/results?search_query=Garuda+Rakshak+DSP+Mutual+Funds+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/fd608adb8feb426fab936573ef6661c0?format=webp"},
+    {id:351,tier:"Bronze",campaign:"Certified Toasters",
+     brand:"Goodman Fielder",
+     agency:"DDB New Zealand",country:"New Zealand",grad:"g351",
+     desc:"Vogel\\'s bread brand certified specific toaster models as \\'Vogel\\'s Approved\\' for optimal toast quality, turning a mundane appliance into a brand experience moment.",
+     tags:["Retail Media", "New Zealand"],
+     youtubeId:"5NNhDRF-BUY",
+     videoUrl:"https://www.youtube.com/results?search_query=Certified+Toasters+Goodman+Fielder+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/8adbba54b1ee4132ba0f1dc7f1572480?format=webp"},
+    {id:352,tier:"Bronze",campaign:"Most Likely To",
+     brand:"Dove",
+     agency:"Ogilvy",country:"Canada",grad:"g352",
+     desc:"Dove reframed 'Most Likely To' superlatives \u2014 a staple of school yearbooks \u2014 to celebrate the achievements of Black girls who are statistically underrepresented in recognition, turning a cultural tradition into an act of equity.",
+     tags:["Audience Insights", "Canada"],
+     videoUrl:"https://www.youtube.com/results?search_query=Most+Likely+To+Dove+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/b5a17a1c03144e94967336e3b40cf303?format=webp"},
+    {id:306,tier:"Bronze",campaign:"The Final Exam",
+     brand:"Change the Ref",
+     agency:"Energy BBDO",country:"United States",grad:"g306",
+     desc:"Change the Ref\\'s powerful activation confronting gun violence in schools through an unforgettable brand experience that forced audiences to reckon with the crisis.",
+     tags:["Not-for-Profit / Charity / Government", "United States"],
+     youtubeId:"Ljsstj4eiko",
+     videoUrl:"https://www.youtube.com/results?search_query=The+Final+Exam+Change+the+Ref+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/615e3a15eabf457d91d317468a12d825?format=webp"},
+    {id:353,tier:"Bronze",campaign:"TikTok University",
+     brand:"Haaga-Helia University of Applied Sciences",
+     agency:"BOB the Robot",country:"Finland",grad:"g353",
+     desc:"Finnish university Haaga-Helia recruited students entirely through TikTok \u2014 replacing traditional admission materials with creator-made content that demonstrated the school's commitment to next-generation digital skills.",
+     tags:["Use of Branded Content Created for Digital or Social", "Finland"],
+     videoUrl:"https://www.youtube.com/results?search_query=TikTok+University+Haaga-Helia+University+of+Applied+Sciences+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/22c3eb49bf1f44e1a33da8051174a97d?format=webp"},
+    {id:354,tier:"Bronze",campaign:"The Lucky Sponsor",
+     brand:"Schneider",
+     agency:"Mercado McCann",country:"Argentina",grad:"g354",
+     desc:"Schneider, an Argentine challenger brand, positioned itself as the 'lucky sponsor' of whatever team happened to win \u2014 attaching itself to victory without the budget of official partnerships, through sheer opportunistic media agility.",
+     tags:["Challenger Brand", "Argentina"],
+     videoUrl:"https://www.youtube.com/results?search_query=The+Lucky+Sponsor+Schneider+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/f500d38d39d342dcafa1abd15497ccd1?format=webp"},
+    {id:355,tier:"Bronze",campaign:"McRib Mistakes",
+     brand:"McDonald's",
+     agency:"LEO",country:"United Kingdom",grad:"g355",
+     desc:"McDonald's UK leaned into the mythology of the McRib's elusive return by surfacing and celebrating the passionate, sometimes unhinged social media posts fans made every time it disappeared \u2014 turning scarcity into fandom.",
+     tags:["Single-Market Campaign", "United Kingdom"],
+     videoUrl:"https://www.youtube.com/results?search_query=McRib+Mistakes+McDonald's+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/8fe9e09227234701bc8fd2eb2a743693?format=webp"},
+    {id:356,tier:"Bronze",campaign:"Pub Museums",
+     brand:"Heineken",
+     agency:"LePub",country:"Italy",grad:"g356",
+     desc:"Heineken partnered with historic Italian pubs facing closure to reclassify them as cultural heritage sites \u2014 using media to rally support for irreplaceable community gathering places and position Heineken as a guardian of pub culture.",
+     tags:["Single-Market Campaign", "Italy"],
+     videoUrl:"https://www.youtube.com/results?search_query=Pub+Museums+Heineken+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/86282110e23b4b43a6d78c517dc757a2?format=webp"},
+    {id:357,tier:"Bronze",campaign:"Lay's Bar Crawl",
+     brand:"Lay's",
+     agency:"Slap Global",country:"Argentina",grad:"g357",
+     desc:"Lay's staged a bar crawl across Buenos Aires where each stop featured a different limited-edition flavor \u2014 turning product sampling into a night out and driving social sharing through the inherently shareable format of a pub crawl.",
+     tags:["Use of Humour", "Argentina"],
+     videoUrl:"https://www.youtube.com/results?search_query=Lay's+Bar+Crawl+Lay's+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/cc887f9119c440728c26ede9e95b1ad2?format=webp"},
+    {id:358,tier:"Bronze",campaign:"Nature Shapes Britannia",
+     brand:"Britannia Industries Ltd.",
+     agency:"Talented",country:"India",grad:"g358",
+     desc:"Britannia used the natural cracks and imperfections formed during baking to create recognizable shapes \u2014 a tree, a river, a mountain \u2014 celebrating sustainability through the literal imprint of nature on each biscuit.",
+     tags:["Breakthrough on a Budget", "India"],
+     videoUrl:"https://www.youtube.com/results?search_query=Nature+Shapes+Britannia+Britannia+Industries+Ltd.+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/716b17d07a0d40d2b7b2a29d2ae9e171?format=webp"},
+    {id:359,tier:"Bronze",campaign:"Time to Live",
+     brand:"Australian Cancer Research Foundation",
+     agency:"The Ministry for Communication & the Arts",country:"Australia",grad:"g359",
+     desc:"Reframed the cancer experience by shifting focus from survival statistics to quality of life during treatment, mobilising donations for better, less harmful treatments.",
+     tags:["Breakthrough on a Budget", "Australia"],
+     youtubeId:"z2T-Rh838GA",
+     videoUrl:"https://www.youtube.com/results?search_query=Time+to+Live+Australian+Cancer+Research+Foundation+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/a0abdebc363f41448dc18f7a9a9a55bb?format=webp"},
+    {id:360,tier:"Bronze",campaign:"Missed Birthdays",
+     brand:"ITV X CALM",
+     agency:"adam&eveDDB",country:"United Kingdom",grad:"g360",
+     desc:"ITV and CALM marked the birthdays of people lost to suicide \u2014 days that never got to be celebrated \u2014 using primetime broadcast moments to make absence visible and drive donations to mental health support.",
+     tags:["Corporate Purpose & Social Responsibility", "United Kingdom"],
+     videoUrl:"https://www.youtube.com/results?search_query=Missed+Birthdays+ITV+X+CALM+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/7349ab32362e4a798f3c0f3e9e70ead3?format=webp"},
+    {id:361,tier:"Bronze",campaign:"Safe Sketch",
+     brand:"Save the Children",
+     agency:"Cheil Hong Kong",country:"Hong Kong",grad:"g361",
+     desc:"Save the Children built a mobile app that let children express trauma through drawing, using AI to detect distress signals in the sketches and alert social workers \u2014 turning children's art into a silent cry for help.",
+     tags:["Corporate Purpose & Social Responsibility", "Hong Kong"],
+     videoUrl:"https://www.youtube.com/results?search_query=Safe+Sketch+Save+the+Children+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/2b787b52c18a48968b47f3d07c59640d?format=webp"},
+    {id:362,tier:"Bronze",campaign:"Timeout Against Hate",
+     brand:"Foundation to Combat Antisemitism",
+     agency:"Mindshare",country:"United States",grad:"g362",
+     desc:"The Foundation to Combat Antisemitism used sports broadcast timeouts \u2014 moments of pause already built into the viewing experience \u2014 to deliver sharp, unskippable messages against hate to sports audiences across the United States.",
+     tags:["Media Planning", "United States"],
+     videoUrl:"https://www.youtube.com/results?search_query=Timeout+Against+Hate+Foundation+to+Combat+Antisemitism+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/e43c43ae03f240ed8fbaf95002d5d795?format=webp"}
+  ]
+};
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+const BEEHIIV_PUB = "pub_3c24cdd1-b9c3-4192-aa8b-8a2b98f78a83";
+const BEEHIIV_KEY = "xzvemwDZrBkLuYVAkhQnA0vZ6WvRWKwWqxyhga0aauweYnsdrKEtttkyTWWOSf6i";
+let curTier = "all";
+let curCat  = "All";
+let curIdx  = 0;
+let entries = [];
+let zoomActive = false;
+let gridFocusIdx = 0;
+// grid-only view (hero removed)
+
+// ─────────────────────────────────────────────
+// AUTO-UNLOCK for returning subscribers
+// ─────────────────────────────────────────────
+if(localStorage.getItem("bc_subscribed")==="1"){
+  document.getElementById("pw").classList.add("off");
+  document.getElementById("app").classList.add("on");
+  // Move focus to body so keyboard shortcuts work immediately
+  const _ei = document.getElementById("pwi");
+  if(_ei) _ei.blur();
+  setTimeout(() => document.body.focus(), 50);
+  // refresh() is a hoisted function declaration, safe to call here
+  setTimeout(()=>refresh(), 0); // deferred call (primary)
+}
+
+// ─────────────────────────────────────────────
+// GATE — cotton candy wisp animation
+// ─────────────────────────────────────────────
+(function initWisps(){
+  const canvas = document.getElementById('wisp-canvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, bCX, bCY, bRX, bRY;
+  const mouse = {x: null, y: null};
+  const COLORS = [
+    'rgba(249,176,206,', // cotton candy pink
+    'rgba(174,214,241,', // baby blue
+    'rgba(255,205,228,', // light pink
+    'rgba(196,226,255,', // light blue
+    'rgba(244,189,215,', // mid pink
+  ];
+  const N = 95;
+  let particles = [];
+
+  function resize(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    // brain is full-bleed centered; image is 3:2, brain occupies ~40% of img width
+    // background-size:cover means brain radius scales with viewport
+    bCX = W * 0.5;
+    bCY = H * 0.46; // slightly above center — brain sits in upper portion of frame
+    bRX = W * 0.22;
+    bRY = H * 0.24;
+  }
+
+  function spawn(){
+    const angle = Math.random() * Math.PI * 2;
+    const r = 0.65 + Math.random() * 0.5; // 65–115% of brain boundary
+    const x = bCX + Math.cos(angle) * bRX * r;
+    const y = bCY + Math.sin(angle) * bRY * r;
+    const spd = 0.12 + Math.random() * 0.25;
+    const ox = (Math.cos(angle) * 0.55 + (Math.random() - 0.5) * 0.55) * spd;
+    const oy = (Math.sin(angle) * 0.55 + (Math.random() - 0.5) * 0.55) * spd;
+    return {
+      x, y, dx: ox, dy: oy, ox, oy,
+      size: 8 + Math.random() * 22,
+      life: Math.floor(Math.random() * 220), // stagger birth
+      maxLife: 160 + Math.random() * 220,
+      color: COLORS[Math.floor(Math.random() * COLORS.length)]
+    };
+  }
+
+  for(let i = 0; i < N; i++) particles.push(spawn());
+
+  window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+  window.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
+
+  let animId;
+  function frame(){
+    animId = requestAnimationFrame(frame);
+    ctx.clearRect(0, 0, W, H);
+
+    for(let i = 0; i < particles.length; i++){
+      const p = particles[i];
+      p.life++;
+      if(p.life > p.maxLife){ particles[i] = spawn(); particles[i].life = 0; continue; }
+
+      // gentle mouse draw
+      if(mouse.x !== null){
+        const mx = mouse.x - p.x, my = mouse.y - p.y;
+        const d = Math.sqrt(mx*mx + my*my);
+        if(d < 280){
+          const f = (1 - d/280) * 0.007;
+          p.dx += (mx/d) * f;
+          p.dy += (my/d) * f;
+        }
+      }
+      // ease back toward original drift
+      p.dx += (p.ox - p.dx) * 0.018;
+      p.dy += (p.oy - p.dy) * 0.018;
+      p.x += p.dx; p.y += p.dy;
+
+      const fi = Math.min(p.life / 45, 1);
+      const fo = Math.min((p.maxLife - p.life) / 55, 1);
+      const alpha = fi * fo * (0.18 + Math.random() * 0.1);
+
+      const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
+      g.addColorStop(0, p.color + alpha + ')');
+      g.addColorStop(1, p.color + '0)');
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = g;
+      ctx.fill();
+    }
+  }
+
+  window.wispStop = () => cancelAnimationFrame(animId);
+  resize();
+  frame();
+  window.addEventListener('resize', resize);
+})();
+
+// ─────────────────────────────────────────────
+// GATE TRANSITION
+// ─────────────────────────────────────────────
+function enterApp(){
+  const pw = document.getElementById("pw");
+  pw.classList.add("exiting");
+  setTimeout(() => {
+    pw.classList.add("off");
+    if(window.wispStop) window.wispStop();
+  }, 750);
+  // Move focus to body so keyboard shortcuts work immediately
+  const emailInput = document.getElementById("pwi");
+  if(emailInput) emailInput.blur();
+  setTimeout(() => document.body.focus(), 50);
+  document.getElementById("app").classList.add("on");
+  refresh();
+  const hash = location.hash;
+  if(hash && hash.startsWith("#entry-")){
+    const id = parseInt(hash.replace("#entry-",""),10);
+    const idx = entries.findIndex(en => en.id === id);
+    if(idx >= 0){ curIdx = idx; gridFocusIdx = idx; paintGridFocus(); openModal(); }
+  }
+}
+
+function skipSubscribe(){
+  enterApp();
+}
+
+async function unlock(e){
+  e.preventDefault();
+  const emailInput = document.getElementById("pwi");
+  const errEl = document.getElementById("pwe");
+  const btn = document.getElementById("pw-submit-btn");
+  const email = emailInput.value.trim();
+
+  // Basic email validation
+  if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    errEl.textContent = "Please enter a valid email address.";
+    errEl.classList.add("on");
+    return;
+  }
+
+  errEl.classList.remove("on");
+  btn.textContent = "Subscribing…";
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(`https://api.beehiiv.com/v2/publications/${BEEHIIV_PUB}/subscriptions`,{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization":`Bearer ${BEEHIIV_KEY}`
+      },
+      body:JSON.stringify({email, reactivate_existing:true, send_welcome_email:false})
+    });
+
+    if(res.ok){
+      localStorage.setItem("bc_subscribed","1");
+      enterApp();
+    } else {
+      const data = await res.json().catch(()=>({}));
+      throw new Error(data.errors?.[0]?.message || "Subscription failed");
+    }
+  } catch(err){
+    if(err.name==="TypeError"){
+      // Network error — still let them in gracefully
+      localStorage.setItem("bc_subscribed","1");
+      enterApp();
+    } else {
+      errEl.textContent = "Something went wrong. Please try again.";
+      errEl.classList.add("on");
+      btn.textContent = "Subscribe & Enter →";
+      btn.disabled = false;
+    }
+  }
+}
+
+// ─────────────────────────────────────────────
+// TOPBAR SEARCH
+// ─────────────────────────────────────────────
+let searchFocusIdx = -1;
+
+function getAllDataEntries(){
+  const all = [];
+  for(const [cat, items] of Object.entries(DATA)){
+    items.forEach(e => all.push(Object.assign({}, e, {_cat: cat})));
+  }
+  return all;
+}
+
+function tbSearch(q){
+  const res = document.getElementById("tb-results");
+  searchFocusIdx = -1;
+  q = q.trim().toLowerCase();
+  if(!q || q.length < 2){ res.classList.remove("on"); res.innerHTML=""; return; }
+  // search across ALL categories
+  const all = getAllDataEntries();
+  const seen = new Set();
+  const matches = all.filter(e => {
+    const key = e.campaign + "||" + e.brand;
+    if(seen.has(key)) return false;
+    seen.add(key);
+    return e.campaign.toLowerCase().includes(q) ||
+      e.brand.toLowerCase().includes(q) ||
+      e.agency.toLowerCase().includes(q) ||
+      e.country.toLowerCase().includes(q) ||
+      e.tier.toLowerCase().includes(q) ||
+      (e.tags && e.tags.some(t => t.toLowerCase().includes(q)));
+  }).slice(0, 10);
+  if(!matches.length){
+    res.innerHTML = '<div class="sr-empty">No winners found for &ldquo;'+q.replace(/</g,"&lt;")+'&rdquo;</div>';
+    res.classList.add("on");
+    return;
+  }
+  res.innerHTML = matches.map(e => {
+    const tc = tierClass(e.tier);
+    const imgStyle = e.imgUrl ? "background-image:url('"+e.imgUrl+"')" : "";
+    return '<div class="sr-item" data-id="'+e.id+'" onclick="searchJump('+e.id+')">'+
+      '<div class="sr-thumb" style="'+imgStyle+'"></div>'+
+      '<div class="sr-info"><div class="sr-title">'+e.campaign+'</div>'+
+      '<div class="sr-meta">'+e._cat+' &mdash; '+e.brand.split("/")[0].trim()+'</div></div>'+
+      '<span class="sr-badge '+tc+'">'+e.tier+'</span></div>';
+  }).join("");
+  res.classList.add("on");
+}
+
+function tbSearchKey(ev){
+  const res = document.getElementById("tb-results");
+  const items = res.querySelectorAll(".sr-item");
+  if(!items.length) return;
+  if(ev.key === "ArrowDown"){ ev.preventDefault(); searchFocusIdx = Math.min(searchFocusIdx+1, items.length-1); highlightSearchItem(items); }
+  else if(ev.key === "ArrowUp"){ ev.preventDefault(); searchFocusIdx = Math.max(searchFocusIdx-1, 0); highlightSearchItem(items); }
+  else if(ev.key === "Enter" && searchFocusIdx >= 0){
+    ev.preventDefault();
+    const id = parseInt(items[searchFocusIdx].dataset.id);
+    searchJump(id);
+  }
+  else if(ev.key === "Escape"){ res.classList.remove("on"); document.getElementById("tb-q").blur(); }
+}
+
+function highlightSearchItem(items){
+  items.forEach((el,i) => el.classList.toggle("focused", i === searchFocusIdx));
+  if(items[searchFocusIdx]) items[searchFocusIdx].scrollIntoView({block:"nearest"});
+}
+
+function searchJump(id){
+  // close search
+  document.getElementById("tb-results").classList.remove("on");
+  document.getElementById("tb-q").value = "";
+  document.getElementById("tb-q").blur();
+  // switch to "All" category so the entry is always visible
+  curCat = "All";
+  document.querySelectorAll(".sb-cat").forEach(c => {
+    c.classList.toggle("on", !c.classList.contains("cs") && c.textContent.trim() === "All");
+  });
+  // reset to all tiers
+  curTier = "all";
+  document.querySelectorAll(".fb").forEach(b=>b.classList.remove("on"));
+  document.querySelector('.fb[data-t="all"]').classList.add("on");
+  refresh();
+  const idx = entries.findIndex(e => e.id === id);
+  if(idx < 0) return;
+  gridFocusIdx = idx;
+  curIdx = idx;
+  paintGridFocus();
+  openModal();
+}
+
+function surpriseMe(){
+  // switch to "All" category so we pick from every entry
+  curCat = "All";
+  document.querySelectorAll(".sb-cat").forEach(c => {
+    c.classList.toggle("on", !c.classList.contains("cs") && c.textContent.trim() === "All");
+  });
+  curTier = "all";
+  document.querySelectorAll(".fb").forEach(b=>b.classList.remove("on"));
+  document.querySelector('.fb[data-t="all"]').classList.add("on");
+  refresh();
+  gridFocusIdx = Math.floor(Math.random() * entries.length);
+  curIdx = gridFocusIdx;
+  paintGridFocus();
+  openModal();
+}
+
+// close search results when clicking outside
+document.addEventListener("click", function(ev){
+  const wrap = document.querySelector(".tb-search-wrap");
+  if(wrap && !wrap.contains(ev.target)){
+    document.getElementById("tb-results").classList.remove("on");
+  }
+});
+
+// ─────────────────────────────────────────────
+// SHARE — copy deep-link URL to clipboard
+// ─────────────────────────────────────────────
+function shareEntry(id){
+  const url = location.origin + location.pathname + "#entry-" + id;
+  navigator.clipboard.writeText(url).then(()=>{
+    // visual feedback on modal share button
+    const btn = document.getElementById("mdl-share-btn");
+    if(btn){ btn.textContent = "✓ Copied!"; btn.classList.add("copied"); setTimeout(()=>{ btn.innerHTML="&#128279; Share"; btn.classList.remove("copied"); },2000); }
+  }).catch(()=>{
+    // fallback: show URL in prompt
+    prompt("Copy this link:", url);
+  });
+}
+
+// ─────────────────────────────────────────────
+// PAN-ZOOM — full-frame zoom on modal images
+// ─────────────────────────────────────────────
+const ZOOM = 2.5;
+function toggleZoom(ev){
+  zoomActive = !zoomActive;
+  const inner = document.getElementById("mdl-img-inner");
+  const img   = document.getElementById("mdl-img");
+  const hint  = document.getElementById("mdl-zoom-prompt");
+  if(zoomActive){
+    // Zoom immediately to the click point
+    if(ev){
+      const rect = img.getBoundingClientRect();
+      const x = ev.clientX - rect.left;
+      const y = ev.clientY - rect.top;
+      inner.style.transformOrigin = x + "px " + y + "px";
+    } else {
+      inner.style.transformOrigin = "center center";
+    }
+    inner.style.transform = "scale(" + ZOOM + ")";
+    img.style.cursor = "zoom-out";
+    if(hint){ hint.textContent = "Click to zoom out"; hint.classList.add("active"); }
+  } else {
+    magHide();
+    img.style.cursor = "crosshair";
+    if(hint){ hint.textContent = "Click image to zoom"; hint.classList.remove("active"); }
+  }
+}
+function magMove(ev){
+  // While zoomed in, pan the zoom origin as the mouse moves
+  if(!zoomActive) return;
+  const img   = document.getElementById("mdl-img");
+  const inner = document.getElementById("mdl-img-inner");
+  const rect  = img.getBoundingClientRect();
+  const x = ev.clientX - rect.left;
+  const y = ev.clientY - rect.top;
+  if(x < 0 || y < 0 || x > rect.width || y > rect.height){ return; }
+  inner.style.transformOrigin = x + "px " + y + "px";
+}
+function magHide(){
+  const inner = document.getElementById("mdl-img-inner");
+  inner.style.transform = "scale(1)";
+  inner.style.transformOrigin = "center center";
+}
+
+// ─────────────────────────────────────────────
+// GRID ARROW KEY NAVIGATION
+// ─────────────────────────────────────────────
+function gridArrow(dir){
+  const cards = document.querySelectorAll("#grid-inner .grid-card");
+  if(!cards.length) return false;
+  // figure out columns from grid layout
+  const firstTop = cards[0].getBoundingClientRect().top;
+  let cols = 0;
+  for(let i=0;i<cards.length;i++){
+    if(cards[i].getBoundingClientRect().top > firstTop + 5) break;
+    cols++;
+  }
+  if(!cols) cols = 1;
+  let next = gridFocusIdx;
+  if(dir === "left")  next = Math.max(0, gridFocusIdx - 1);
+  if(dir === "right") next = Math.min(cards.length - 1, gridFocusIdx + 1);
+  if(dir === "up")    next = Math.max(0, gridFocusIdx - cols);
+  if(dir === "down")  next = Math.min(cards.length - 1, gridFocusIdx + cols);
+  if(next !== gridFocusIdx){
+    gridFocusIdx = next;
+    curIdx = next;
+    paintGridFocus(cards);
+    cards[gridFocusIdx].scrollIntoView({block:"nearest",behavior:"smooth"});
+  }
+  return true;
+}
+
+function paintGridFocus(cards){
+  if(!cards) cards = document.querySelectorAll("#grid-inner .grid-card");
+  cards.forEach((c,i) => c.classList.toggle("arrow-focus", i === gridFocusIdx));
+}
+
+// ─────────────────────────────────────────────
+// TIER FILTER
+// ─────────────────────────────────────────────
+function setTier(btn){
+  document.querySelectorAll(".fb").forEach(b=>b.classList.remove("on"));
+  btn.classList.add("on");
+  curTier = btn.dataset.t;
+  curIdx  = 0;
+  refresh();
+}
+
+function selCat(el){
+  if(el.classList.contains("cs")) return;
+  document.querySelectorAll(".sb-cat").forEach(c=>c.classList.remove("on"));
+  el.classList.add("on");
+  curCat  = el.textContent.trim();
+  curTier = "all";
+  document.querySelectorAll(".fb").forEach(b=>b.classList.remove("on"));
+  document.querySelector('.fb[data-t="all"]').classList.add("on");
+  curIdx = 0;
+  refresh();
+}
+
+// ─────────────────────────────────────────────
+// REFRESH — rebuild entries list + repaint
+// ─────────────────────────────────────────────
+// ─────────────────────────────────────────────
+// DEDUPLICATION — merge entries with same campaign+brand
+// ─────────────────────────────────────────────
+function dedup(arr){
+  const map = new Map();
+  arr.forEach(e => {
+    const key = e.campaign + "||" + e.brand;
+    if(map.has(key)){
+      const existing = map.get(key);
+      // merge tier
+      existing.tiers.push(e.tier);
+      // keep the best image
+      if(!existing.imgUrl && e.imgUrl) existing.imgUrl = e.imgUrl;
+      // accumulate distinct categories
+      if(e._cat && !existing._cats.includes(e._cat)) existing._cats.push(e._cat);
+    } else {
+      map.set(key, Object.assign({}, e, {tiers: [e.tier], _cats: e._cat ? [e._cat] : []}));
+    }
+  });
+  return Array.from(map.values());
+}
+
+function tierOrder(t){ return t==="Grand Prix"?0:t==="Gold"?1:t==="Silver"?2:t==="Bronze"?3:4; }
+
+function refresh(){
+  let raw;
+  if(curCat === "All"){
+    raw = getAllDataEntries();
+  } else {
+    raw = (DATA[curCat] || []).map(e => Object.assign({}, e, {_cat: curCat}));
+  }
+  const deduped = dedup(raw);
+  if(curTier === "all"){
+    entries = deduped;
+  } else {
+    entries = deduped.filter(e => e.tiers.includes(curTier));
+  }
+  if(curIdx >= entries.length) curIdx = 0;
+  gridFocusIdx = curIdx;
+  document.getElementById("cnt").textContent =
+    entries.length + " winner" + (entries.length === 1 ? "" : "s");
+  buildGrid();
+}
+
+// ─────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────
+function tierClass(t){
+  if(t==="Grand Prix") return "gp";
+  return t.toLowerCase();
+}
+
+function tierBadges(tiers){
+  // count and sort tiers
+  const counts = {};
+  tiers.forEach(t => counts[t] = (counts[t]||0)+1);
+  const sorted = Object.keys(counts).sort((a,b) => tierOrder(a)-tierOrder(b));
+  return sorted.map(t => {
+    const tc = tierClass(t);
+    const label = t==="Grand Prix" ? "🏆 GP" : t;
+    const ct = counts[t];
+    return `<span class="gc-badge ${tc}">${ct > 1 ? ct+"x " : ""}${label}</span>`;
+  }).join(" ");
+}
+
+// ─────────────────────────────────────────────
+// GRID
+// ─────────────────────────────────────────────
+function buildGrid(){
+  const g = document.getElementById("grid-inner");
+  g.innerHTML = entries.map((e,i) => {
+    const tc = tierClass(e.tiers[0]);
+    const imgStyle = e.imgUrl ? `background-image:url('${e.imgUrl}')` : "";
+    const gradClass = !e.imgUrl ? e.grad : "";
+    const focused = i === gridFocusIdx ? " arrow-focus" : "";
+    return `<div class="grid-card ${tc}${focused}" onclick="gridClick(${i})">
+      <div class="gc-img ${gradClass}" style="${imgStyle}"></div>
+      <button class="gc-share" onclick="event.stopPropagation();shareEntry(${e.id})" title="Copy link">&#128279;</button>
+      <div class="gc-body">
+        ${tierBadges(e.tiers)}
+        <div class="gc-title">${e.campaign}</div>
+        <div class="gc-meta">${e.brand.split("/")[0].trim()} &mdash; ${e.agency.split(",")[0]}</div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function gridClick(i){
+  curIdx = i;
+  gridFocusIdx = i;
+  paintGridFocus();
+  openModal();
+}
+
+// ─────────────────────────────────────────────
+// VIDEO EMBED
+// ─────────────────────────────────────────────
+function playVideo(youtubeId, searchUrl){
+  const img = document.getElementById('mdl-img');
+  let vw = document.getElementById('mdl-video-wrap');
+  if(!vw){
+    vw = document.createElement('div');
+    vw.id = 'mdl-video-wrap';
+    vw.className = 'mdl-video-wrap';
+    img.parentNode.insertBefore(vw, img);
+  }
+  vw.innerHTML = `<iframe src="https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+  img.style.display = 'none';
+  vw.style.display = 'block';
+  const btn = document.getElementById('mdl-video-btn');
+  if(btn){
+    btn.innerHTML = '&#9632; Close Video';
+    btn.onclick = function(){ stopVideo(youtubeId, searchUrl); };
+  }
+  if(searchUrl && !document.getElementById('mdl-video-search')){
+    const acts = document.getElementById('mdl-acts');
+    const link = document.createElement('a');
+    link.id = 'mdl-video-search';
+    link.href = searchUrl;
+    link.target = '_blank';
+    link.className = 'mdl-video-fallback';
+    link.textContent = 'Wrong video? Search YouTube \u2197';
+    acts.appendChild(link);
+  }
+}
+
+function stopVideo(youtubeId, searchUrl){
+  const vw = document.getElementById('mdl-video-wrap');
+  if(vw){ vw.innerHTML = ''; vw.style.display = 'none'; }
+  document.getElementById('mdl-img').style.display = '';
+  const btn = document.getElementById('mdl-video-btn');
+  if(btn){
+    btn.innerHTML = '&#9654; Watch Case Study <span style="opacity:.5;font-size:10px;margin-left:4px">[Space]</span>';
+    btn.onclick = function(){ playVideo(youtubeId, searchUrl); };
+  }
+  const fl = document.getElementById('mdl-video-search');
+  if(fl) fl.remove();
+}
+
+// ─────────────────────────────────────────────
+// MODAL
+// ─────────────────────────────────────────────
+function openModal(){
+  if(!entries.length) return;
+  const e  = entries[curIdx];
+  const tc = tierClass(e.tiers[0]);
+  const mi = document.getElementById("mdl-img");
+  const miInner = document.getElementById("mdl-img-inner");
+  // reset any active zoom when switching entries
+  zoomActive = false;
+  const zoomPrompt = document.getElementById("mdl-zoom-prompt");
+  if(zoomPrompt){ zoomPrompt.textContent = "Click image to zoom"; zoomPrompt.classList.remove("active"); }
+  magHide();
+  // reset video player when switching entries
+  const vwReset = document.getElementById('mdl-video-wrap');
+  if(vwReset){ vwReset.innerHTML=''; vwReset.style.display='none'; }
+  mi.style.display='';
+  if(e.imgUrl){
+    miInner.style.backgroundImage=`url('${e.imgUrl}')`;
+    mi.style.backgroundImage="";
+    mi.className="mdl-img";
+  } else {
+    miInner.style.backgroundImage="";
+    mi.style.backgroundImage="";
+    mi.className=`mdl-img ${e.grad}`;
+  }
+  const tb=document.getElementById("mdl-tb");
+  // show all tiers in modal badge — deduplicated with counts (e.g. "2x Gold")
+  const tierCounts = {};
+  e.tiers.forEach(t => tierCounts[t] = (tierCounts[t]||0)+1);
+  tb.innerHTML = Object.keys(tierCounts).sort((a,b)=>tierOrder(a)-tierOrder(b)).map(t => {
+    const c = tierClass(t);
+    const ct = tierCounts[t];
+    const label = t==="Grand Prix" ? "🏆 Grand Prix" : t;
+    return `<span class="mdl-tier-badge ${c}">${ct > 1 ? ct+"x " : ""}${label}</span>`;
+  }).join(" ");
+  tb.className="mdl-tb";
+  const catLabel = (e._cats && e._cats.length) ? e._cats.join(" · ") : (e._cat || curCat);
+  document.getElementById("mdl-ttl").innerHTML =
+    e.campaign + (catLabel ? ` <span style="font-weight:400;font-size:.6em;color:rgba(255,255,255,.38);letter-spacing:.5px;margin-left:4px">| ${catLabel}</span>` : "");
+  document.getElementById("mdl-meta").innerHTML=
+    `<span class="mdl-m"><strong>Brand</strong> ${e.brand}</span>
+     <span class="mdl-m"><strong>Agency</strong> ${e.agency}</span>
+     <span class="mdl-m"><strong>Country</strong> ${e.country}</span>`;
+  document.getElementById("mdl-desc").textContent=e.desc;
+  let acts="";
+  if(e.youtubeId){
+    const sUrl = e.videoUrl||'';
+    acts+=`<button class="ha p" id="mdl-video-btn" onclick="playVideo('${e.youtubeId}','${sUrl}')">&#9654; Watch Case Study <span style="opacity:.5;font-size:10px;margin-left:4px">[Space]</span></button>`;
+  } else if(e.videoUrl){
+    acts+=`<a class="ha p" id="mdl-video-btn" href="${e.videoUrl}" target="_blank">&#9654; Watch Case Study <span style="opacity:.5;font-size:10px;margin-left:4px">[Space]</span></a>`;
+  }
+  if(e.caseUrl)  acts+=`<a class="ha s" href="${e.caseUrl}" target="_blank">&#8599; Learn More</a>`;
+  acts+=`<button class="mdl-share" id="mdl-share-btn" onclick="shareEntry(${e.id})">&#128279; Share</button>`;
+  document.getElementById("mdl-acts").innerHTML=acts;
+  // update URL hash for deep-linking
+  history.replaceState(null,"","#entry-"+e.id);
+  // show/hide nav arrows
+  document.getElementById("mdl-prev").style.display = curIdx > 0 ? "flex" : "none";
+  document.getElementById("mdl-next").style.display = curIdx < entries.length-1 ? "flex" : "none";
+  document.getElementById("modal").classList.add("on");
+}
+
+function mdlGo(dir){
+  const next = curIdx + dir;
+  if(next < 0 || next >= entries.length) return;
+  curIdx = next;
+  gridFocusIdx = next;
+  paintGridFocus();
+  openModal();
+  // scroll grid card into view
+  const cards = document.querySelectorAll("#grid-inner .grid-card");
+  if(cards[curIdx]) cards[curIdx].scrollIntoView({block:"nearest",behavior:"smooth"});
+}
+
+function closeMdl(ev){
+  if(ev && ev.target!==document.getElementById("modal")
+     && !ev.target.classList.contains("mdl-close")
+     && !ev.target.classList.contains("mdl-nav")) return;
+  document.getElementById("modal").classList.remove("on");
+  const vw = document.getElementById('mdl-video-wrap');
+  if(vw){ vw.innerHTML=''; vw.style.display='none'; }
+  history.replaceState(null,"",location.pathname+location.search);
+  magHide();
+}
+
+// ─────────────────────────────────────────────
+// KEYBOARD
+// ─────────────────────────────────────────────
+document.addEventListener("keydown", ev => {
+  const modalOpen = document.getElementById("modal").classList.contains("on");
+  if(ev.key==="Escape"){
+    const sr = document.getElementById("tb-results");
+    if(sr && sr.classList.contains("on")){ sr.classList.remove("on"); document.getElementById("tb-q").value=""; return; }
+    if(modalOpen){ document.getElementById("modal").classList.remove("on"); return; }
+    return;
+  }
+  // Block shortcuts only when the topbar search input has focus
+  if(ev.target === document.getElementById("tb-q")) return;
+
+  // "R" = Surprise Me — works everywhere (grid or modal)
+  if(ev.key.toLowerCase() === "r"){ ev.preventDefault(); surpriseMe(); return; }
+
+  // Modal keyboard shortcuts
+  if(modalOpen){
+    if(ev.key==="ArrowLeft")  { ev.preventDefault(); mdlGo(-1); }
+    if(ev.key==="ArrowRight") { ev.preventDefault(); mdlGo(1); }
+    if(ev.key===" "){
+      ev.preventDefault();
+      const vbtn = document.getElementById("mdl-video-btn");
+      if(vbtn) vbtn.click();
+    }
+    return;
+  }
+
+  // Grid 2D arrow navigation
+  if(ev.key==="ArrowLeft")  { ev.preventDefault(); gridArrow("left"); }
+  if(ev.key==="ArrowRight") { ev.preventDefault(); gridArrow("right"); }
+  if(ev.key==="ArrowUp")    { ev.preventDefault(); gridArrow("up"); }
+  if(ev.key==="ArrowDown")  { ev.preventDefault(); gridArrow("down"); }
+  if(ev.key==="Enter"){ curIdx = gridFocusIdx; openModal(); }
+
+  // Tier shortcuts
+  if(ev.key==="1") document.querySelector('.fb[data-t="all"]').click();
+  if(ev.key==="2") document.querySelector('.fb[data-t="Grand Prix"]').click();
+  if(ev.key==="3") document.querySelector('.fb[data-t="Gold"]').click();
+  if(ev.key==="4") document.querySelector('.fb[data-t="Silver"]').click();
+  if(ev.key==="5") document.querySelector('.fb[data-t="Bronze"]').click();
+  if(ev.key.toLowerCase()==="g") document.querySelector('.fb[data-t="Grand Prix"]').click();
+  // Focus search with /
+  if(ev.key==="/") { ev.preventDefault(); document.getElementById("tb-q").focus(); }
+});
+
+document.getElementById("pwi").addEventListener("keydown",e=>{
+  if(e.key==="Enter"){
+    const btn = document.getElementById("pw-submit-btn");
+    if(btn) btn.click();
+  }
+});
+
+// ─────────────────────────────────────────────
+// GRID INIT FAILSAFE
+// If the app is already visible (returning subscriber auto-unlocked)
+// but the grid is empty, populate it now synchronously.
+// This handles environments where setTimeout(0) may not fire reliably.
+// ─────────────────────────────────────────────
+(function initGrid(){
+  const app = document.getElementById("app");
+  const gridInner = document.getElementById("grid-inner");
+  if(app && app.classList.contains("on") && gridInner && gridInner.children.length === 0){
+    refresh();
+  }
+})();
+</script>
+</body>
+</html>
