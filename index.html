@@ -26,9 +26,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 #pw{position:fixed;inset:0;z-index:9999;background:#000;overflow:hidden;transition:opacity .75s ease,transform .75s ease}
 #pw.exiting{opacity:0;transform:scale(1.04);pointer-events:none}
 #pw.off{display:none}
-/* full-screen background video */
-#entry-video{position:absolute;top:50%;left:50%;min-width:100%;min-height:100%;width:100%;height:100%;transform:translate(-50%,-50%);object-fit:cover;object-position:center;z-index:0}
-/* dark overlay between video and content */
+/* video is hidden — canvas draws it */
+#entry-video{display:none}
+/* full-bleed canvas renderer */
+#entry-canvas{position:absolute;top:0;left:0;z-index:0}
+/* dark overlay between canvas and content */
 #video-overlay{position:absolute;inset:0;background:rgba(0,0,0,.52);z-index:2}
 /* centered content overlay */
 .cc-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:10;padding:32px 24px 80px}
@@ -282,8 +284,12 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 <!-- GATE: VIDEO ENTRY -->
 <div id="pw">
-  <!-- looping background video (Vimeo) -->
-  <iframe id="entry-video" src="https://player.vimeo.com/video/1183153037?background=1&autoplay=1&loop=1&muted=1&byline=0&title=0" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+  <!-- hidden video source — canvas reads its frames -->
+  <video id="entry-video" autoplay muted loop playsinline>
+    <source src="Brain-Cannesdy-Entry-Video-1.mp4" type="video/mp4">
+  </video>
+  <!-- canvas renders full-bleed with blurred fill zones -->
+  <canvas id="entry-canvas"></canvas>
   <!-- dark overlay -->
   <div id="video-overlay"></div>
   <!-- centered content overlay -->
@@ -1908,6 +1914,102 @@ if(localStorage.getItem("bc_subscribed")==="1"){
 
 
 // ─────────────────────────────────────────────
+// GATE — full-bleed canvas video renderer
+// Draws the video contained + blurred edge fills
+// for any viewport aspect ratio.
+// ─────────────────────────────────────────────
+(function initVideoCanvas(){
+  const video  = document.getElementById('entry-video');
+  const canvas = document.getElementById('entry-canvas');
+  if(!video || !canvas) return;
+
+  const ctx = canvas.getContext('2d');
+  let W, H, animId;
+
+  function resize(){
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function drawFrame(){
+    animId = requestAnimationFrame(drawFrame);
+    const vW = video.videoWidth, vH = video.videoHeight;
+
+    // Not ready yet — fill black
+    if(!vW || !vH || video.readyState < 2){
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, W || window.innerWidth, H || window.innerHeight);
+      return;
+    }
+
+    ctx.clearRect(0, 0, W, H);
+
+    const vidAR  = vW / vH;
+    const canvAR = W  / H;
+
+    // ── Contained video rect (object-fit:contain equivalent) ──
+    let cW, cH, cX, cY;
+    if(canvAR >= vidAR){
+      // Canvas wider → letterbox left/right
+      cH = H;  cW = H * vidAR;
+      cX = (W - cW) / 2;  cY = 0;
+    } else {
+      // Canvas taller → letterbox top/bottom
+      cW = W;  cH = W / vidAR;
+      cX = 0;  cY = (H - cH) / 2;
+    }
+
+    // ── Blurred edge fills ──
+    const BLUR = 45;
+    const PAD  = BLUR * 2.5; // extra draw region prevents blur-clipping at canvas edge
+
+    ctx.save();
+    ctx.filter = `blur(${BLUR}px)`;
+
+    if(cY > 4){
+      // Top/bottom gaps → fill with top/bottom bands of the video
+      // Top: use top 35% of video content stretched into top gap
+      ctx.drawImage(video,
+        0, 0, vW, vH * 0.35,
+        -PAD, -PAD, W + PAD * 2, cY + PAD * 1.5
+      );
+      // Bottom: use bottom 35% of video content stretched into bottom gap
+      const bY = cY + cH;
+      ctx.drawImage(video,
+        0, vH * 0.65, vW, vH * 0.35,
+        -PAD, bY - PAD, W + PAD * 2, (H - bY) + PAD * 2
+      );
+    } else if(cX > 4){
+      // Left/right gaps → fill with left/right bands of the video
+      ctx.drawImage(video,
+        0, 0, vW * 0.35, vH,
+        -PAD, -PAD, cX + PAD * 1.5, H + PAD * 2
+      );
+      const rX = cX + cW;
+      ctx.drawImage(video,
+        vW * 0.65, 0, vW * 0.35, vH,
+        rX - PAD, -PAD, (W - rX) + PAD * 2, H + PAD * 2
+      );
+    }
+
+    ctx.restore();
+
+    // ── Main video (contained, sharp) ──
+    ctx.drawImage(video, cX, cY, cW, cH);
+  }
+
+  // Expose stop hook for enterApp cleanup
+  window.videoCanvasStop = () => {
+    cancelAnimationFrame(animId);
+    video.pause();
+  };
+
+  resize();
+  window.addEventListener('resize', resize);
+  drawFrame();
+})();
+
+// ─────────────────────────────────────────────
 // GATE TRANSITION
 // ─────────────────────────────────────────────
 function enterApp(){
@@ -1915,6 +2017,7 @@ function enterApp(){
   pw.classList.add("exiting");
   setTimeout(() => {
     pw.classList.add("off");
+    if(window.videoCanvasStop) window.videoCanvasStop();
   }, 750);
   // Move focus to body so keyboard shortcuts work immediately
   const emailInput = document.getElementById("pwi");
