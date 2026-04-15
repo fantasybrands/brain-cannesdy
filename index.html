@@ -61,7 +61,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .fb-arc-widget{position:absolute;bottom:20px;right:20px;width:180px;height:180px;display:flex;align-items:center;justify-content:center;z-index:20;text-decoration:none;cursor:pointer}
 .fb-arc-svg{position:absolute;inset:0;width:100%;height:100%;animation:fb-spin 18s linear infinite}
 .fb-arc-text{font-size:9px;font-family:'Nunito',sans-serif;font-weight:800;fill:rgba(255,255,255,0.78)}
-.fb-arc-logo{width:57px;height:57px;border-radius:50%;object-fit:cover;transition:transform .3s ease,box-shadow .3s ease;position:relative;z-index:1}
+.fb-arc-logo{width:67px;height:67px;border-radius:50%;object-fit:cover;transition:transform .3s ease,box-shadow .3s ease;position:relative;z-index:1}
 .fb-arc-widget:hover .fb-arc-logo{transform:scale(1.09);box-shadow:0 6px 32px rgba(34,211,238,.5),0 0 0 2px rgba(34,211,238,.4)}
 .fb-arc-widget:hover .fb-arc-svg{animation-duration:10s}
 @keyframes fb-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
@@ -353,7 +353,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <path id="fb-text-path" d="M 100,100 m -53,0 a 53,53 0 1,1 106,0 a 53,53 0 1,1 -106,0"/>
       </defs>
       <text class="fb-arc-text">
-        <textPath href="#fb-text-path" startOffset="0%" textLength="333" lengthAdjust="spacing">PRESENTED BY FANTASY BRANDS  •  </textPath>
+        <textPath href="#fb-text-path" startOffset="0%" textLength="333" lengthAdjust="spacing">PRESENTED BY FANTASY BRANDS&#x2002;&#x2002;•&#x2002;&#x2002;</textPath>
       </text>
     </svg>
     <img class="fb-arc-logo" src="Fantasy-Brands-Logo-Cyan.jpg" alt="Fantasy Brands">
