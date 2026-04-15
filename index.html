@@ -31,17 +31,19 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 /* centered content overlay */
 .cc-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:10;padding:32px 24px 80px}
 .cc-headline{font-family:'DynaPuff',sans-serif;font-size:clamp(72px,13vw,200px);font-weight:700;color:#fdf5e8;letter-spacing:-.01em;line-height:1;text-align:center;user-select:none;margin-bottom:4px;-webkit-text-stroke:2px rgba(12,4,2,.5);paint-order:stroke fill;text-shadow:0 2px 4px rgba(0,0,0,.95),0 6px 20px rgba(0,0,0,.75),0 18px 55px rgba(0,0,0,.45)}
-.cc-tagline{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(253,245,232,.75);text-align:center;text-shadow:0 1px 6px rgba(0,0,0,.8)}
+.cc-tagline{font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;letter-spacing:1.8px;text-transform:uppercase;color:rgba(253,245,232,.92);text-align:center;text-shadow:0 1px 6px rgba(0,0,0,.8)}
 .cc-form-area{display:flex;flex-direction:column;align-items:center;gap:10px;width:min(300px,80vw);margin-top:2px}
-/* underline-only input */
-.cc-in{width:100%;padding:8px 4px;border:none;border-bottom:1.5px solid rgba(253,245,232,.4);border-radius:0;background:transparent;color:#fdf5e8;font-size:15px;text-align:center;letter-spacing:.5px;outline:none;transition:border-color .3s;font-family:var(--font);text-shadow:0 1px 4px rgba(0,0,0,.7)}
-.cc-in::placeholder{color:rgba(253,245,232,.45)}
-.cc-in:focus{border-bottom-color:rgba(253,245,232,.9)}
-/* Liquid glass button */
-.cc-btn{position:relative;display:flex;align-items:center;justify-content:center;width:100%;padding:0;border:none;background:transparent;cursor:pointer;font-family:var(--font);margin-top:6px;border-radius:50px;overflow:visible;-webkit-tap-highlight-color:transparent}
+/* unified card: wraps input + button as one element */
+.cc-unified{width:100%;border-radius:16px;border:1px solid rgba(253,245,232,.22);background:rgba(253,245,232,.07);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);overflow:hidden;transition:border-color .3s,box-shadow .3s;box-shadow:0 2px 20px rgba(0,0,0,.3)}
+.cc-unified:focus-within{border-color:rgba(253,245,232,.5);box-shadow:0 4px 28px rgba(0,0,0,.4),0 0 0 1px rgba(253,245,232,.15)}
+.cc-in{width:100%;padding:12px 16px;border:none;border-bottom:1px solid rgba(253,245,232,.12);border-radius:0;background:transparent;color:#fdf5e8;font-size:15px;text-align:center;letter-spacing:.5px;outline:none;transition:border-color .3s;font-family:var(--font);text-shadow:0 1px 4px rgba(0,0,0,.7)}
+.cc-in::placeholder{color:rgba(253,245,232,.4)}
+.cc-in:focus{border-bottom-color:rgba(253,245,232,.25)}
+/* Liquid glass button — lives inside .cc-unified card */
+.cc-btn{position:relative;display:flex;align-items:center;justify-content:center;width:100%;padding:0;border:none;background:transparent;cursor:pointer;font-family:var(--font);margin-top:0;border-radius:0;overflow:visible;-webkit-tap-highlight-color:transparent}
 .cc-btn:disabled{opacity:.6;cursor:default}
-.cc-btn-glass{position:relative;display:flex;align-items:center;justify-content:center;width:100%;padding:14px 20px;border-radius:50px;font-size:13px;font-weight:700;letter-spacing:1.5px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.4);box-shadow:0 6px 6px rgba(0,0,0,.2),0 0 20px rgba(0,0,0,.1);transition:padding .25s cubic-bezier(.175,.885,.32,2.2),border-radius .25s cubic-bezier(.175,.885,.32,2.2),box-shadow .25s;overflow:hidden}
-.cc-btn:not(:disabled):hover .cc-btn-glass{padding:16px 22px;border-radius:28px;box-shadow:0 8px 10px rgba(0,0,0,.25),0 0 28px rgba(0,0,0,.15)}
+.cc-btn-glass{position:relative;display:flex;align-items:center;justify-content:center;width:100%;padding:13px 20px;border-radius:0;font-size:13px;font-weight:700;letter-spacing:1.5px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.4);box-shadow:none;transition:background .2s;overflow:hidden}
+.cc-btn:not(:disabled):hover .cc-btn-glass{background:rgba(255,255,255,.06)}
 /* layer 1 – blur + distortion */
 .cc-btn-glass-blur{position:absolute;inset:0;border-radius:inherit;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);filter:url(#glass-distortion);isolation:isolate;z-index:0}
 /* layer 2 – white tint */
@@ -52,11 +54,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .cc-btn-glass-label{position:relative;z-index:3}
 .cc-err{color:#ff8ab0;font-size:11px;display:none;text-align:center}
 .cc-err.on{display:block}
-.cc-disclaimer{font-size:9px;color:rgba(253,245,232,.45);text-align:center;letter-spacing:.2px;line-height:1.5;margin-top:-2px;text-shadow:0 1px 4px rgba(0,0,0,.7)}
-.cc-socials{display:flex;gap:18px;margin-top:6px;align-items:center}
-.cc-socials a{color:rgba(253,245,232,.5);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;transition:color .25s,transform .2s;filter:drop-shadow(0 1px 3px rgba(0,0,0,.7))}
-.cc-socials a:hover{color:#fdf5e8;transform:translateY(-2px)}
-.cc-socials a svg{width:20px;height:20px;fill:currentColor;display:block}
 /* ── FANTASY BRANDS arc-logo widget (bottom-right of entry screen) ── */
 .fb-arc-widget{position:absolute;bottom:20px;right:20px;width:180px;height:180px;display:flex;align-items:center;justify-content:center;z-index:20;text-decoration:none;cursor:pointer}
 .fb-arc-svg{position:absolute;inset:0;width:100%;height:100%;animation:fb-spin 18s linear infinite}
@@ -320,29 +317,19 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <p class="cc-tagline">A visual database of the best ideas in advertising</p>
     <div class="cc-form-area">
       <form style="width:100%;display:flex;flex-direction:column;gap:10px" onsubmit="unlock(event)">
-        <input type="email" class="cc-in" id="pwi" placeholder="your@email.com" autocomplete="email">
-        <div class="cc-err" id="pwe"></div>
-        <button type="submit" class="cc-btn" id="pw-submit-btn">
-          <span class="cc-btn-glass">
-            <span class="cc-btn-glass-blur"></span>
-            <span class="cc-btn-glass-tint"></span>
-            <span class="cc-btn-glass-ring"></span>
-            <span class="cc-btn-glass-label">Let me in</span>
-          </span>
-        </button>
+        <div class="cc-unified">
+          <input type="email" class="cc-in" id="pwi" placeholder="your@email.com" autocomplete="email">
+          <div class="cc-err" id="pwe" style="padding:0 16px 6px;margin-top:-4px"></div>
+          <button type="submit" class="cc-btn" id="pw-submit-btn">
+            <span class="cc-btn-glass">
+              <span class="cc-btn-glass-blur"></span>
+              <span class="cc-btn-glass-tint"></span>
+              <span class="cc-btn-glass-ring"></span>
+              <span class="cc-btn-glass-label">Let me in</span>
+            </span>
+          </button>
+        </div>
       </form>
-      <p class="cc-disclaimer">Get updates from Fantasy Brands. No spam, ever.</p>
-      <div class="cc-socials">
-        <a href="https://www.tiktok.com/@playfantasybrands" target="_blank" aria-label="TikTok">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.85a8.18 8.18 0 004.84 1.55V6.93a4.85 4.85 0 01-1.07-.24z"/></svg>
-        </a>
-        <a href="https://www.instagram.com/playfantasybrands" target="_blank" aria-label="Instagram">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-        </a>
-        <a href="https://www.youtube.com/@playfantasybrands_media" target="_blank" aria-label="YouTube">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-        </a>
-      </div>
     </div>
   </div>
 
