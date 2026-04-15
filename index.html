@@ -37,10 +37,19 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .cc-in{width:100%;padding:8px 4px;border:none;border-bottom:1.5px solid rgba(253,245,232,.4);border-radius:0;background:transparent;color:#fdf5e8;font-size:15px;text-align:center;letter-spacing:.5px;outline:none;transition:border-color .3s;font-family:var(--font);text-shadow:0 1px 4px rgba(0,0,0,.7)}
 .cc-in::placeholder{color:rgba(253,245,232,.45)}
 .cc-in:focus{border-bottom-color:rgba(253,245,232,.9)}
-.cc-btn{width:100%;padding:12px;border-radius:50px;border:none;cursor:pointer;background:linear-gradient(135deg,#e8a0c0,#b8d4f4,#e8a0c0);background-size:250% 250%;animation:btnShimmer 5s ease-in-out infinite;color:#3a1525;font-size:13px;font-weight:700;letter-spacing:1.5px;transition:opacity .2s,box-shadow .2s;box-shadow:0 4px 22px rgba(200,130,170,.3);font-family:var(--font);margin-top:6px}
-.cc-btn:hover{opacity:.9;box-shadow:0 4px 32px rgba(200,130,170,.48)}
+/* Liquid glass button */
+.cc-btn{position:relative;display:flex;align-items:center;justify-content:center;width:100%;padding:0;border:none;background:transparent;cursor:pointer;font-family:var(--font);margin-top:6px;border-radius:50px;overflow:visible;-webkit-tap-highlight-color:transparent}
 .cc-btn:disabled{opacity:.6;cursor:default}
-@keyframes btnShimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.cc-btn-glass{position:relative;display:flex;align-items:center;justify-content:center;width:100%;padding:14px 20px;border-radius:50px;font-size:13px;font-weight:700;letter-spacing:1.5px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.4);box-shadow:0 6px 6px rgba(0,0,0,.2),0 0 20px rgba(0,0,0,.1);transition:padding .25s cubic-bezier(.175,.885,.32,2.2),border-radius .25s cubic-bezier(.175,.885,.32,2.2),box-shadow .25s;overflow:hidden}
+.cc-btn:not(:disabled):hover .cc-btn-glass{padding:16px 22px;border-radius:28px;box-shadow:0 8px 10px rgba(0,0,0,.25),0 0 28px rgba(0,0,0,.15)}
+/* layer 1 – blur + distortion */
+.cc-btn-glass-blur{position:absolute;inset:0;border-radius:inherit;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);filter:url(#glass-distortion);isolation:isolate;z-index:0}
+/* layer 2 – white tint */
+.cc-btn-glass-tint{position:absolute;inset:0;border-radius:inherit;background:rgba(255,255,255,.22);z-index:1}
+/* layer 3 – inner highlight ring */
+.cc-btn-glass-ring{position:absolute;inset:0;border-radius:inherit;box-shadow:inset 2px 2px 1px 0 rgba(255,255,255,.55),inset -1px -1px 1px 1px rgba(255,255,255,.45);z-index:2}
+/* label */
+.cc-btn-glass-label{position:relative;z-index:3}
 .cc-err{color:#ff8ab0;font-size:11px;display:none;text-align:center}
 .cc-err.on{display:block}
 .cc-disclaimer{font-size:9px;color:rgba(253,245,232,.45);text-align:center;letter-spacing:.2px;line-height:1.5;margin-top:-2px;text-shadow:0 1px 4px rgba(0,0,0,.7)}
@@ -277,6 +286,23 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 </style>
 </head>
 <body tabindex="-1">
+<!-- SVG filter for liquid glass distortion -->
+<svg style="display:none" aria-hidden="true">
+  <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox">
+    <feTurbulence type="fractalNoise" baseFrequency="0.001 0.005" numOctaves="1" seed="17" result="turbulence"/>
+    <feComponentTransfer in="turbulence" result="mapped">
+      <feFuncR type="gamma" amplitude="1" exponent="10" offset="0.5"/>
+      <feFuncG type="gamma" amplitude="0" exponent="1" offset="0"/>
+      <feFuncB type="gamma" amplitude="0" exponent="1" offset="0.5"/>
+    </feComponentTransfer>
+    <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap"/>
+    <feSpecularLighting in="softMap" surfaceScale="5" specularConstant="1" specularExponent="100" lightingColor="white" result="specLight">
+      <fePointLight x="-200" y="-200" z="300"/>
+    </feSpecularLighting>
+    <feComposite in="specLight" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="litImage"/>
+    <feDisplacementMap in="SourceGraphic" in2="softMap" scale="200" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
 
 <!-- GATE: VIDEO ENTRY -->
 <div id="pw">
@@ -292,7 +318,14 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <form style="width:100%;display:flex;flex-direction:column;gap:10px" onsubmit="unlock(event)">
         <input type="email" class="cc-in" id="pwi" placeholder="your@email.com" autocomplete="email">
         <div class="cc-err" id="pwe"></div>
-        <button type="submit" class="cc-btn" id="pw-submit-btn">Let me in</button>
+        <button type="submit" class="cc-btn" id="pw-submit-btn">
+          <span class="cc-btn-glass">
+            <span class="cc-btn-glass-blur"></span>
+            <span class="cc-btn-glass-tint"></span>
+            <span class="cc-btn-glass-ring"></span>
+            <span class="cc-btn-glass-label">Let me in</span>
+          </span>
+        </button>
       </form>
       <p class="cc-disclaimer">Get updates from Fantasy Brands. No spam, ever.</p>
       <div class="cc-socials">
@@ -1947,7 +1980,8 @@ async function unlock(e){
   }
 
   errEl.classList.remove("on");
-  btn.textContent = "Subscribing…";
+  const btnLabel = btn.querySelector(".cc-btn-glass-label") || btn;
+  btnLabel.textContent = "Subscribing…";
   btn.disabled = true;
 
   try {
@@ -1975,7 +2009,7 @@ async function unlock(e){
     } else {
       errEl.textContent = "Something went wrong. Please try again.";
       errEl.classList.add("on");
-      btn.textContent = "Subscribe & Enter →";
+      btnLabel.textContent = "Subscribe & Enter →";
       btn.disabled = false;
     }
   }
