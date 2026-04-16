@@ -430,7 +430,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <button class="fb" data-t="Gold" onclick="setTier(this)">Gold</button>
       <button class="fb" data-t="Silver" onclick="setTier(this)">Silver</button>
       <button class="fb" data-t="Bronze" onclick="setTier(this)">Bronze</button>
-      <button class="fb" data-t="favorites" onclick="setTier(this)">&#9829; My Favorites</button>
+      <button class="fb" data-t="favorites" onclick="setTier(this)">&#128278; My Favorites</button>
       <button class="tb-sort-btn" id="sort-liked-btn" onclick="toggleSortLiked()">&#128077; Most Liked</button>
       <span class="tb-count" id="cnt"></span>
       <div class="tb-search-wrap">
@@ -2204,13 +2204,13 @@ function toggleFav(id){
   // Update all heart buttons for this entry in the grid
   document.querySelectorAll('.gc-heart[data-id="' + id + '"]').forEach(b => {
     b.classList.toggle('on', nowFav);
-    b.innerHTML = nowFav ? '&#9829;' : '&#9825;';
+    b.innerHTML = nowFav ? '&#128278;' : '&#128278;';
   });
   // Update modal heart button if open
   const mdlFav = document.getElementById('mdl-fav-btn');
   if(mdlFav && parseInt(mdlFav.dataset.id) === id){
     mdlFav.classList.toggle('on', nowFav);
-    mdlFav.innerHTML = nowFav ? '&#9829; Saved' : '&#9825; Save';
+    mdlFav.innerHTML = nowFav ? '&#128278; Saved' : '&#128278; Save';
   }
   // If we're in favorites view, rebuild so removed items disappear
   if(curTier === 'favorites') refresh();
@@ -2667,7 +2667,7 @@ function buildGrid(){
         <div class="gc-title">${e.campaign}</div>
         <div class="gc-meta">${e.brand.split("/")[0].trim()} &mdash; ${e.agency.split(",")[0]}</div>
         <div class="gc-actions">
-          <button class="gc-heart${isFav ? ' on' : ''}" data-id="${e.id}" onclick="event.stopPropagation();toggleFav(${e.id})" title="Save to favorites">${isFav ? '&#9829;' : '&#9825;'}</button>
+          <button class="gc-heart${isFav ? ' on' : ''}" data-id="${e.id}" onclick="event.stopPropagation();toggleFav(${e.id})" title="Save to favorites">${isFav ? '&#128278;' : '&#128278;'}</button>
           <button class="gc-like-btn${isLiked ? ' on' : ''}" data-id="${e.id}" onclick="event.stopPropagation();toggleLike(${e.id})" title="Like">&#128077; <span class="gc-like-count">${likeCount > 0 ? likeCount : ''}</span></button>
         </div>
       </div>
@@ -2784,7 +2784,7 @@ function openModal(){
   acts+=`<button class="mdl-share" id="mdl-share-btn" onclick="shareEntry(${e.id})">&#128279; Share</button>`;
   // Favorites heart
   const isFav = getFavs().has(e.id);
-  acts+=`<button class="mdl-fav-btn${isFav ? ' on' : ''}" id="mdl-fav-btn" data-id="${e.id}" onclick="toggleFav(${e.id})">${isFav ? '&#9829; Saved' : '&#9825; Save'}</button>`;
+  acts+=`<button class="mdl-fav-btn${isFav ? ' on' : ''}" id="mdl-fav-btn" data-id="${e.id}" onclick="toggleFav(${e.id})">${isFav ? '&#128278; Saved' : '&#128278; Save'}</button>`;
   // Global like
   const likeCount = likeCounts[e.id] || 0;
   const isLiked = localStorage.getItem('bc_liked_' + e.id) === '1';
