@@ -284,7 +284,30 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .gc-badge.bronze{background:var(--bronze)}
 .gc-title{font-size:14px;font-weight:700;line-height:1.3;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .gc-meta{font-size:11px;color:rgba(255,255,255,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ── FAVORITES & LIKES ── */
+.gc-actions{display:flex;align-items:center;gap:6px;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.06)}
+.gc-heart,.gc-like-btn{display:flex;align-items:center;gap:3px;padding:4px 9px;border-radius:20px;border:1px solid rgba(255,255,255,.1);background:transparent;color:rgba(255,255,255,.3);cursor:pointer;font-size:12px;transition:all .2s;font-family:var(--font);line-height:1;white-space:nowrap}
+.gc-heart:hover{color:#ff9de2;border-color:rgba(255,157,226,.35);background:rgba(255,157,226,.08)}
+.gc-like-btn:hover{color:#7efcdb;border-color:rgba(126,252,219,.3);background:rgba(126,252,219,.08)}
+.gc-heart.on{color:#ff9de2;border-color:rgba(255,157,226,.45);background:rgba(255,157,226,.12)}
+.gc-like-btn.on{color:#7efcdb;border-color:rgba(126,252,219,.4);background:rgba(126,252,219,.12)}
+.gc-like-count{font-size:10px}
+/* modal favorite/like buttons */
+.mdl-fav-btn,.mdl-like-act{padding:9px 16px;border-radius:50px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:rgba(255,255,255,.65);cursor:pointer;font-size:12px;font-weight:600;letter-spacing:.3px;transition:all var(--tr);display:inline-flex;align-items:center;gap:6px;font-family:var(--font)}
+.mdl-fav-btn:hover{background:rgba(255,157,226,.12);color:#ff9de2;border-color:rgba(255,157,226,.3)}
+.mdl-fav-btn.on{background:rgba(255,157,226,.15);color:#ff9de2;border-color:rgba(255,157,226,.5)}
+.mdl-like-act:hover{background:rgba(126,252,219,.1);color:#7efcdb;border-color:rgba(126,252,219,.25)}
+.mdl-like-act.on{background:rgba(126,252,219,.12);color:#7efcdb;border-color:rgba(126,252,219,.45)}
+/* favorites filter button */
+.fb[data-t="favorites"].on{background:rgba(255,157,226,.18);border-color:rgba(255,157,226,.5);color:#ff9de2}
+/* sort button */
+.tb-sort-btn{padding:6px 12px;border-radius:50px;border:1px solid rgba(255,255,255,.1);background:transparent;color:rgba(255,255,255,.35);cursor:pointer;font-size:11px;font-weight:600;letter-spacing:.3px;transition:all var(--tr);font-family:var(--font);white-space:nowrap}
+.tb-sort-btn:hover{color:#fff;border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.05)}
+.tb-sort-btn.on{background:rgba(126,252,219,.12);border-color:rgba(126,252,219,.4);color:#7efcdb}
 </style>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 </head>
 <body tabindex="-1">
 <!-- SVG filter for liquid glass distortion -->
@@ -408,6 +431,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <button class="fb" data-t="Gold" onclick="setTier(this)">Gold</button>
       <button class="fb" data-t="Silver" onclick="setTier(this)">Silver</button>
       <button class="fb" data-t="Bronze" onclick="setTier(this)">Bronze</button>
+      <button class="fb" data-t="favorites" onclick="setTier(this)">&#9829; My Favorites</button>
+      <button class="tb-sort-btn" id="sort-liked-btn" onclick="toggleSortLiked()">&#128077; Most Liked</button>
       <span class="tb-count" id="cnt"></span>
       <div class="tb-search-wrap">
         <span class="tb-search-icon">&#128269;</span>
@@ -1910,6 +1935,122 @@ const DATA = {
 };
 
 // ─────────────────────────────────────────────
+// FIREBASE — global likes
+// ─────────────────────────────────────────────
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBvlMLB3EinZ5ZFhqTzEUyap47WERAn4U4",
+  authDomain: "brain-cannesdy.firebaseapp.com",
+  databaseURL: "https://brain-cannesdy-default-rtdb.firebaseio.com",
+  projectId: "brain-cannesdy",
+  storageBucket: "brain-cannesdy.firebasestorage.app",
+  messagingSenderId: "941253937578",
+  appId: "1:941253937578:web:5a71f38c7bf143c1aa03d3"
+};
+let db = null;
+let likeCounts = {};
+
+function initFirebase(){
+  try {
+    firebase.initializeApp(FIREBASE_CONFIG);
+    db = firebase.database();
+    db.ref('likes').on('value', snap => {
+      likeCounts = snap.val() || {};
+      refreshLikeCounts();
+      if(curSort === 'most-liked') buildGrid();
+    });
+  } catch(err){ console.warn('Firebase init failed:', err); }
+}
+
+function refreshLikeCounts(){
+  document.querySelectorAll('.gc-like-btn[data-id]').forEach(btn => {
+    const id = parseInt(btn.dataset.id);
+    const count = likeCounts[id] || 0;
+    const isLiked = localStorage.getItem('bc_liked_' + id) === '1';
+    btn.classList.toggle('on', isLiked);
+    const ce = btn.querySelector('.gc-like-count');
+    if(ce) ce.textContent = count > 0 ? count : '';
+  });
+}
+
+// ─────────────────────────────────────────────
+// FAVORITES — localStorage hearts
+// ─────────────────────────────────────────────
+function getFavs(){
+  try { return new Set(JSON.parse(localStorage.getItem('bc_favorites') || '[]')); }
+  catch(e){ return new Set(); }
+}
+function saveFavs(set){
+  localStorage.setItem('bc_favorites', JSON.stringify([...set]));
+}
+function toggleFav(id){
+  const favs = getFavs();
+  const nowFav = !favs.has(id);
+  if(nowFav) favs.add(id); else favs.delete(id);
+  saveFavs(favs);
+  // Update all heart buttons for this entry in the grid
+  document.querySelectorAll('.gc-heart[data-id="' + id + '"]').forEach(b => {
+    b.classList.toggle('on', nowFav);
+    b.innerHTML = nowFav ? '&#9829;' : '&#9825;';
+  });
+  // Update modal heart button if open
+  const mdlFav = document.getElementById('mdl-fav-btn');
+  if(mdlFav && parseInt(mdlFav.dataset.id) === id){
+    mdlFav.classList.toggle('on', nowFav);
+    mdlFav.innerHTML = nowFav ? '&#9829; Saved' : '&#9825; Save';
+  }
+  // If we're in favorites view, rebuild so removed items disappear
+  if(curTier === 'favorites') refresh();
+}
+
+// ─────────────────────────────────────────────
+// LIKES — Firebase thumbs up
+// ─────────────────────────────────────────────
+function toggleLike(id){
+  if(!db) return;
+  const likedKey = 'bc_liked_' + id;
+  const alreadyLiked = localStorage.getItem(likedKey) === '1';
+  const ref = db.ref('likes/' + id);
+  if(alreadyLiked){
+    ref.transaction(c => Math.max(0, (c || 0) - 1));
+    localStorage.removeItem(likedKey);
+    likeCounts[id] = Math.max(0, (likeCounts[id] || 1) - 1);
+    applyLikeUI(id, false);
+  } else {
+    ref.transaction(c => (c || 0) + 1);
+    localStorage.setItem(likedKey, '1');
+    likeCounts[id] = (likeCounts[id] || 0) + 1;
+    applyLikeUI(id, true);
+  }
+  if(curSort === 'most-liked') buildGrid();
+}
+
+function applyLikeUI(id, isLiked){
+  const count = likeCounts[id] || 0;
+  document.querySelectorAll('.gc-like-btn[data-id="' + id + '"]').forEach(b => {
+    b.classList.toggle('on', isLiked);
+    const ce = b.querySelector('.gc-like-count');
+    if(ce) ce.textContent = count > 0 ? count : '';
+  });
+  const mdlLike = document.getElementById('mdl-like-btn');
+  if(mdlLike && parseInt(mdlLike.dataset.id) === id){
+    mdlLike.classList.toggle('on', isLiked);
+    const ce = mdlLike.querySelector('.mdl-like-count');
+    if(ce) ce.textContent = count > 0 ? ' ' + count : '';
+  }
+}
+
+// ─────────────────────────────────────────────
+// SORT — most liked toggle
+// ─────────────────────────────────────────────
+let curSort = 'default';
+function toggleSortLiked(){
+  curSort = curSort === 'most-liked' ? 'default' : 'most-liked';
+  const btn = document.getElementById('sort-liked-btn');
+  if(btn) btn.classList.toggle('on', curSort === 'most-liked');
+  refresh();
+}
+
+// ─────────────────────────────────────────────
 // STATE
 // ─────────────────────────────────────────────
 const BEEHIIV_PUB = "pub_3c24cdd1-b9c3-4192-aa8b-8a2b98f78a83";
@@ -2282,8 +2423,15 @@ function refresh(){
   const deduped = dedup(raw);
   if(curTier === "all"){
     entries = deduped;
+  } else if(curTier === "favorites"){
+    const favs = getFavs();
+    entries = deduped.filter(e => favs.has(e.id));
   } else {
     entries = deduped.filter(e => e.tiers.includes(curTier));
+  }
+  // Sort
+  if(curSort === "most-liked"){
+    entries = [...entries].sort((a, b) => (likeCounts[b.id] || 0) - (likeCounts[a.id] || 0));
   }
   if(curIdx >= entries.length) curIdx = 0;
   gridFocusIdx = curIdx;
@@ -2318,11 +2466,15 @@ function tierBadges(tiers){
 // ─────────────────────────────────────────────
 function buildGrid(){
   const g = document.getElementById("grid-inner");
+  const favs = getFavs();
   g.innerHTML = entries.map((e,i) => {
     const tc = tierClass(e.tiers[0]);
     const imgStyle = e.imgUrl ? `background-image:url('${e.imgUrl}')` : "";
     const gradClass = !e.imgUrl ? e.grad : "";
     const focused = i === gridFocusIdx ? " arrow-focus" : "";
+    const isFav = favs.has(e.id);
+    const likeCount = likeCounts[e.id] || 0;
+    const isLiked = localStorage.getItem('bc_liked_' + e.id) === '1';
     return `<div class="grid-card ${tc}${focused}" onclick="gridClick(${i})">
       <div class="gc-img ${gradClass}" style="${imgStyle}"></div>
       <button class="gc-share" onclick="event.stopPropagation();shareEntry(${e.id})" title="Copy link">&#128279;</button>
@@ -2330,6 +2482,10 @@ function buildGrid(){
         ${tierBadges(e.tiers)}
         <div class="gc-title">${e.campaign}</div>
         <div class="gc-meta">${e.brand.split("/")[0].trim()} &mdash; ${e.agency.split(",")[0]}</div>
+        <div class="gc-actions">
+          <button class="gc-heart${isFav ? ' on' : ''}" data-id="${e.id}" onclick="event.stopPropagation();toggleFav(${e.id})" title="Save to favorites">${isFav ? '&#9829;' : '&#9825;'}</button>
+          <button class="gc-like-btn${isLiked ? ' on' : ''}" data-id="${e.id}" onclick="event.stopPropagation();toggleLike(${e.id})" title="Like">&#128077; <span class="gc-like-count">${likeCount > 0 ? likeCount : ''}</span></button>
+        </div>
       </div>
     </div>`;
   }).join("");
@@ -2442,6 +2598,13 @@ function openModal(){
   }
   if(e.caseUrl)  acts+=`<a class="ha s" href="${e.caseUrl}" target="_blank">&#8599; Learn More</a>`;
   acts+=`<button class="mdl-share" id="mdl-share-btn" onclick="shareEntry(${e.id})">&#128279; Share</button>`;
+  // Favorites heart
+  const isFav = getFavs().has(e.id);
+  acts+=`<button class="mdl-fav-btn${isFav ? ' on' : ''}" id="mdl-fav-btn" data-id="${e.id}" onclick="toggleFav(${e.id})">${isFav ? '&#9829; Saved' : '&#9825; Save'}</button>`;
+  // Global like
+  const likeCount = likeCounts[e.id] || 0;
+  const isLiked = localStorage.getItem('bc_liked_' + e.id) === '1';
+  acts+=`<button class="mdl-like-act${isLiked ? ' on' : ''}" id="mdl-like-btn" data-id="${e.id}" onclick="toggleLike(${e.id})">&#128077; Like<span class="mdl-like-count">${likeCount > 0 ? ' ' + likeCount : ''}</span></button>`;
   document.getElementById("mdl-acts").innerHTML=acts;
   // update URL hash for deep-linking
   history.replaceState(null,"","#entry-"+e.id);
@@ -2541,6 +2704,9 @@ document.getElementById("pwi").addEventListener("keydown",e=>{
     refresh();
   }
 })();
+
+// Init Firebase for global likes
+initFirebase();
 </script>
 </body>
 </html>
