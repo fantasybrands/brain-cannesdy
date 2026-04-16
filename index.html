@@ -42,7 +42,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 /* Liquid glass button — lives inside .cc-unified card */
 .cc-btn{position:relative;display:flex;align-items:center;justify-content:center;width:100%;padding:0;border:none;background:transparent;cursor:pointer;font-family:var(--font);margin-top:0;border-radius:0;overflow:visible;-webkit-tap-highlight-color:transparent}
 .cc-btn:disabled{opacity:.6;cursor:default}
-.cc-btn-glass{position:relative;display:flex;align-items:center;justify-content:center;width:100%;padding:13px 20px;border-radius:0;font-size:13px;font-weight:700;letter-spacing:1.5px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.4);box-shadow:none;transition:background .2s;overflow:hidden}
+.cc-btn-glass{position:relative;display:flex;align-items:center;justify-content:center;width:100%;padding:13px 20px;border-radius:0;font-size:13px;font-weight:700;letter-spacing:1.5px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.4);background:rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.15);transition:background .2s;overflow:hidden}
 .cc-btn:not(:disabled):hover .cc-btn-glass{background:rgba(92,224,216,.18);box-shadow:inset 0 0 24px rgba(92,224,216,.12)}
 /* layer 1 – blur + distortion */
 .cc-btn-glass-blur{position:absolute;inset:0;border-radius:inherit;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);filter:url(#glass-distortion);isolation:isolate;z-index:0}
