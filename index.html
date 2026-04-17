@@ -69,27 +69,26 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 /* ── TOPBAR SEARCH ── */
 .tb-search-wrap{position:relative;margin-left:8px}
-.tb-search{width:240px;padding:8px 14px 8px 34px;border-radius:50px;border:2px solid rgba(142,184,255,.3);background:rgba(142,184,255,.05);color:#fff;font-size:13px;outline:none;transition:all .25s;font-family:var(--font)}
+.tb-search{width:240px;padding:8px 32px 8px 34px;border-radius:50px;border:2px solid rgba(142,184,255,.3);background:rgba(142,184,255,.05);color:#fff;font-size:13px;outline:none;transition:all .25s;font-family:var(--font)}
 .tb-search::placeholder{color:rgba(142,184,255,.4)}
 .tb-search:focus{width:320px;border-color:var(--holo-pink);background:rgba(255,157,226,.06);box-shadow:0 0 18px rgba(255,157,226,.15)}
 .tb-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:rgba(142,184,255,.55);font-size:14px;pointer-events:none}
 .tb-surprise{padding:6px 14px;border-radius:50px;border:1px solid rgba(255,157,226,.25);background:rgba(255,157,226,.06);color:rgba(255,255,255,.7);cursor:pointer;font-size:11px;font-weight:600;letter-spacing:.3px;transition:all var(--tr);font-family:var(--font);white-space:nowrap}
 .tb-surprise:hover{background:rgba(255,157,226,.15);color:#fff;border-color:rgba(255,157,226,.45)}
-/* search results dropdown anchored to topbar */
-.tb-results{position:absolute;top:calc(100% + 6px);left:0;width:380px;background:rgba(14,12,34,.97);border-radius:12px;border:1px solid rgba(255,255,255,.08);max-height:400px;overflow-y:auto;display:none;backdrop-filter:blur(20px);z-index:100;box-shadow:0 12px 40px rgba(0,0,0,.5)}
-.tb-results.on{display:block}
-.tb-results::-webkit-scrollbar{width:6px}
-.tb-results::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px}
-.sr-item{display:flex;align-items:center;gap:12px;padding:10px 14px;cursor:pointer;transition:background .15s;border-bottom:1px solid rgba(255,255,255,.04)}
-.sr-item:last-child{border-bottom:none}
-.sr-item:hover,.sr-item.focused{background:rgba(255,255,255,.07)}
-.sr-thumb{width:48px;height:36px;border-radius:5px;background-size:contain;background-position:center;background-repeat:no-repeat;background-color:rgba(255,255,255,.05);flex-shrink:0}
-.sr-info{flex:1;min-width:0}
-.sr-title{font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sr-meta{font-size:10px;color:rgba(255,255,255,.3);margin-top:1px}
-.sr-badge{padding:2px 7px;border-radius:50px;font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;flex-shrink:0;color:#fff}
-.sr-badge.gp{background:var(--gp)}.sr-badge.gold{background:var(--gold)}.sr-badge.silver{background:var(--silver)}.sr-badge.bronze{background:var(--bronze)}
-.sr-empty{padding:18px;text-align:center;color:rgba(255,255,255,.3);font-size:12px}
+/* clear (×) button inside search bar */
+.tb-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:18px;height:18px;border-radius:50%;border:none;background:rgba(255,255,255,.15);color:rgba(255,255,255,.7);font-size:11px;line-height:1;cursor:pointer;display:none;align-items:center;justify-content:center;transition:all .15s;padding:0}
+.tb-clear.on{display:flex}
+.tb-clear:hover{background:rgba(255,157,226,.35);color:#fff}
+/* search mode: count label becomes pink */
+#cnt.search-mode{color:rgba(255,157,226,.7)}
+/* empty grid search state */
+.grid-empty-search{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;gap:10px;color:rgba(255,255,255,.25)}
+.ges-icon{font-size:48px;opacity:.4}
+.ges-msg{font-size:16px;font-weight:600;color:rgba(255,255,255,.35)}
+.ges-hint{font-size:12px;color:rgba(255,255,255,.2)}
+/* card pop-in animation for grid */
+@keyframes cardPop{from{opacity:0;transform:translateY(14px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.grid-card.popping{animation:cardPop 0.28s cubic-bezier(0.34,1.2,0.64,1) both}
 /* holographic shimmer for grid cards */
 @keyframes holoShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 @keyframes holoBorder{0%{border-color:rgba(142,184,255,.2)}33%{border-color:rgba(255,157,226,.2)}66%{border-color:rgba(126,252,219,.2)}100%{border-color:rgba(142,184,255,.2)}}
@@ -383,7 +382,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <div class="sb-cat on" onclick="selCat(this)">All</div>
     <div class="sb-cat" onclick="selCat(this)">Brand Experience &amp; Activation</div>
     <div class="sb-cat" onclick="selCat(this)">Design</div>
-    <div class="sb-cat" onclick="selCat(this)">Film</div>
+    <div class="sb-cat cs">Film</div>
     <div class="sb-cat cs">Digital Craft</div>
     <div class="sb-cat cs">Entertainment</div>
     <div class="sb-cat cs">Entertainment for Gaming</div>
@@ -431,13 +430,13 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <button class="fb" data-t="Gold" onclick="setTier(this)">Gold</button>
       <button class="fb" data-t="Silver" onclick="setTier(this)">Silver</button>
       <button class="fb" data-t="Bronze" onclick="setTier(this)">Bronze</button>
-      <button class="fb" data-t="favorites" onclick="setTier(this)">&#9829; My Favorites</button>
+      <button class="fb" data-t="favorites" onclick="setTier(this)"><svg width="0.9em" height="1.05em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;display:inline-block"><path d="M5 3H19C19.5523 3 20 3.44772 20 4V21L12 17L4 21V4C4 3.44772 4.44772 3 5 3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg> My Favorites</button>
       <button class="tb-sort-btn" id="sort-liked-btn" onclick="toggleSortLiked()">&#128077; Most Liked</button>
       <span class="tb-count" id="cnt"></span>
       <div class="tb-search-wrap">
         <span class="tb-search-icon">&#128269;</span>
         <input class="tb-search" id="tb-q" type="text" placeholder="Search winners..." autocomplete="off" oninput="tbSearch(this.value)" onkeydown="tbSearchKey(event)">
-        <div class="tb-results" id="tb-results"></div>
+        <button class="tb-clear" id="tb-clear" onclick="clearSearch()" title="Clear search">&#10005;</button>
       </div>
       <button class="tb-surprise" onclick="surpriseMe()" title="View a random winner [R]">&#127922; Surprise Me <span class="kk" style="opacity:.55">R</span></button>
     </div>
@@ -472,7 +471,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 // e.g. imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/abc123"
 // ─────────────────────────────────────────────
 const DATA = {
-
 
   "Brand Experience & Activation": [
 
@@ -1080,6 +1078,221 @@ const DATA = {
      videoUrl:"https://www.youtube.com/results?search_query=Worst+Children's+Library+Samsung+Cannes+2025",
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/24a4ad960f3c4ac8a1a86823848e8d17?format=webp"}
+  ],
+
+  "Audio & Radio": [
+
+    // GRAND PRIX,
+    {id:301,tier:"Grand Prix",campaign:"One Second Ads",
+     brand:"Budweiser",
+     agency:"Africa Creative DDB",country:"Brazil",grad:"g301",
+     desc:"Budweiser compressed its entire brand story into a single second of audio \u2014 proving that sonic identity alone can carry a full emotional message. The campaign transformed radio brevity from a limitation into a creative superpower.",
+     tags:["Use of Music", "Brazil"],
+     keywords:["beer", "alcohol", "music", "sonic", "TikTok", "social media", "Brazil"],
+     youtubeId:"RpvlshoKIrE",
+     videoUrl:"https://www.youtube.com/results?search_query=One+Second+Ads+Budweiser+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/3ed15a7b9f6044dcbfddb34f26865591/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+
+    // GOLD,
+    {id:302,tier:"Gold",campaign:"Name This Oreo",
+     brand:"Oreo",
+     agency:"VML",country:"United States",grad:"g302",
+     desc:"Oreo invited fans to name a mystery new flavor using only audio cues and voice activation, turning a product tease into a participatory sonic experience. The voice-first mechanic made snack discovery feel genuinely playful.",
+     tags:["Voice Activation", "United States"],
+     keywords:["cookies", "snacks", "food", "voice", "gaming", "interactive", "United States"],
+     youtubeId:"hRp6cBmbfIw",
+     videoUrl:"https://www.youtube.com/results?search_query=Name+This+Oreo+Oreo+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/ef3247bf826c4a83838f548add166694/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:303,tier:"Gold",campaign:"One Second Ads",
+     brand:"Budweiser",
+     agency:"Africa Creative DDB",country:"Brazil",grad:"g303",
+     desc:"Budweiser compressed its entire brand story into a single second of audio \u2014 proving that sonic identity alone can carry a full emotional message. The campaign transformed radio brevity from a limitation into a creative superpower.",
+     tags:["Audio-Led Creativity", "Brazil"],
+     keywords:["beer", "alcohol", "music", "sonic", "TikTok", "social media", "Brazil"],
+     youtubeId:"RpvlshoKIrE",
+     videoUrl:"https://www.youtube.com/results?search_query=One+Second+Ads+Budweiser+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/3ed15a7b9f6044dcbfddb34f26865591/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:304,tier:"Gold",campaign:"The Second Release",
+     brand:"Billboard Arabia",
+     agency:"SRMG Labs",country:"Saudi Arabia",grad:"g304",
+     desc:"Billboard Arabia partnered with a Saudi artist to drop an unreleased song exclusively as a radio broadcast \u2014 no streaming, no download, just a single live airing. The stunt reframed radio as the ultimate exclusive platform in the streaming era.",
+     tags:["Single-Market Campaign", "Saudi Arabia"],
+     keywords:["music", "radio", "exclusive", "streaming", "Saudi Arabia", "publishing"],
+     youtubeId:"gD1XqvQaMR0",
+     videoUrl:"https://www.youtube.com/results?search_query=The+Second+Release+Billboard+Arabia+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/3d395c305b9f443fa71a53d5de3a0c69/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+
+    // SILVER,
+    {id:305,tier:"Silver",campaign:"Name This Oreo",
+     brand:"Oreo",
+     agency:"VML",country:"United States",grad:"g305",
+     desc:"Oreo invited fans to name a mystery new flavor using only audio cues and voice activation, turning a product tease into a participatory sonic experience. The voice-first mechanic made snack discovery feel genuinely playful.",
+     tags:["Use of Audio & Radio as a Medium", "United States"],
+     keywords:["cookies", "snacks", "food", "voice", "gaming", "interactive", "United States"],
+     youtubeId:"hRp6cBmbfIw",
+     videoUrl:"https://www.youtube.com/results?search_query=Name+This+Oreo+Oreo+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/ef3247bf826c4a83838f548add166694/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:306,tier:"Silver",campaign:"Fishermen Storytellers",
+     brand:"Corona",
+     agency:"Africa Creative DDB",country:"Brazil",grad:"g306",
+     desc:"Corona partnered with Brazilian fishermen to record their sea stories as long-form audio content, tapping into a rich oral tradition to create an authentic branded podcast. The campaign celebrated quiet places and the art of slow storytelling.",
+     tags:["Branded Content/Podcasts", "Brazil"],
+     keywords:["beer", "alcohol", "podcast", "storytelling", "Brazil", "ocean", "fishing"],
+     youtubeId:"LDbcqtL9zP8",
+     videoUrl:"https://www.youtube.com/results?search_query=Fishermen+Storytellers+Corona+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/6bbb4c442a3642d1b9da756e908f96ba/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:307,tier:"Silver",campaign:"1. High Energy Intern",
+     brand:"Fusion Energy Drink",
+     agency:"David",country:"Spain",grad:"g307",
+     desc:"Fusion Energy Drink ran a radio campaign starring an insufferably enthusiastic intern whose over-the-top energy became an unexpected cultural mirror. The scripts landed perfectly in the awkward space between relatable and cringey.",
+     tags:["Script", "Spain"],
+     keywords:["energy drink", "humor", "radio", "Spain", "script", "office"],
+     videoUrl:"https://www.youtube.com/results?search_query=1.+High+Energy+Intern+Fusion+Energy+Drink+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/846afe3e468240929823119e42cf3b99/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:308,tier:"Silver",campaign:"Chill Enough",
+     brand:"Coors Light",
+     agency:"Alma Advertising Agency",country:"United States",grad:"g308",
+     desc:"Coors Light cast real people with genuinely chill energy \u2014 not actors performing chill \u2014 for a radio campaign that felt like an audio documentary about doing less. The casting was the concept.",
+     tags:["Casting & Performance", "United States"],
+     keywords:["beer", "alcohol", "casting", "humor", "United States", "laid-back"],
+     videoUrl:"https://www.youtube.com/results?search_query=Chill+Enough+Coors+Light+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/d280437042604b28b05e4a6ff87b4918/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:309,tier:"Silver",campaign:"Burger to King",
+     brand:"Burger King",
+     agency:"Happiness, an FCB Alliance",country:"Belgium",grad:"g309",
+     desc:"Burger King Belgium flipped the script on fast food rivalry by inviting customers to 'burger' their way to royalty \u2014 a clever audio wordplay campaign that made the brand feel locally irreverent. The challenger tone landed hard in a market dominated by bigger players.",
+     tags:["Challenger Brand", "Belgium"],
+     keywords:["fast food", "QSR", "Belgium", "challenger", "humor", "food"],
+     youtubeId:"RQVaoU4CGRk",
+     videoUrl:"https://www.youtube.com/results?search_query=Burger+to+King+Burger+King+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/2758636e8d504995aada10a961b5e89e/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:310,tier:"Silver",campaign:"The Second Release",
+     brand:"Billboard Arabia",
+     agency:"SRMG Labs",country:"Saudi Arabia",grad:"g310",
+     desc:"Billboard Arabia partnered with a Saudi artist to drop an unreleased song exclusively as a radio broadcast \u2014 no streaming, no download, just a single live airing. The stunt reframed radio as the ultimate exclusive platform in the streaming era.",
+     tags:["Social Behaviour", "Saudi Arabia"],
+     keywords:["music", "radio", "exclusive", "streaming", "Saudi Arabia", "publishing"],
+     youtubeId:"gD1XqvQaMR0",
+     videoUrl:"https://www.youtube.com/results?search_query=The+Second+Release+Billboard+Arabia+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/3d395c305b9f443fa71a53d5de3a0c69/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:311,tier:"Silver",campaign:"From Hurt to Hit",
+     brand:"Brahma",
+     agency:"Africa Creative DDB",country:"Brazil",grad:"g311",
+     desc:"Brahma transformed bad Brazilian breakup songs into rally anthems by remixing listener submissions into something actually worth celebrating. The campaign turned heartbreak into a communal audio moment around beer and resilience.",
+     tags:["Use of Humour", "Brazil"],
+     keywords:["beer", "alcohol", "Brazil", "music", "humor", "heartbreak", "remix"],
+     videoUrl:"https://www.youtube.com/results?search_query=From+Hurt+to+Hit+Brahma+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/2c4c0601d34e42cf931304cf072f6fa8?resize=1024%2C768&quality=85&format=webp"},
+    {id:312,tier:"Silver",campaign:"Me Feat. Me",
+     brand:"Nosotras",
+     agency:"DDB Chile",country:"Chile",grad:"g312",
+     desc:"Nosotras teamed up with Chilean artists to remix songs \u2014 replacing the male featured artist with the original female singer featuring herself. The campaign made a quiet but pointed argument about who gets credit in music.",
+     tags:["Cultural Engagement", "Chile"],
+     keywords:["women", "equality", "music", "Chile", "feminist", "hygiene", "empowerment"],
+     youtubeId:"KBcSEzHf5DA",
+     videoUrl:"https://www.youtube.com/results?search_query=Me+Feat.+Me+Nosotras+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/a6ac5c5dd4fc4487966ae01ac52f95ff?resize=1024%2C768&quality=85&format=webp"},
+
+    // BRONZE,
+    {id:313,tier:"Bronze",campaign:"The Future Fan Stage",
+     brand:"Way Out West",
+     agency:"Nord DDB",country:"Sweden",grad:"g313",
+     desc:"Way Out West festival created an AI-generated stage populated entirely by music acts that don't exist yet \u2014 sonic experiments built from fan-submitted ideas and generative audio. It reimagined what festival programming could look like when the crowd becomes the curator.",
+     tags:["Branded Content/Podcasts", "Sweden"],
+     keywords:["music", "festival", "AI", "generative", "Sweden", "innovation"],
+     youtubeId:"cjnTY_qX2wM",
+     videoUrl:"https://www.youtube.com/results?search_query=The+Future+Fan+Stage+Way+Out+West+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/4e75651ba0a54a7fbba80de2e2684670?resize=1024%2C768&quality=85&format=webp"},
+    {id:314,tier:"Bronze",campaign:"Roobadge",
+     brand:"Volkswagen",
+     agency:"DDB Sydney",country:"Australia",grad:"g314",
+     desc:"Volkswagen Australia created a sonic badge for kangaroo-proof cars \u2014 a distinctive audio cue that played when a vehicle passed wildlife detection zones. The idea turned safety tech into something you could actually hear.",
+     tags:["Audio-Led Creativity", "Australia"],
+     keywords:["automotive", "cars", "Australia", "safety", "wildlife", "kangaroo"],
+     videoUrl:"https://www.youtube.com/results?search_query=Roobadge+Volkswagen+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/0fc6fc20f09f4688ad2f2ef080c8d91a/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:315,tier:"Bronze",campaign:"The Sound of Divorce",
+     brand:"Calm",
+     agency:"Ogilvy Argentina",country:"Argentina",grad:"g315",
+     desc:"Calm created a radio spot built entirely from the ambient sounds of a house mid-separation \u2014 drawers, silences, the hum of a half-empty fridge. It made the case for the app without ever raising its voice.",
+     tags:["Audio-Led Creativity", "Argentina"],
+     keywords:["mental health", "wellness", "meditation", "Argentina", "divorce", "mindfulness"],
+     youtubeId:"FVsx6MQYNRc",
+     videoUrl:"https://www.youtube.com/results?search_query=The+Sound+of+Divorce+Calm+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/ba21ee8e4ae340bdbb2a0ad904835ef2/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:316,tier:"Bronze",campaign:"Megan Thee [____]",
+     brand:"Amazon",
+     agency:"Amazon XCM",country:"United States",grad:"g316",
+     desc:"Amazon bleeped out Megan Thee Stallion's own name in a radio spot timed to Prime Day, turning a censorship gag into a cultural hook that drove search traffic. The blank became the call to action.",
+     tags:["Use of Music", "United States"],
+     keywords:["e-commerce", "retail", "celebrity", "United States", "music", "Prime Day", "censorship"],
+     videoUrl:"https://www.youtube.com/results?search_query=Megan+Thee+%5B____%5D+Amazon+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/3e26bcda38d64f2aba747511ae8aa1b6/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:317,tier:"Bronze",campaign:"Me Feat. Me",
+     brand:"Nosotras",
+     agency:"DDB Chile",country:"Chile",grad:"g317",
+     desc:"Nosotras teamed up with Chilean artists to remix songs \u2014 replacing the male featured artist with the original female singer featuring herself. The campaign made a quiet but pointed argument about who gets credit in music.",
+     tags:["Use of Music", "Chile"],
+     keywords:["women", "equality", "music", "Chile", "feminist", "hygiene", "empowerment"],
+     youtubeId:"KBcSEzHf5DA",
+     videoUrl:"https://www.youtube.com/results?search_query=Me+Feat.+Me+Nosotras+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/a6ac5c5dd4fc4487966ae01ac52f95ff?resize=1024%2C768&quality=85&format=webp"},
+    {id:318,tier:"Bronze",campaign:"What's Gucci?",
+     brand:"Hansa Pilsener",
+     agency:"Joe Public",country:"South Africa",grad:"g318",
+     desc:"Hansa Pilsener's South African radio campaign rewired Gen Z slang into beer-drinking scripts that felt completely native to the culture \u2014 no translation needed. The writing was so sharp it became quotable in its own right.",
+     tags:["Script", "South Africa"],
+     keywords:["beer", "alcohol", "South Africa", "humor", "Gen Z", "slang", "script"],
+     videoUrl:"https://www.youtube.com/results?search_query=What%27s+Gucci%3F+Hansa+Pilsener+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/0bca684772274dd9a6e2c0c6cd401876/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:319,tier:"Bronze",campaign:"Harmoniser",
+     brand:"Twix",
+     agency:"adam&eveDDB",country:"United Kingdom",grad:"g319",
+     desc:"Twix turned the left bar vs. right bar debate into an audio experience \u2014 with two announcers who literally cannot agree on anything, harmonizing only when someone bites into a Twix. Sound design did the heavy lifting.",
+     tags:["Social Behaviour", "United Kingdom"],
+     keywords:["chocolate", "candy", "snacks", "United Kingdom", "humor", "sound design"],
+     youtubeId:"OFY3DkMtpEk",
+     videoUrl:"https://www.youtube.com/results?search_query=Harmoniser+Twix+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/bd69a0303076425391bbc54c35136f07?resize=1024%2C768&quality=85&format=webp"},
+    {id:320,tier:"Bronze",campaign:"Football Lover FM",
+     brand:"So Foot",
+     agency:"BETC",country:"France",grad:"g320",
+     desc:"So Foot, the French football culture magazine, launched a fake radio station that broadcast only to people who love football the way real fans do \u2014 obsessively, poetically, fluently. It was a love letter to the game in pure audio form.",
+     tags:["Use of Humour", "France"],
+     keywords:["football", "soccer", "sport", "France", "humor", "radio", "publishing"],
+     youtubeId:"j0eeoSEDFn0",
+     videoUrl:"https://www.youtube.com/results?search_query=Football+Lover+FM+So+Foot+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/0b397234b3d74a5aa798ad871042c23c?resize=1024%2C768&quality=85&format=webp"},
+    {id:321,tier:"Bronze",campaign:"Sounds Right",
+     brand:"Museum for the United Nations - UN Live, Spotify",
+     agency:"AKQA",country:"Denmark",grad:"g321",
+     desc:"The Museum for the UN and Spotify gave nature its own music royalties \u2014 registering bird calls, ocean sounds, and rainfall as credited artists so ecosystems could earn from streams. It reframed conservation as a rights issue.",
+     tags:["Corporate Purpose & Social Responsibility", "Denmark"],
+     keywords:["nature", "music", "streaming", "sustainability", "Denmark", "environment", "conservation", "Spotify"],
+     youtubeId:"5newTxSZ9bU",
+     videoUrl:"https://www.youtube.com/results?search_query=Sounds+Right+Museum+for+the+United+Nations+-+UN+Live%2C+Spotify+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/b6b3d3d70b4947f0823f4a8f653bc0aa/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"}
   ],
 
   "Design": [
@@ -1932,744 +2145,7 @@ const DATA = {
      videoUrl:"https://www.youtube.com/results?search_query=Timeout+Against+Hate+Foundation+to+Combat+Antisemitism+Cannes+2025",
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/e43c43ae03f240ed8fbaf95002d5d795?format=webp"}
-  ],
-
-  "Film": [
-    {id:401,tier:"Grand Prix",campaign:"Paris Paralympics 2024: Considering What?",
-     brand:"CHANNEL 4",
-     agency:"CHANNEL 4",country:"United Kingdom",grad:"g401",
-     desc:"Channel 4's Paralympics coverage confronted public skepticism head-on with a provocative film that turned the question 'Considering what?' into a rallying cry for elite athletic achievement.",
-     tags:["Media/Entertainment", "United Kingdom"],
-     keywords:["paralympics", "disability", "sports", "broadcast", "inclusion", "channel 4", "uk"],
-     youtubeId:"bUs_mNTNwvE",
-     videoUrl:"https://www.youtube.com/results?search_query=Paris+Paralympics+2024%3A+Considering+What%3F+CHANNEL+4+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/305450a901ff489cba9f80862c6b50fa/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:402,tier:"Grand Prix",campaign:"The Final Copy of Ilon Specht",
-     brand:"L'ORÉAL PARIS",
-     agency:"McCANN",country:"France",grad:"g402",
-     desc:"L'Oréal Paris resurrected the original 1971 'Because I'm Worth It' script in the handwriting of its creator, Ilon Specht, honoring the first woman to write her own ad copy and reclaiming female self-worth for a new generation.",
-     tags:["Corporate Purpose & Social Responsibility", "France"],
-     keywords:["women", "empowerment", "feminism", "heritage", "beauty", "equality", "advertising history"],
-     youtubeId:"-4o8bCc6-GM",
-     videoUrl:"https://www.youtube.com/results?search_query=The+Final+Copy+of+Ilon+Specht+L%27OR%C3%89AL+PARIS+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/466b4803619c44d1bfdd8db58534ce3b/storyboard_000004.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:403,tier:"Gold",campaign:"Find Your Friends",
-     brand:"APPLE",
-     agency:"APPLE",country:"United States",grad:"g403",
-     desc:"Apple's film showcased iPhone's Precision Finding feature through an emotionally charged reunion story, demonstrating how technology dissolves distance between people who've lost touch.",
-     tags:["Consumer Goods", "United States"],
-     keywords:["apple", "iphone", "technology", "reunion", "friendship", "precision finding"],
-     youtubeId:"LO4wamMlCKQ",
-     videoUrl:"https://www.youtube.com/results?search_query=Find+Your+Friends+APPLE+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/281da47dc515494796c5df896f025837/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:404,tier:"Gold",campaign:"Never Just a Period",
-     brand:"BODYFORM",
-     agency:"AMV BBDO",country:"United Kingdom",grad:"g404",
-     desc:"Bodyform's raw and unflinching film shattered the sanitized portrayal of menstruation, depicting the full physical and emotional reality of periods to demand that women's pain finally be taken seriously.",
-     tags:["Healthcare", "United Kingdom"],
-     keywords:["menstruation", "women's health", "period", "body", "equality", "healthcare", "female"],
-     youtubeId:"EQW59KR3c4U",
-     videoUrl:"https://www.youtube.com/results?search_query=Never+Just+a+Period+BODYFORM+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/6d28ab96c9f74932b46b85f09c942462/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:405,tier:"Gold",campaign:"Let There Be Cake",
-     brand:"KFC THAILAND",
-     agency:"BANANAS",country:"South Africa",grad:"g405",
-     desc:"KFC Thailand's 40th anniversary film is a joyful, sugar-rush tribute to the unexpected pleasure of cake in a chicken restaurant — a maximalist celebration of brand surprises.",
-     tags:["Travel, Leisure, Retail, Restaurants & Fast-Food Chains", "South Africa"],
-     keywords:["kfc", "fast food", "restaurant", "anniversary", "humor", "celebration", "food"],
-     youtubeId:"YDaAgeyVXiw",
-     videoUrl:"https://www.youtube.com/results?search_query=Let+There+Be+Cake+KFC+THAILAND+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/880f481b580e4ddbb51427137d8c2233/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:406,tier:"Gold",campaign:"The Last Birthday",
-     brand:"ASSOCIATION VALENTIN HAÜY",
-     agency:"JOSIANE",country:"France",grad:"g406",
-     desc:"A heartbreaking film for the French blind advocacy association showing a visually impaired man experiencing what may be his last birthday celebration, shining light on the isolation faced by the visually impaired.",
-     tags:["Not-For-Profit / Charity / Government", "France"],
-     keywords:["blindness", "disability", "charity", "nonprofit", "france", "awareness", "aging"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=The+Last+Birthday+ASSOCIATION+VALENTIN+HA%C3%9CY+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/ee42f5eb9191473cb30977941b93c317/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:407,tier:"Gold",campaign:"Telstra - Better on a Better Network",
-     brand:"TELSTRA",
-     agency:"BEAR MEETS EAGLE ON FIRE",country:"Australia",grad:"g407",
-     desc:"Telstra's campaign dramatized the real-world stakes of mobile connectivity in Australia, showing that being on a better network isn't just convenient — in vast, remote landscapes, it's essential.",
-     tags:["Single-Market Campaign", "Australia"],
-     keywords:["telstra", "telecom", "network", "australia", "connectivity", "rural", "mobile"],
-     youtubeId:"L8wOtakkr28",
-     videoUrl:"https://www.youtube.com/results?search_query=Telstra+-+Better+on+a+Better+Network+TELSTRA+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/098258845930457596eadbc3638252e0/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:408,tier:"Gold",campaign:"The Best Place in the World to Have Herpes",
-     brand:"NEW ZEALAND HERPES FOUNDATION",
-     agency:"FINCH",country:"Australia",grad:"g408",
-     desc:"New Zealand's Herpes Foundation reframed STI stigma with bold, irreverent humor, positioning New Zealand as the world's most chill place to have herpes thanks to its destigmatizing culture.",
-     tags:["Use of Humour", "Australia"],
-     keywords:["sexual health", "sti", "herpes", "humor", "new zealand", "destigmatization", "public health"],
-     youtubeId:"DvaU3-VCk8I",
-     videoUrl:"https://www.youtube.com/results?search_query=The+Best+Place+in+the+World+to+Have+Herpes+NEW+ZEALAND+HERPES+FOUNDATION+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/92bd7118acf74b66b36e002363d5ddaf/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:409,tier:"Gold",campaign:"Brian Cox Goes to College",
-     brand:"UBER ONE",
-     agency:"SPECIAL",country:"United States",grad:"g409",
-     desc:"Uber One enlisted the gravitas of Brian Cox to hilariously validate Uber One for Students, turning a cost-of-living crisis into a comedy about the absurdity of student life.",
-     tags:["Use of Humour", "United States"],
-     keywords:["uber", "students", "humor", "celebrity", "comedy", "savings", "subscription"],
-     youtubeId:"iY3aDUwo-Lg",
-     videoUrl:"https://www.youtube.com/results?search_query=Brian+Cox+Goes+to+College+UBER+ONE+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/881be696329d4ca593cdf9363b65ebeb/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:410,tier:"Gold",campaign:"Group Therapy",
-     brand:"AXA",
-     agency:"VML",country:"France",grad:"g410",
-     desc:"AXA's film used the trope of group therapy to explore humanity's collective anxieties — from climate to job insecurity — positioning insurance as the rational antidote to modern dread.",
-     tags:["Use of Humour", "France"],
-     keywords:["insurance", "anxiety", "humor", "therapy", "axa", "society", "france"],
-     youtubeId:"cH8-sNMfrOM",
-     videoUrl:"https://www.youtube.com/results?search_query=Group+Therapy+AXA+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/1d9b3b16880a4f74b308aff23c359211/storyboard_000004.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:411,tier:"Silver",campaign:"Flock",
-     brand:"APPLE",
-     agency:"TBWA\\MEDIA ARTS LAB",country:"United States",grad:"g411",
-     desc:"Apple's visually stunning iPhone film used flocking bird behavior as a metaphor for emergent collective intelligence, showcasing the device's camera capabilities through nature's own algorithms.",
-     tags:["Consumer Goods", "United States"],
-     keywords:["apple", "iphone", "nature", "camera", "cinematography", "technology", "birds"],
-     youtubeId:"jom8zBix-4c",
-     videoUrl:"https://www.youtube.com/results?search_query=Flock+APPLE+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/562cb04627f140f9b5dec66167130ab3/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:412,tier:"Silver",campaign:"Jordan Can't Ban Greatness",
-     brand:"NIKE",
-     agency:"WIEDEN+KENNEDY",country:"United States",grad:"g412",
-     desc:"Nike and Jordan Brand fired back at institutional bans on high-performance footwear with a defiant film declaring that greatness can never be legislated away — featuring athletes who refuse to be limited.",
-     tags:["Consumer Goods", "United States"],
-     keywords:["nike", "jordan", "basketball", "sports", "defiance", "athletes", "sneakers"],
-     youtubeId:"L-upphAEYGc",
-     videoUrl:"https://www.youtube.com/results?search_query=Jordan+Can%27t+Ban+Greatness+NIKE+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/367732ce038f4075824ea5fc8354545e/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:413,tier:"Silver",campaign:"Winning Isn't for Everyone",
-     brand:"NIKE",
-     agency:"WIEDEN+KENNEDY",country:"United States",grad:"g413",
-     desc:"Nike's controversial film embraced the psychology of elite competition, celebrating the obsessive, singular drive to win as a virtue rather than an affliction — unapologetically narrated by athletes at the top.",
-     tags:["Consumer Goods", "United States"],
-     keywords:["nike", "winning", "athletes", "competition", "sports", "motivation", "controversial"],
-     youtubeId:"FFFmnfdBrm8",
-     videoUrl:"https://www.youtube.com/results?search_query=Winning+Isn%27t+for+Everyone+NIKE+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/d935fbdb3c404fa4b0d2c7e6d6a99a5b/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:414,tier:"Silver",campaign:"Snitch",
-     brand:"AXION",
-     agency:"GUT",country:"Argentina",grad:"g414",
-     desc:"Axion's film for Castrol lubricants used the spy-thriller genre to dramatize the idea of motor oil that tells on itself — alerting drivers the moment it needs changing, personifying the product as a loyal informant.",
-     tags:["Automotive", "Argentina"],
-     keywords:["automotive", "lubricants", "castrol", "humor", "thriller", "argentina", "car maintenance"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=Snitch+AXION+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/9b40129018d74d94bf27680ed70fddbf/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:415,tier:"Silver",campaign:"A Tale as Old as Websites",
-     brand:"SQUARESPACE",
-     agency:"SQUARESPACE",country:"United States",grad:"g415",
-     desc:"Squarespace's self-aware film parodied the timeless archetypes of web design tropes through a fairy-tale lens, celebrating the brand as the enduring solution to everyone's website woes.",
-     tags:["Consumer Services/Business to Business", "United States"],
-     keywords:["squarespace", "website", "design", "humor", "fairy tale", "self-aware", "b2b"],
-     youtubeId:"LXQtg237SKY",
-     videoUrl:"https://www.youtube.com/results?search_query=A+Tale+as+Old+as+Websites+SQUARESPACE+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/623957253a6b46f7819ed4698c7d8d81/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:416,tier:"Silver",campaign:"Warren",
-     brand:"APPLE",
-     agency:"APPLE",country:"United States",grad:"g416",
-     desc:"Apple Intelligence got a human face in Warren, a film about an ordinary man discovering his phone's AI capabilities one awkward, delightful interaction at a time — warm, funny, and disarmingly relatable.",
-     tags:["Consumer Goods", "United States"],
-     keywords:["apple", "ai", "apple intelligence", "iphone", "humor", "technology", "relatability"],
-     youtubeId:"gGXMP0PpimM",
-     videoUrl:"https://www.youtube.com/results?search_query=Warren+APPLE+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/2775467c7cd54c3d9baa72e25671a229/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:417,tier:"Silver",campaign:"100 Years of Meisterstück, Montblanc X Wes Anderson",
-     brand:"MONTBLANC INTERNATIONAL GMBH",
-     agency:"SOLOMON WINTER",country:"Germany",grad:"g417",
-     desc:"Montblanc tapped Wes Anderson to direct a centenary celebration of the iconic Meisterstück pen, weaving together craft, heritage, and Anderson's signature symmetrical whimsy into a love letter to writing.",
-     tags:["Consumer Goods", "Germany"],
-     keywords:["montblanc", "wes anderson", "luxury", "pen", "craftsmanship", "heritage", "centenary"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=100+Years+of+Meisterst%C3%BCck%2C+Montblanc+X+Wes+Anderson+MONTBLANC+INTERNATIONAL+GMBH+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/9311eba8878143429454c2b93bc329ef/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:418,tier:"Silver",campaign:"Is It Even a City?",
-     brand:"VISIT OSLO",
-     agency:"NEWSLAB",country:"Norway",grad:"g418",
-     desc:"Visit Oslo's self-deprecating tourism film leaned into every cliché used against it — too expensive, too cold, too quiet — and turned each one into a reason to visit, building pride through radical honesty.",
-     tags:["Travel, Leisure, Retail, Restaurants & Fast-Food Chains", "Norway"],
-     keywords:["tourism", "norway", "oslo", "travel", "humor", "self-deprecating", "destination"],
-     youtubeId:"8vhD59ac7nw",
-     videoUrl:"https://www.youtube.com/results?search_query=Is+It+Even+a+City%3F+VISIT+OSLO+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/b0649b3b520e450ca4b8d80fb3fb66ca/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:419,tier:"Silver",campaign:"The Shooting",
-     brand:"LA UNIÓN NEWSPAPER / ARTICULO 19",
-     agency:"GREY",country:"Mexico",grad:"g419",
-     desc:"Grey Mexico's film for La Unión Newspaper dramatized a real journalist's shooting in real-time, blurring the line between news and film to expose the terrifying reality of press violence in Mexico.",
-     tags:["Media/Entertainment", "Mexico"],
-     keywords:["journalism", "press freedom", "mexico", "violence", "documentary", "news", "awareness"],
-     youtubeId:"9vpZNqaMVaQ",
-     videoUrl:"https://www.youtube.com/results?search_query=The+Shooting+LA+UNI%C3%93N+NEWSPAPER+%2F+ARTICULO+19+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/581862ba4dc5446e9c3144b4b705b73e/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:420,tier:"Silver",campaign:"Everything, Covered – 100 Years of the New Yorker",
-     brand:"THE NEW YORKER",
-     agency:"LE TRUC",country:"United States",grad:"g420",
-     desc:"Le Truc's centenary film for The New Yorker traced 100 years of American culture through the magazine's iconic cover art, celebrating editorial illustration as a form of cultural memory.",
-     tags:["Media/Entertainment", "United States"],
-     keywords:["new yorker", "publishing", "illustration", "culture", "heritage", "media", "anniversary"],
-     youtubeId:"TJOY7vPB_hU",
-     videoUrl:"https://www.youtube.com/results?search_query=Everything%2C+Covered+%E2%80%93+100+Years+of+the+New+Yorker+THE+NEW+YORKER+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/e88276602e7e4dcc875c78f16cb77a65/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:421,tier:"Silver",campaign:"The Count",
-     brand:"SICKKIDS FOUNDATION",
-     agency:"FCB TORONTO",country:"Canada",grad:"g421",
-     desc:"SickKids Foundation's devastating film used the conceit of a child counting — breaths, steps, days — to make visceral the relentless arithmetic of serious childhood illness and the urgency of donor support.",
-     tags:["Not-For-Profit / Charity / Government", "Canada"],
-     keywords:["children", "hospital", "charity", "healthcare", "canada", "fundraising", "emotion"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=The+Count+SICKKIDS+FOUNDATION+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/d401a23fd548494580fef221b62dd2f1/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:422,tier:"Silver",campaign:"The Comments Section",
-     brand:"MEAT & LIVESTOCK AUSTRALIA",
-     agency:"DROGA5 ANZ, PART OF ACCENTURE SONG",country:"Australia",grad:"g422",
-     desc:"Meat & Livestock Australia's annual lamb campaign turned social media toxicity on its head, staging an intervention in the comments section itself to reunite a fractured online community over a shared meal.",
-     tags:["Viral Film", "Australia"],
-     keywords:["lamb", "australia", "social media", "humor", "viral", "food", "culture"],
-     youtubeId:"4P6ltRZaCLU",
-     videoUrl:"https://www.youtube.com/results?search_query=The+Comments+Section+MEAT+%26+LIVESTOCK+AUSTRALIA+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/2809ad4c1b0a4e8f8ccd712eea72f1a8?resize=1024%2C768&quality=85&format=webp"},
-    {id:423,tier:"Silver",campaign:"Someday",
-     brand:"APPLE",
-     agency:"TBWA\\MEDIA ARTS LAB",country:"United States",grad:"g423",
-     desc:"Apple's AirPods film told a poignant inter-generational story of a grandfather and grandchild connected through music, using sound as the emotional thread across a lifetime of memory.",
-     tags:["Viral Film", "United States"],
-     keywords:["apple", "airpods", "music", "family", "emotion", "generational", "sound"],
-     youtubeId:"LO4wamMlCKQ",
-     videoUrl:"https://www.youtube.com/results?search_query=Someday+APPLE+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/b5cc9e15a3654aceae5613f9f7a28f7d/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:424,tier:"Silver",campaign:"Night Fishing",
-     brand:"HYUNDAI MOTOR COMPANY",
-     agency:"INNOCEAN",country:"South Korea",grad:"g424",
-     desc:"Hyundai's IONIQ film used the quiet ritual of night fishing to explore the contemplative relationship between a father and son, positioning the electric vehicle as a partner in life's most meaningful moments.",
-     tags:["TV/Cinema Film", "South Korea"],
-     keywords:["hyundai", "electric vehicle", "family", "korea", "nature", "contemplation", "ev"],
-     youtubeId:"BTcsn4aLOkQ",
-     videoUrl:"https://www.youtube.com/results?search_query=Night+Fishing+HYUNDAI+MOTOR+COMPANY+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/8c8aacc591464dd7a4c86161fd0403ee/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:425,tier:"Silver",campaign:"Love Captured",
-     brand:"THE EXODUS ROAD",
-     agency:"KLICK HEALTH",country:"Canada",grad:"g425",
-     desc:"Klick Health's film for The Exodus Road reconstructed the moment a human trafficking survivor was rescued through intimate, first-person footage, transforming awareness into raw, unmissable testimony.",
-     tags:["Online & Viral Film", "Canada"],
-     keywords:["human trafficking", "rescue", "awareness", "nonprofit", "documentary", "canada", "social impact"],
-     youtubeId:"udite96Jhl8",
-     videoUrl:"https://www.youtube.com/results?search_query=Love+Captured+THE+EXODUS+ROAD+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/f09d6066d68c4bbb9e0ffe08b0c1bb47/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:426,tier:"Bronze",campaign:"So Win",
-     brand:"NIKE",
-     agency:"WIEDEN+KENNEDY",country:"United States",grad:"g426",
-     desc:"Nike's So Win is a rallying anthem for women in sport, channeling the full force of athletic ambition in response to cultural resistance — direct, defiant, and unapologetically female.",
-     tags:["Consumer Goods", "United States"],
-     keywords:["nike", "women", "sports", "empowerment", "female athletes", "competition", "motivation"],
-     youtubeId:"Bcpu-jqAL6w",
-     videoUrl:"https://www.youtube.com/results?search_query=So+Win+NIKE+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/c819e3ba7b074390b3a379ce55256bec/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:427,tier:"Bronze",campaign:"Go Further",
-     brand:"7-ELEVEN",
-     agency:"CLEMENGER BBDO",country:"Australia",grad:"g427",
-     desc:"Clemenger BBDO's film for 7-Eleven's Mobil fuels dramatized the promise of going further on every tank, following Australians whose journeys — literal and metaphorical — demand more from their fuel.",
-     tags:["Consumer Goods", "Australia"],
-     keywords:["7-eleven", "fuel", "road trip", "australia", "motivation", "energy", "automotive"],
-     youtubeId:"mSPou5OfPyw",
-     videoUrl:"https://www.youtube.com/results?search_query=Go+Further+7-ELEVEN+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/21b5a87a37054403bf6297def115d30e/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:428,tier:"Bronze",campaign:"Century of Cravings",
-     brand:"UBER EATS",
-     agency:"SPECIAL",country:"United States",grad:"g428",
-     desc:"Uber Eats' centenary film traveled through 100 years of American food culture, framing the platform as the latest chapter in the nation's enduring obsession with craving, delivery, and indulgence.",
-     tags:["Travel, Leisure, Retail, Restaurants & Fast-Food Chains", "United States"],
-     keywords:["uber eats", "food delivery", "history", "america", "nostalgia", "food culture", "cravings"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=Century+of+Cravings+UBER+EATS+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/e82a1b3a62ff4635b7d927f608411604/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:429,tier:"Bronze",campaign:"Obsession",
-     brand:"RIYADH SEASON",
-     agency:"BIGTIME CREATIVE SHOP",country:"Saudi Arabia",grad:"g429",
-     desc:"Bigtime Creative Shop crafted a cinematic hype film for Riyadh Season's boxing event, channeling the raw psychological obsession of fighters preparing to face their moment of truth in the ring.",
-     tags:["Media/Entertainment", "Saudi Arabia"],
-     keywords:["boxing", "sports", "saudi arabia", "riyadh", "event", "hype", "combat sports"],
-     youtubeId:"B687Xux1-Bs",
-     videoUrl:"https://www.youtube.com/results?search_query=Obsession+RIYADH+SEASON+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/ab28f486b9c947e09a566c1beee1045e/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:430,tier:"Bronze",campaign:"Together Is for Christmas",
-     brand:"TELSTRA",
-     agency:"BEAR MEETS EAGLE ON FIRE",country:"Australia",grad:"g430",
-     desc:"Telstra's Christmas film showed how reliable connectivity makes moments of togetherness possible across Australia's vast distances — a tender, seasonal reminder of who we reach out to most.",
-     tags:["Consumer Services/Business to Business", "Australia"],
-     keywords:["telstra", "christmas", "family", "connectivity", "australia", "telecom", "emotion"],
-     youtubeId:"_I-QedV87Nw",
-     videoUrl:"https://www.youtube.com/results?search_query=Together+Is+for+Christmas+TELSTRA+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/beeb1eba6b23482db8ad4b0a6ce0c4eb/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:431,tier:"Bronze",campaign:"Orange - The Greatest Run",
-     brand:"ORANGE",
-     agency:"PUBLICIS CONSEIL",country:"France",grad:"g431",
-     desc:"Publicis Conseil's film for Orange used the Paris Paralympics to reframe what 'the greatest run' in telecom history means — not coverage milestones, but the human stories made possible by connection.",
-     tags:["Consumer Services/Business to Business", "France"],
-     keywords:["orange", "paralympics", "telecom", "france", "paris", "disability", "sports"],
-     youtubeId:"AbLLBcDM064",
-     videoUrl:"https://www.youtube.com/results?search_query=Orange+-+The+Greatest+Run+ORANGE+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/be10e3c068fa4640bbdab7a95ff14d1c/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:432,tier:"Bronze",campaign:"The Ugliest Sweater",
-     brand:"ILAS",
-     agency:"MADE",country:"Mexico",grad:"g432",
-     desc:"ILAS and MADE Mexico subverted the wholesome ugly Christmas sweater tradition, hiding disturbing imagery of child abuse in plain sight to force uncomfortable acknowledgment of a hidden crisis.",
-     tags:["Not-For-Profit / Charity / Government", "Mexico"],
-     keywords:["child abuse", "christmas", "awareness", "mexico", "charity", "subversion", "social impact"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=The+Ugliest+Sweater+ILAS+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/1912e691abfe4b2ea4037335ca76487c/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:433,tier:"Bronze",campaign:"Dog",
-     brand:"AXE/LYNX",
-     agency:"LOLA MULLENLOWE",country:"Spain",grad:"g433",
-     desc:"Lola MullenLowe's film for Axe/Lynx used the irresistible magnetism between humans and dogs as a proxy for the brand's core promise — attraction that bypasses all rational defenses.",
-     tags:["Consumer Goods", "Spain"],
-     keywords:["axe", "lynx", "deodorant", "humor", "attraction", "animals", "spain"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=Dog+AXE%2FLYNX+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/cee60b478e9e4b1cbf40f1225c244475/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:434,tier:"Bronze",campaign:"Call Me When You Need Me",
-     brand:"VIVO",
-     agency:"HAVAS BEIJING",country:"China",grad:"g434",
-     desc:"Havas Beijing's film for Vivo's X100 Ultra used a father-child relationship as the emotional context for showcasing the smartphone's ultra-long camera capabilities, connecting distance with intimacy.",
-     tags:["Consumer Goods", "China"],
-     keywords:["vivo", "smartphone", "camera", "family", "china", "technology", "emotion"],
-     youtubeId:"uXaZyGTQNKw",
-     videoUrl:"https://www.youtube.com/results?search_query=Call+Me+When+You+Need+Me+VIVO+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/c8213e95cee843928274fe319692cfe9/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:435,tier:"Bronze",campaign:"Invisible Stain",
-     brand:"VANISH",
-     agency:"BETC HAVAS",country:"Brazil",grad:"g435",
-     desc:"BETC Havas' film for Vanish used bullying's psychological scarring as a metaphor for invisible stains, making the case that some marks — on clothes and on children — deserve better removal.",
-     tags:["Consumer Goods", "Brazil"],
-     keywords:["vanish", "bullying", "awareness", "brazil", "laundry", "children", "social"],
-     youtubeId:"OXK-4pQhM7o",
-     videoUrl:"https://www.youtube.com/results?search_query=Invisible+Stain+VANISH+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/ccc92b2e5ee449a89042b675609363ea/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:436,tier:"Bronze",campaign:"Cats Lose Their Cool | DJ Cat",
-     brand:"TEMPTATIONS",
-     agency:"adam&eveDDB",country:"United Kingdom",grad:"g436",
-     desc:"adam&eveDDB's viral film for Temptations Lickable Spoons leaned into the internet's cat obsession, showing even the coolest, most composed feline reduced to delirious excitement by the product.",
-     tags:["Consumer Goods", "United Kingdom"],
-     keywords:["temptations", "cats", "pet food", "humor", "viral", "uk", "animals"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=Cats+Lose+Their+Cool+%7C+DJ+Cat+TEMPTATIONS+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/9fa88b83d0b8433088c04fb2f6724d65/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:437,tier:"Bronze",campaign:"Lynx with Catnip",
-     brand:"AXE/LYNX",
-     agency:"LOLA MULLENLOWE",country:"Spain",grad:"g437",
-     desc:"Lola MullenLowe extended Axe/Lynx's irresistible-attraction territory into absurdist comedy, testing whether a deodorant infused with catnip could make men as magnetically appealing to cats as to humans.",
-     tags:["Consumer Goods", "Spain"],
-     keywords:["axe", "lynx", "catnip", "cats", "humor", "attraction", "deodorant"],
-     youtubeId:"CHHeZrjP87w",
-     videoUrl:"https://www.youtube.com/results?search_query=Lynx+with+Catnip+AXE%2FLYNX+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/8d6696938e154c149ff8c9a2467c716f/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:438,tier:"Bronze",campaign:"The Reinfall",
-     brand:"THE NORWEGIAN POSTAL SERVICE",
-     agency:"POL",country:"Norway",grad:"g438",
-     desc:"POL Oslo's film for Norway Post turned an embarrassing delivery failure into a charming ode to the postal service's perseverance — finding humor and humanity in the one parcel that refuses to arrive.",
-     tags:["Consumer Services/Business to Business", "Norway"],
-     keywords:["postal service", "norway", "humor", "delivery", "failure", "resilience", "b2b"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=The+Reinfall+THE+NORWEGIAN+POSTAL+SERVICE+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/5ed8965efd35470096adab00a480bd1c/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:439,tier:"Bronze",campaign:"Irmela vs. Nazis",
-     brand:"TOOM DIY MARKET",
-     agency:"SCHOLZ & FRIENDS",country:"Germany",grad:"g439",
-     desc:"Scholz & Friends' microfilm told the true story of Irmela Mensah-Schramm, an elderly German woman who has spent decades crossing out neo-Nazi graffiti, armed only with a marker and unshakeable conviction.",
-     tags:["Microfilm", "Germany"],
-     keywords:["nazis", "activism", "germany", "graffiti", "elderly", "courage", "social impact"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=Irmela+vs.+Nazis+TOOM+DIY+MARKET+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/6e72394fe6ea437fa61fc0a7722ccc29/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:440,tier:"Bronze",campaign:"You Have What It Takes",
-     brand:"FÖRSVARSMAKTEN",
-     agency:"NORD DDB",country:"Sweden",grad:"g440",
-     desc:"Nord DDB's film for the Swedish Armed Forces spoke directly to a generation skeptical of military service, confronting self-doubt with a quietly powerful message: the qualities that make you hesitate are exactly what the defense needs.",
-     tags:["Microfilm", "Sweden"],
-     keywords:["military", "recruitment", "sweden", "self-doubt", "courage", "armed forces", "youth"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=You+Have+What+It+Takes+F%C3%96RSVARSMAKTEN+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/e26b3466ac96451cb63011afdbc16dc4/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:441,tier:"Bronze",campaign:"Submerged",
-     brand:"APPLE",
-     agency:"APPLE",country:"United States",grad:"g441",
-     desc:"Apple's Vision Pro film created an immersive underwater cinematic experience, demonstrating the spatial computing device's ability to transport viewers into fully realized alternative realities.",
-     tags:["New Realities & Emerging Tech", "United States"],
-     keywords:["apple", "vision pro", "vr", "spatial computing", "underwater", "immersive", "technology"],
-     youtubeId:"lP8LLIjCe6Q",
-     videoUrl:"https://www.youtube.com/results?search_query=Submerged+APPLE+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/75d50e487cdd44fe8b036fff88ed6c5e/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:442,tier:"Bronze",campaign:"Gambol \"Dare to Step\"",
-     brand:"GAMBOL",
-     agency:"YDM THAILAND",country:"Thailand",grad:"g442",
-     desc:"YDM Thailand's film for Gambol sandals built a local brand legend around the simple dare to take a step — celebrating the adventurous spirit of everyday Thais who walk their own path.",
-     tags:["Local Brand", "Thailand"],
-     keywords:["gambol", "sandals", "thailand", "local", "footwear", "adventure", "dare"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=Gambol+%22Dare+to+Step%22+GAMBOL+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/f9395a8b7f894c67baeb4d268a3f9dc7/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:443,tier:"Bronze",campaign:"Steal",
-     brand:"MANDAUE FOAM HOME STORE",
-     agency:"GIGIL",country:"The Philippines",grad:"g443",
-     desc:"GIGIL's provocative film for Mandaue Foam positioned the brand so desirable that stealing it becomes understandable — a bold challenger move that built cult status through aspirational transgression.",
-     tags:["Challenger Brand", "The Philippines"],
-     keywords:["furniture", "philippines", "humor", "steal", "challenger brand", "gigil", "home"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=Steal+MANDAUE+FOAM+HOME+STORE+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/9ec1161c272f499ea887c4236fda3363/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:444,tier:"Bronze",campaign:"Miracle",
-     brand:"RC COLA",
-     agency:"GIGIL",country:"The Philippines",grad:"g444",
-     desc:"GIGIL's film for RC Cola staged a pitch-perfect local miracle: the soda nobody expected becomes the hero of a Filipino community celebration, turning underdog status into pure emotional triumph.",
-     tags:["Single-Market Campaign", "The Philippines"],
-     keywords:["rc cola", "philippines", "miracle", "local", "humor", "soda", "community"],
-     youtubeId:"BoVS5Yq_H18",
-     videoUrl:"https://www.youtube.com/results?search_query=Miracle+RC+COLA+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/2a502431f99e4798b0a0f607be48bba4/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:445,tier:"Bronze",campaign:"Hey Jude",
-     brand:"ADIDAS FOOTBALL",
-     agency:"JOHANNES LEONARDO",country:"United States",grad:"g445",
-     desc:"Johannes Leonardo's film for Adidas Football cast Jude Bellingham as the next chapter in the sport's mythology — not just a player, but a symbol of football's generational passing of the torch.",
-     tags:["Single-Market Campaign", "United States"],
-     keywords:["adidas", "football", "soccer", "jude bellingham", "sports", "athlete", "sponsorship"],
-     youtubeId:"aoOfn_W8PWg",
-     videoUrl:"https://www.youtube.com/results?search_query=Hey+Jude+ADIDAS+FOOTBALL+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/8b14e63259bb428ba740b64ed28c29ee/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:446,tier:"Bronze",campaign:"Fer",
-     brand:"SAVE THE CHILDREN, MEXICO",
-     agency:"ANONIMO",country:"Mexico",grad:"g446",
-     desc:"Anonimo's film for Save the Children Mexico followed a child named Fer through a single day, revealing with quiet devastation how normalized domestic violence becomes for children trapped inside it.",
-     tags:["Social Behaviour", "Mexico"],
-     keywords:["save the children", "domestic violence", "children", "mexico", "awareness", "charity", "social impact"],
-     youtubeId:"RBQ-IoHfimQ",
-     videoUrl:"https://www.youtube.com/results?search_query=Fer+SAVE+THE+CHILDREN%2C+MEXICO+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/4214a618a77647838c0a81ffe47ab7d9/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:447,tier:"Bronze",campaign:"18 Months",
-     brand:"SECOND NURTURE",
-     agency:"KLICK HEALTH",country:"Canada",grad:"g447",
-     desc:"Klick Health's film for Second Nurture exposed the silent crisis of postpartum depression beyond the standard narrative, following a mother whose struggle extends well past the cultural expectation of recovery.",
-     tags:["Social Behaviour", "Canada"],
-     keywords:["postpartum", "mental health", "motherhood", "canada", "charity", "healthcare", "awareness"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=18+Months+SECOND+NURTURE+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/d6f811f9376446ac9d5a7e885d5d8936/storyboard_000019.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:448,tier:"Bronze",campaign:"Read Better",
-     brand:"WATERSTONES",
-     agency:"FP7 McCANN",country:"United Arab Emirates",grad:"g448",
-     desc:"FP7 McCann's film for Waterstones made the case that reading transforms not just minds but lives — delivered through the UAE market with warmth and literary passion to build the brand's cultural authority.",
-     tags:["Social Behaviour", "United Arab Emirates"],
-     keywords:["books", "reading", "waterstones", "uae", "education", "literacy", "culture"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=Read+Better+WATERSTONES+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/fdf308fea817428794e5b51cfe09d79e?resize=1024%2C768&quality=85&format=webp"},
-    {id:449,tier:"Bronze",campaign:"Telstra - Better on a Better Network",
-     brand:"TELSTRA",
-     agency:"BEAR MEETS EAGLE ON FIRE",country:"Australia",grad:"g449",
-     desc:"Bear Meets Eagle on Fire's comic take on Telstra's network superiority used absurdist humor to dramatize what it's like to be stuck on an inferior network — and the blessed relief of switching.",
-     tags:["Use of Humour", "Australia"],
-     keywords:["telstra", "telecom", "humor", "network", "australia", "comedy", "mobile"],
-     youtubeId:"L8wOtakkr28",
-     videoUrl:"https://www.youtube.com/results?search_query=Telstra+-+Better+on+a+Better+Network+TELSTRA+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/098258845930457596eadbc3638252e0/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:450,tier:"Bronze",campaign:"Squad Up",
-     brand:"SUPERCELL",
-     agency:"UNCOMMON CREATIVE STUDIO",country:"United Kingdom",grad:"g450",
-     desc:"Uncommon Creative Studio's film for Supercell turned the social mechanics of mobile gaming into a meditation on friendship and belonging — inviting players not just to play, but to find their people.",
-     tags:["Use of Humour", "United Kingdom"],
-     keywords:["supercell", "gaming", "mobile", "humor", "friendship", "community", "uk"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=Squad+Up+SUPERCELL+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/d7137ce2bd54485cbcd0f8ed8ef89240?resize=1024%2C768&quality=85&format=webp"},
-    {id:451,tier:"Bronze",campaign:"Paris Paralympics 2024: Considering What?",
-     brand:"CHANNEL 4",
-     agency:"CHANNEL 4",country:"United Kingdom",grad:"g451",
-     desc:"Channel 4's Paralympic coverage challenged perceptions of disability and athletic excellence in a film that asked audiences to reconsider their assumptions about what elite performance looks like.",
-     tags:["Corporate Purpose & Social Responsibility", "United Kingdom"],
-     keywords:["channel 4", "paralympics", "disability", "sports", "inclusion", "uk", "social responsibility"],
-     youtubeId:"bUs_mNTNwvE",
-     videoUrl:"https://www.youtube.com/results?search_query=Paris+Paralympics+2024%3A+Considering+What%3F+CHANNEL+4+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/305450a901ff489cba9f80862c6b50fa/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:452,tier:"Bronze",campaign:"Skin",
-     brand:"RAÇA MAGAZINE",
-     agency:"LEPUB",country:"Brazil",grad:"g452",
-     desc:"LePub's film for Raça Magazine celebrated Black Brazilian identity through the powerful metaphor of skin — honoring the magazine's decades-long role as a cultural mirror for a community too rarely seen.",
-     tags:["Cultural Engagement", "Brazil"],
-     keywords:["brazil", "black culture", "magazine", "identity", "skin", "representation", "cultural"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=Skin+RA%C3%87A+MAGAZINE+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/ef4b40ec11db45f790394c9226a1d119/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"}
-  ],
-
-  "Audio & Radio": [
-    {id:501,tier:"Grand Prix",campaign:"One Second Ads",
-     brand:"Budweiser",
-     agency:"Africa Creative DDB",country:"Brazil",grad:"g501",
-     desc:"Budweiser distilled its entire brand into a single unforgettable second — a sonic logo experiment that proved one beer note could carry more cultural memory than a full 30-second spot.",
-     tags:["Use of Music", "Brazil"],
-     keywords:["budweiser", "beer", "brazil", "sonic branding", "music", "one second", "minimalism"],
-     youtubeId:"RpvlshoKIrE",
-     videoUrl:"https://www.youtube.com/results?search_query=One+Second+Ads+Budweiser+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/3ed15a7b9f6044dcbfddb34f26865591/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:502,tier:"Gold",campaign:"Name This Oreo",
-     brand:"Oreo",
-     agency:"VML",country:"United States",grad:"g502",
-     desc:"VML turned Oreo's blank center into an interactive radio moment, inviting listeners to name a new flavor live on air — turning a cookie into a co-creation platform powered by voice.",
-     tags:["Voice Activation", "United States"],
-     keywords:["oreo", "voice", "radio", "interactive", "co-creation", "food", "activation"],
-     youtubeId:"hRp6cBmbfIw",
-     videoUrl:"https://www.youtube.com/results?search_query=Name+This+Oreo+Oreo+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/ef3247bf826c4a83838f548add166694/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:503,tier:"Gold",campaign:"One Second Ads",
-     brand:"Budweiser",
-     agency:"Africa Creative DDB",country:"Brazil",grad:"g503",
-     desc:"Budweiser proved that one second of audio could do more brand work than most 30-second spots, compressing recognition, nostalgia, and desire into a single sonic signature.",
-     tags:["Audio-Led Creativity", "Brazil"],
-     keywords:["budweiser", "beer", "brazil", "audio", "sonic", "minimalism", "radio"],
-     youtubeId:"RpvlshoKIrE",
-     videoUrl:"https://www.youtube.com/results?search_query=One+Second+Ads+Budweiser+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/3ed15a7b9f6044dcbfddb34f26865591/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:504,tier:"Gold",campaign:"The Second Release",
-     brand:"Billboard Arabia",
-     agency:"SRMG Labs",country:"Saudi Arabia",grad:"g504",
-     desc:"SRMG Labs gave Saudi Arabia's music scene its second chance — resurfacing shelved recordings by artists whose songs were never officially released, using Billboard Arabia as the platform for their belated debut.",
-     tags:["Single-Market Campaign", "Saudi Arabia"],
-     keywords:["music", "saudi arabia", "billboard", "archive", "cultural", "release", "audio"],
-     youtubeId:"gD1XqvQaMR0",
-     videoUrl:"https://www.youtube.com/results?search_query=The+Second+Release+Billboard+Arabia+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/3d395c305b9f443fa71a53d5de3a0c69/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:505,tier:"Silver",campaign:"Name This Oreo",
-     brand:"Oreo",
-     agency:"VML",country:"United States",grad:"g505",
-     desc:"VML's Oreo campaign showed how radio could become a participation engine, inviting audiences to name a new flavor and turning passive listeners into active brand collaborators.",
-     tags:["Use of Audio & Radio as a Medium", "United States"],
-     keywords:["oreo", "radio", "participation", "audio", "interactive", "food", "us"],
-     youtubeId:"hRp6cBmbfIw",
-     videoUrl:"https://www.youtube.com/results?search_query=Name+This+Oreo+Oreo+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/ef3247bf826c4a83838f548add166694/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:506,tier:"Silver",campaign:"Fishermen Storytellers",
-     brand:"Corona",
-     agency:"Africa Creative DDB",country:"Brazil",grad:"g506",
-     desc:"Africa Creative DDB sent Corona to sea with Brazilian fishermen whose oral storytelling traditions became the brand's podcast content — raw, unhurried, and deeply authentic.",
-     tags:["Branded Content/Podcasts", "Brazil"],
-     keywords:["corona", "beer", "brazil", "podcast", "storytelling", "fishermen", "branded content"],
-     youtubeId:"LDbcqtL9zP8",
-     videoUrl:"https://www.youtube.com/results?search_query=Fishermen+Storytellers+Corona+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/6bbb4c442a3642d1b9da756e908f96ba/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:507,tier:"Silver",campaign:"1. High Energy Intern",
-     brand:"Fusion Energy Drink",
-     agency:"David",country:"Spain",grad:"g507",
-     desc:"David's radio script for Fusion Energy Drink cast an intern with limitless enthusiasm as the brand's unlikely voice — a comedic portrait of energy-drink culture taken to absurd extremes.",
-     tags:["Script", "Spain"],
-     keywords:["energy drink", "humor", "radio", "script", "spain", "intern", "comedy"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=1.+High+Energy+Intern+Fusion+Energy+Drink+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/846afe3e468240929823119e42cf3b99/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:508,tier:"Silver",campaign:"Chill Enough",
-     brand:"Coors Light",
-     agency:"Alma Advertising Agency",country:"United States",grad:"g508",
-     desc:"Alma Advertising Agency captured the exact frequency of chill for Coors Light, casting a voice so relentlessly laid-back it made the beer's promise of relaxation feel physically inevitable.",
-     tags:["Casting & Performance", "United States"],
-     keywords:["coors light", "beer", "radio", "chill", "relaxation", "casting", "humor"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=Chill+Enough+Coors+Light+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/d280437042604b28b05e4a6ff87b4918/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:509,tier:"Silver",campaign:"Burger to King",
-     brand:"Burger King",
-     agency:"Happiness, an FCB Alliance",country:"Belgium",grad:"g509",
-     desc:"Burger King Belgium used radio to declare an audio coup — playing a jingle that borrowed heavily from McDonald's sonic territory and daring listeners to tell the difference.",
-     tags:["Challenger Brand", "Belgium"],
-     keywords:["burger king", "mcdonalds", "radio", "challenger", "belgium", "jingle", "fast food"],
-     youtubeId:"RQVaoU4CGRk",
-     videoUrl:"https://www.youtube.com/results?search_query=Burger+to+King+Burger+King+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/2758636e8d504995aada10a961b5e89e/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:510,tier:"Silver",campaign:"The Second Release",
-     brand:"Billboard Arabia",
-     agency:"SRMG Labs",country:"Saudi Arabia",grad:"g510",
-     desc:"SRMG Labs used Billboard Arabia's cultural authority to surface suppressed Saudi music and spark a national conversation about creative freedom and the right to be heard.",
-     tags:["Social Behaviour", "Saudi Arabia"],
-     keywords:["billboard", "saudi arabia", "music", "censorship", "culture", "freedom", "social impact"],
-     youtubeId:"gD1XqvQaMR0",
-     videoUrl:"https://www.youtube.com/results?search_query=The+Second+Release+Billboard+Arabia+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/3d395c305b9f443fa71a53d5de3a0c69/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:511,tier:"Silver",campaign:"From Hurt to Hit",
-     brand:"Brahma",
-     agency:"Africa Creative DDB",country:"Brazil",grad:"g511",
-     desc:"Africa Creative DDB turned Brahma's sponsorship of a failed football tournament into the world's most self-aware radio ad — transforming commercial disappointment into pure comic gold.",
-     tags:["Use of Humour", "Brazil"],
-     keywords:["brahma", "beer", "brazil", "football", "humor", "radio", "self-aware"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=From+Hurt+to+Hit+Brahma+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/2c4c0601d34e42cf931304cf072f6fa8?resize=1024%2C768&quality=85&format=webp"},
-    {id:512,tier:"Silver",campaign:"Me Feat. Me",
-     brand:"Nosotras",
-     agency:"DDB Chile",country:"Chile",grad:"g512",
-     desc:"DDB Chile created an original song entirely from quotes by women talking about themselves, building a feminist anthem from the raw material of real voices for feminine hygiene brand Nosotras.",
-     tags:["Cultural Engagement", "Chile"],
-     keywords:["nosotras", "women", "chile", "music", "feminism", "empowerment", "audio"],
-     youtubeId:"KBcSEzHf5DA",
-     videoUrl:"https://www.youtube.com/results?search_query=Me+Feat.+Me+Nosotras+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/a6ac5c5dd4fc4487966ae01ac52f95ff?resize=1024%2C768&quality=85&format=webp"},
-    {id:513,tier:"Bronze",campaign:"The Future Fan Stage",
-     brand:"Way Out West",
-     agency:"Nord DDB",country:"Sweden",grad:"g513",
-     desc:"Nord DDB gave Sweden's Way Out West festival a new stage powered by AI — where future fans could experience performances that haven't happened yet, blending music discovery with generative audio.",
-     tags:["Branded Content/Podcasts", "Sweden"],
-     keywords:["music festival", "sweden", "ai", "audio", "podcast", "future", "branded content"],
-     youtubeId:"cjnTY_qX2wM",
-     videoUrl:"https://www.youtube.com/results?search_query=The+Future+Fan+Stage+Way+Out+West+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/4e75651ba0a54a7fbba80de2e2684670?resize=1024%2C768&quality=85&format=webp"},
-    {id:514,tier:"Bronze",campaign:"Roobadge",
-     brand:"Volkswagen",
-     agency:"DDB Sydney",country:"Australia",grad:"g514",
-     desc:"DDB Sydney created a sonic badge for VW's kangaroo safety feature — a distinctive audio cue that turned a practical alert into a distinctly Australian brand asset.",
-     tags:["Audio-Led Creativity", "Australia"],
-     keywords:["volkswagen", "australia", "kangaroo", "safety", "sonic branding", "automotive", "audio"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=Roobadge+Volkswagen+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/0fc6fc20f09f4688ad2f2ef080c8d91a/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:515,tier:"Bronze",campaign:"The Sound of Divorce",
-     brand:"Calm",
-     agency:"Ogilvy Argentina",country:"Argentina",grad:"g515",
-     desc:"Ogilvy Argentina used the dissonant soundscape of a breaking marriage to promote Calm, making the case for the app through the most viscerally un-calm audio experience imaginable.",
-     tags:["Audio-Led Creativity", "Argentina"],
-     keywords:["calm", "meditation", "divorce", "argentina", "audio", "mental health", "contrast"],
-     youtubeId:"FVsx6MQYNRc",
-     videoUrl:"https://www.youtube.com/results?search_query=The+Sound+of+Divorce+Calm+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/ba21ee8e4ae340bdbb2a0ad904835ef2/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:516,tier:"Bronze",campaign:"Megan Thee [____]",
-     brand:"Amazon",
-     agency:"Amazon XCM",country:"United States",grad:"g516",
-     desc:"Amazon XCM's playful audio campaign let Megan Thee Stallion fill in the blank — building suspense and social conversation around a bleeped product name that became the campaign's punchline.",
-     tags:["Use of Music", "United States"],
-     keywords:["amazon", "megan thee stallion", "music", "humor", "prime day", "celebrity", "audio"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=Megan+Thee+%5B____%5D+Amazon+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/3e26bcda38d64f2aba747511ae8aa1b6/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:517,tier:"Bronze",campaign:"Me Feat. Me",
-     brand:"Nosotras",
-     agency:"DDB Chile",country:"Chile",grad:"g517",
-     desc:"DDB Chile's audio entry for Nosotras built a song from women's self-descriptions, turning everyday language into a musical celebration of female identity and self-worth.",
-     tags:["Use of Music", "Chile"],
-     keywords:["nosotras", "women", "music", "chile", "identity", "feminism", "audio"],
-     youtubeId:"KBcSEzHf5DA",
-     videoUrl:"https://www.youtube.com/results?search_query=Me+Feat.+Me+Nosotras+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/a6ac5c5dd4fc4487966ae01ac52f95ff?resize=1024%2C768&quality=85&format=webp"},
-    {id:518,tier:"Bronze",campaign:"What's Gucci?",
-     brand:"Hansa Pilsener",
-     agency:"Joe Public",country:"South Africa",grad:"g518",
-     desc:"Joe Public's radio script for Hansa Pilsener played with South African slang at its most untranslatable, celebrating local culture through the one question that perfectly captures a certain vibe.",
-     tags:["Script", "South Africa"],
-     keywords:["hansa", "beer", "south africa", "slang", "humor", "radio", "local culture"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=What%27s+Gucci%3F+Hansa+Pilsener+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/0bca684772274dd9a6e2c0c6cd401876/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:519,tier:"Bronze",campaign:"Harmoniser",
-     brand:"Twix",
-     agency:"adam&eveDDB",country:"United Kingdom",grad:"g519",
-     desc:"adam&eveDDB's Twix campaign used audio to literally harmonize opposing viewpoints — a sonic experiment in conflict resolution that made the left-right debate deliciously irrelevant.",
-     tags:["Social Behaviour", "United Kingdom"],
-     keywords:["twix", "chocolate", "uk", "audio", "harmony", "social", "humor"],
-     youtubeId:"OFY3DkMtpEk",
-     videoUrl:"https://www.youtube.com/results?search_query=Harmoniser+Twix+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/bd69a0303076425391bbc54c35136f07?resize=1024%2C768&quality=85&format=webp"},
-    {id:520,tier:"Bronze",campaign:"Football Lover FM",
-     brand:"So Foot",
-     agency:"BETC",country:"France",grad:"g520",
-     desc:"BETC created a radio station for people who are pathologically, obsessively, wonderfully in love with football — a satirical broadcast that knew its audience better than any algorithm.",
-     tags:["Use of Humour", "France"],
-     keywords:["so foot", "football", "soccer", "france", "humor", "radio", "fan culture"],
-     youtubeId:"j0eeoSEDFn0",
-     videoUrl:"https://www.youtube.com/results?search_query=Football+Lover+FM+So+Foot+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/0b397234b3d74a5aa798ad871042c23c?resize=1024%2C768&quality=85&format=webp"},
-    {id:521,tier:"Bronze",campaign:"Sounds Right",
-     brand:"Museum for the United Nations - UN Live, Spotify",
-     agency:"AKQA",country:"Denmark",grad:"g521",
-     desc:"AKQA and Spotify gave nature a royalty — registering the sounds of endangered species as official music tracks so that every stream generates conservation funding for the natural world.",
-     tags:["Corporate Purpose & Social Responsibility", "Denmark"],
-     keywords:["spotify", "nature", "sustainability", "conservation", "music", "denmark", "purpose"],
-     youtubeId:"5newTxSZ9bU",
-     videoUrl:"https://www.youtube.com/results?search_query=Sounds+Right+Museum+for+the+United+Nations+-+UN+Live%2C+Spotify+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/b6b3d3d70b4947f0823f4a8f653bc0aa/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"}
   ]
-
 };
 
 // ─────────────────────────────────────────────
@@ -2711,8 +2187,10 @@ function refreshLikeCounts(){
 }
 
 // ─────────────────────────────────────────────
-// FAVORITES — localStorage hearts
+// FAVORITES — localStorage bookmarks
 // ─────────────────────────────────────────────
+const BKMK    = '<svg width="0.9em" height="1.05em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;display:inline-block"><path d="M5 3H19C19.5523 3 20 3.44772 20 4V21L12 17L4 21V4C4 3.44772 4.44772 3 5 3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
+const BKMK_ON = '<svg width="0.9em" height="1.05em" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;display:inline-block"><path d="M5 3H19C19.5523 3 20 3.44772 20 4V21L12 17L4 21V4C4 3.44772 4.44772 3 5 3Z"/></svg>';
 function getFavs(){
   try { return new Set(JSON.parse(localStorage.getItem('bc_favorites') || '[]')); }
   catch(e){ return new Set(); }
@@ -2728,13 +2206,13 @@ function toggleFav(id){
   // Update all heart buttons for this entry in the grid
   document.querySelectorAll('.gc-heart[data-id="' + id + '"]').forEach(b => {
     b.classList.toggle('on', nowFav);
-    b.innerHTML = nowFav ? '&#9829;' : '&#9825;';
+    b.innerHTML = nowFav ? BKMK_ON : BKMK;
   });
   // Update modal heart button if open
   const mdlFav = document.getElementById('mdl-fav-btn');
   if(mdlFav && parseInt(mdlFav.dataset.id) === id){
     mdlFav.classList.toggle('on', nowFav);
-    mdlFav.innerHTML = nowFav ? '&#9829; Saved' : '&#9825; Save';
+    mdlFav.innerHTML = nowFav ? BKMK_ON + ' Saved' : BKMK + ' Save';
   }
   // If we're in favorites view, rebuild so removed items disappear
   if(curTier === 'favorites') refresh();
@@ -2896,7 +2374,7 @@ async function unlock(e){
 // ─────────────────────────────────────────────
 // TOPBAR SEARCH
 // ─────────────────────────────────────────────
-let searchFocusIdx = -1;
+let searchQuery = "";
 
 function getAllDataEntries(){
   const all = [];
@@ -2906,82 +2384,37 @@ function getAllDataEntries(){
   return all;
 }
 
+function searchMatchesEntry(e, q){
+  return e.campaign.toLowerCase().includes(q) ||
+    e.brand.toLowerCase().includes(q) ||
+    e.agency.toLowerCase().includes(q) ||
+    e.country.toLowerCase().includes(q) ||
+    (e.tiers && e.tiers.some(t => t.toLowerCase().includes(q))) ||
+    (e.tier && e.tier.toLowerCase().includes(q)) ||
+    (e.tags && e.tags.some(t => t.toLowerCase().includes(q))) ||
+    (e.keywords && e.keywords.some(k => k.toLowerCase().includes(q))) ||
+    (e.desc && e.desc.toLowerCase().includes(q));
+}
+
 function tbSearch(q){
-  const res = document.getElementById("tb-results");
-  searchFocusIdx = -1;
-  q = q.trim().toLowerCase();
-  if(!q || q.length < 2){ res.classList.remove("on"); res.innerHTML=""; return; }
-  // search across ALL categories
-  const all = getAllDataEntries();
-  const seen = new Set();
-  const matches = all.filter(e => {
-    const key = e.campaign + "||" + e.brand;
-    if(seen.has(key)) return false;
-    seen.add(key);
-    return e.campaign.toLowerCase().includes(q) ||
-      e.brand.toLowerCase().includes(q) ||
-      e.agency.toLowerCase().includes(q) ||
-      e.country.toLowerCase().includes(q) ||
-      e.tier.toLowerCase().includes(q) ||
-      (e.tags && e.tags.some(t => t.toLowerCase().includes(q)));
-  }).slice(0, 10);
-  if(!matches.length){
-    res.innerHTML = '<div class="sr-empty">No winners found for &ldquo;'+q.replace(/</g,"&lt;")+'&rdquo;</div>';
-    res.classList.add("on");
-    return;
-  }
-  res.innerHTML = matches.map(e => {
-    const tc = tierClass(e.tier);
-    const imgStyle = e.imgUrl ? "background-image:url('"+e.imgUrl+"')" : "";
-    return '<div class="sr-item" data-id="'+e.id+'" onclick="searchJump('+e.id+')">'+
-      '<div class="sr-thumb" style="'+imgStyle+'"></div>'+
-      '<div class="sr-info"><div class="sr-title">'+e.campaign+'</div>'+
-      '<div class="sr-meta">'+e._cat+' &mdash; '+e.brand.split("/")[0].trim()+'</div></div>'+
-      '<span class="sr-badge '+tc+'">'+e.tier+'</span></div>';
-  }).join("");
-  res.classList.add("on");
+  searchQuery = q.trim().toLowerCase();
+  document.getElementById("tb-clear").classList.toggle("on", searchQuery.length > 0);
+  refresh();
+}
+
+function clearSearch(){
+  searchQuery = "";
+  document.getElementById("tb-q").value = "";
+  document.getElementById("tb-clear").classList.remove("on");
+  refresh();
 }
 
 function tbSearchKey(ev){
-  const res = document.getElementById("tb-results");
-  const items = res.querySelectorAll(".sr-item");
-  if(!items.length) return;
-  if(ev.key === "ArrowDown"){ ev.preventDefault(); searchFocusIdx = Math.min(searchFocusIdx+1, items.length-1); highlightSearchItem(items); }
-  else if(ev.key === "ArrowUp"){ ev.preventDefault(); searchFocusIdx = Math.max(searchFocusIdx-1, 0); highlightSearchItem(items); }
-  else if(ev.key === "Enter" && searchFocusIdx >= 0){
+  if(ev.key === "Escape"){ clearSearch(); document.getElementById("tb-q").blur(); }
+  else if(ev.key === "Enter"){
     ev.preventDefault();
-    const id = parseInt(items[searchFocusIdx].dataset.id);
-    searchJump(id);
+    if(entries.length > 0){ gridFocusIdx = 0; curIdx = 0; paintGridFocus(); openModal(); }
   }
-  else if(ev.key === "Escape"){ res.classList.remove("on"); document.getElementById("tb-q").blur(); }
-}
-
-function highlightSearchItem(items){
-  items.forEach((el,i) => el.classList.toggle("focused", i === searchFocusIdx));
-  if(items[searchFocusIdx]) items[searchFocusIdx].scrollIntoView({block:"nearest"});
-}
-
-function searchJump(id){
-  // close search
-  document.getElementById("tb-results").classList.remove("on");
-  document.getElementById("tb-q").value = "";
-  document.getElementById("tb-q").blur();
-  // switch to "All" category so the entry is always visible
-  curCat = "All";
-  document.querySelectorAll(".sb-cat").forEach(c => {
-    c.classList.toggle("on", !c.classList.contains("cs") && c.textContent.trim() === "All");
-  });
-  // reset to all tiers
-  curTier = "all";
-  document.querySelectorAll(".fb").forEach(b=>b.classList.remove("on"));
-  document.querySelector('.fb[data-t="all"]').classList.add("on");
-  refresh();
-  const idx = entries.findIndex(e => e.id === id);
-  if(idx < 0) return;
-  gridFocusIdx = idx;
-  curIdx = idx;
-  paintGridFocus();
-  openModal();
 }
 
 function surpriseMe(){
@@ -3000,13 +2433,7 @@ function surpriseMe(){
   openModal();
 }
 
-// close search results when clicking outside
-document.addEventListener("click", function(ev){
-  const wrap = document.querySelector(".tb-search-wrap");
-  if(wrap && !wrap.contains(ev.target)){
-    document.getElementById("tb-results").classList.remove("on");
-  }
-});
+// (search results now live in the grid — no click-outside listener needed)
 
 // ─────────────────────────────────────────────
 // SHARE — copy deep-link URL to clipboard
@@ -3171,10 +2598,20 @@ function refresh(){
   if(curSort === "most-liked"){
     entries = [...entries].sort((a, b) => (likeCounts[b.id] || 0) - (likeCounts[a.id] || 0));
   }
+  // Apply search filter
+  if(searchQuery.length >= 1){
+    entries = entries.filter(e => searchMatchesEntry(e, searchQuery));
+  }
   if(curIdx >= entries.length) curIdx = 0;
   gridFocusIdx = curIdx;
-  document.getElementById("cnt").textContent =
-    entries.length + " winner" + (entries.length === 1 ? "" : "s");
+  const cnt = document.getElementById("cnt");
+  if(searchQuery.length >= 1){
+    cnt.textContent = entries.length + " result" + (entries.length === 1 ? "" : "s") + " for \u201c" + searchQuery + "\u201d";
+    cnt.classList.add("search-mode");
+  } else {
+    cnt.textContent = entries.length + " winner" + (entries.length === 1 ? "" : "s");
+    cnt.classList.remove("search-mode");
+  }
   buildGrid();
 }
 
@@ -3204,6 +2641,15 @@ function tierBadges(tiers){
 // ─────────────────────────────────────────────
 function buildGrid(){
   const g = document.getElementById("grid-inner");
+  // empty-search state
+  if(entries.length === 0 && searchQuery.length >= 1){
+    g.innerHTML = `<div class="grid-empty-search">
+      <div class="ges-icon">&#128269;</div>
+      <div class="ges-msg">No results for \u201c${searchQuery}\u201d</div>
+      <div class="ges-hint">Try a different keyword</div>
+    </div>`;
+    return;
+  }
   const favs = getFavs();
   g.innerHTML = entries.map((e,i) => {
     const tc = tierClass(e.tiers[0]);
@@ -3213,7 +2659,9 @@ function buildGrid(){
     const isFav = favs.has(e.id);
     const likeCount = likeCounts[e.id] || 0;
     const isLiked = localStorage.getItem('bc_liked_' + e.id) === '1';
-    return `<div class="grid-card ${tc}${focused}" onclick="gridClick(${i})">
+    // stagger animation: each card pops in with a small delay, capped at 400ms total
+    const delay = Math.min(i * 28, 400);
+    return `<div class="grid-card ${tc}${focused} popping" style="animation-delay:${delay}ms" onclick="gridClick(${i})">
       <div class="gc-img ${gradClass}" style="${imgStyle}"></div>
       <button class="gc-share" onclick="event.stopPropagation();shareEntry(${e.id})" title="Copy link">&#128279;</button>
       <div class="gc-body">
@@ -3221,7 +2669,7 @@ function buildGrid(){
         <div class="gc-title">${e.campaign}</div>
         <div class="gc-meta">${e.brand.split("/")[0].trim()} &mdash; ${e.agency.split(",")[0]}</div>
         <div class="gc-actions">
-          <button class="gc-heart${isFav ? ' on' : ''}" data-id="${e.id}" onclick="event.stopPropagation();toggleFav(${e.id})" title="Save to favorites">${isFav ? '&#9829;' : '&#9825;'}</button>
+          <button class="gc-heart${isFav ? ' on' : ''}" data-id="${e.id}" onclick="event.stopPropagation();toggleFav(${e.id})" title="Save to favorites">${isFav ? BKMK_ON : BKMK}</button>
           <button class="gc-like-btn${isLiked ? ' on' : ''}" data-id="${e.id}" onclick="event.stopPropagation();toggleLike(${e.id})" title="Like">&#128077; <span class="gc-like-count">${likeCount > 0 ? likeCount : ''}</span></button>
         </div>
       </div>
@@ -3310,11 +2758,7 @@ function openModal(){
   }
   const tb=document.getElementById("mdl-tb");
   // show all tiers in modal badge — deduplicated with counts (e.g. "2x Gold")
-  const tierCounts = {,
-
-  
-
-};
+  const tierCounts = {};
   e.tiers.forEach(t => tierCounts[t] = (tierCounts[t]||0)+1);
   tb.innerHTML = Object.keys(tierCounts).sort((a,b)=>tierOrder(a)-tierOrder(b)).map(t => {
     const c = tierClass(t);
@@ -3342,7 +2786,7 @@ function openModal(){
   acts+=`<button class="mdl-share" id="mdl-share-btn" onclick="shareEntry(${e.id})">&#128279; Share</button>`;
   // Favorites heart
   const isFav = getFavs().has(e.id);
-  acts+=`<button class="mdl-fav-btn${isFav ? ' on' : ''}" id="mdl-fav-btn" data-id="${e.id}" onclick="toggleFav(${e.id})">${isFav ? '&#9829; Saved' : '&#9825; Save'}</button>`;
+  acts+=`<button class="mdl-fav-btn${isFav ? ' on' : ''}" id="mdl-fav-btn" data-id="${e.id}" onclick="toggleFav(${e.id})">${isFav ? BKMK_ON + ' Saved' : BKMK + ' Save'}</button>`;
   // Global like
   const likeCount = likeCounts[e.id] || 0;
   const isLiked = localStorage.getItem('bc_liked_' + e.id) === '1';
@@ -3385,8 +2829,7 @@ function closeMdl(ev){
 document.addEventListener("keydown", ev => {
   const modalOpen = document.getElementById("modal").classList.contains("on");
   if(ev.key==="Escape"){
-    const sr = document.getElementById("tb-results");
-    if(sr && sr.classList.contains("on")){ sr.classList.remove("on"); document.getElementById("tb-q").value=""; return; }
+    if(searchQuery.length > 0){ clearSearch(); return; }
     if(modalOpen){ document.getElementById("modal").classList.remove("on"); return; }
     return;
   }
