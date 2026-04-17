@@ -473,6 +473,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 // ─────────────────────────────────────────────
 const DATA = {
 
+
   "Brand Experience & Activation": [
 
     // GRAND PRIX,
@@ -1931,648 +1932,7 @@ const DATA = {
      videoUrl:"https://www.youtube.com/results?search_query=Timeout+Against+Hate+Foundation+to+Combat+Antisemitism+Cannes+2025",
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/e43c43ae03f240ed8fbaf95002d5d795?format=webp"}
-  ]
-};
-
-// ─────────────────────────────────────────────
-// FIREBASE — global likes
-// ─────────────────────────────────────────────
-const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyBvlMLB3EinZ5ZFhqTzEUyap47WERAn4U4",
-  authDomain: "brain-cannesdy.firebaseapp.com",
-  databaseURL: "https://brain-cannesdy-default-rtdb.firebaseio.com",
-  projectId: "brain-cannesdy",
-  storageBucket: "brain-cannesdy.firebasestorage.app",
-  messagingSenderId: "941253937578",
-  appId: "1:941253937578:web:5a71f38c7bf143c1aa03d3"
-};
-let db = null;
-let likeCounts = {};
-
-function initFirebase(){
-  try {
-    firebase.initializeApp(FIREBASE_CONFIG);
-    db = firebase.database();
-    db.ref('likes').on('value', snap => {
-      likeCounts = snap.val() || {};
-      refreshLikeCounts();
-      if(curSort === 'most-liked') buildGrid();
-    });
-  } catch(err){ console.warn('Firebase init failed:', err); }
-}
-
-function refreshLikeCounts(){
-  document.querySelectorAll('.gc-like-btn[data-id]').forEach(btn => {
-    const id = parseInt(btn.dataset.id);
-    const count = likeCounts[id] || 0;
-    const isLiked = localStorage.getItem('bc_liked_' + id) === '1';
-    btn.classList.toggle('on', isLiked);
-    const ce = btn.querySelector('.gc-like-count');
-    if(ce) ce.textContent = count > 0 ? count : '';
-  });
-}
-
-// ─────────────────────────────────────────────
-// FAVORITES — localStorage hearts
-// ─────────────────────────────────────────────
-function getFavs(){
-  try { return new Set(JSON.parse(localStorage.getItem('bc_favorites') || '[]')); }
-  catch(e){ return new Set(); }
-}
-function saveFavs(set){
-  localStorage.setItem('bc_favorites', JSON.stringify([...set]));
-}
-function toggleFav(id){
-  const favs = getFavs();
-  const nowFav = !favs.has(id);
-  if(nowFav) favs.add(id); else favs.delete(id);
-  saveFavs(favs);
-  // Update all heart buttons for this entry in the grid
-  document.querySelectorAll('.gc-heart[data-id="' + id + '"]').forEach(b => {
-    b.classList.toggle('on', nowFav);
-    b.innerHTML = nowFav ? '&#9829;' : '&#9825;';
-  });
-  // Update modal heart button if open
-  const mdlFav = document.getElementById('mdl-fav-btn');
-  if(mdlFav && parseInt(mdlFav.dataset.id) === id){
-    mdlFav.classList.toggle('on', nowFav);
-    mdlFav.innerHTML = nowFav ? '&#9829; Saved' : '&#9825; Save';
-  }
-  // If we're in favorites view, rebuild so removed items disappear
-  if(curTier === 'favorites') refresh();
-}
-
-// ─────────────────────────────────────────────
-// LIKES — Firebase thumbs up
-// ─────────────────────────────────────────────
-function toggleLike(id){
-  if(!db) return;
-  const likedKey = 'bc_liked_' + id;
-  const alreadyLiked = localStorage.getItem(likedKey) === '1';
-  const ref = db.ref('likes/' + id);
-  if(alreadyLiked){
-    ref.transaction(c => Math.max(0, (c || 0) - 1));
-    localStorage.removeItem(likedKey);
-    likeCounts[id] = Math.max(0, (likeCounts[id] || 1) - 1);
-    applyLikeUI(id, false);
-  } else {
-    ref.transaction(c => (c || 0) + 1);
-    localStorage.setItem(likedKey, '1');
-    likeCounts[id] = (likeCounts[id] || 0) + 1;
-    applyLikeUI(id, true);
-  }
-  if(curSort === 'most-liked') buildGrid();
-}
-
-function applyLikeUI(id, isLiked){
-  const count = likeCounts[id] || 0;
-  document.querySelectorAll('.gc-like-btn[data-id="' + id + '"]').forEach(b => {
-    b.classList.toggle('on', isLiked);
-    const ce = b.querySelector('.gc-like-count');
-    if(ce) ce.textContent = count > 0 ? count : '';
-  });
-  const mdlLike = document.getElementById('mdl-like-btn');
-  if(mdlLike && parseInt(mdlLike.dataset.id) === id){
-    mdlLike.classList.toggle('on', isLiked);
-    const ce = mdlLike.querySelector('.mdl-like-count');
-    if(ce) ce.textContent = count > 0 ? ' ' + count : '';
-  }
-}
-
-// ─────────────────────────────────────────────
-// SORT — most liked toggle
-// ─────────────────────────────────────────────
-let curSort = 'default';
-function toggleSortLiked(){
-  curSort = curSort === 'most-liked' ? 'default' : 'most-liked';
-  const btn = document.getElementById('sort-liked-btn');
-  if(btn) btn.classList.toggle('on', curSort === 'most-liked');
-  refresh();
-}
-
-// ─────────────────────────────────────────────
-// STATE
-// ─────────────────────────────────────────────
-const BEEHIIV_PUB = "pub_3c24cdd1-b9c3-4192-aa8b-8a2b98f78a83";
-const BEEHIIV_KEY = "xzvemwDZrBkLuYVAkhQnA0vZ6WvRWKwWqxyhga0aauweYnsdrKEtttkyTWWOSf6i";
-let curTier = "all";
-let curCat  = "All";
-let curIdx  = 0;
-let entries = [];
-let zoomActive = false;
-let gridFocusIdx = 0;
-// grid-only view (hero removed)
-
-// ─────────────────────────────────────────────
-// AUTO-UNLOCK for returning subscribers
-// ─────────────────────────────────────────────
-if(localStorage.getItem("bc_subscribed")==="1"){
-  document.getElementById("pw").classList.add("off");
-  document.getElementById("app").classList.add("on");
-  // Move focus to body so keyboard shortcuts work immediately
-  const _ei = document.getElementById("pwi");
-  if(_ei) _ei.blur();
-  setTimeout(() => document.body.focus(), 50);
-  // refresh() is a hoisted function declaration, safe to call here
-  setTimeout(()=>refresh(), 0); // deferred call (primary)
-}
-
-
-// ─────────────────────────────────────────────
-// GATE TRANSITION
-// ─────────────────────────────────────────────
-function enterApp(){
-  const pw = document.getElementById("pw");
-  pw.classList.add("exiting");
-  setTimeout(() => {
-    pw.classList.add("off");
-  }, 750);
-  // Move focus to body so keyboard shortcuts work immediately
-  const emailInput = document.getElementById("pwi");
-  if(emailInput) emailInput.blur();
-  setTimeout(() => document.body.focus(), 50);
-  document.getElementById("app").classList.add("on");
-  refresh();
-  const hash = location.hash;
-  if(hash && hash.startsWith("#entry-")){
-    const id = parseInt(hash.replace("#entry-",""),10);
-    const idx = entries.findIndex(en => en.id === id);
-    if(idx >= 0){ curIdx = idx; gridFocusIdx = idx; paintGridFocus(); openModal(); }
-  }
-}
-
-function skipSubscribe(){
-  enterApp();
-}
-
-async function unlock(e){
-  e.preventDefault();
-  const emailInput = document.getElementById("pwi");
-  const errEl = document.getElementById("pwe");
-  const btn = document.getElementById("pw-submit-btn");
-  const email = emailInput.value.trim();
-
-  // Basic email validation
-  if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
-    errEl.textContent = "Please enter a valid email address.";
-    errEl.classList.add("on");
-    return;
-  }
-
-  errEl.classList.remove("on");
-  const btnLabel = btn.querySelector(".cc-btn-glass-label") || btn;
-  btnLabel.textContent = "Subscribing…";
-  btn.disabled = true;
-
-  try {
-    const res = await fetch(`https://api.beehiiv.com/v2/publications/${BEEHIIV_PUB}/subscriptions`,{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json",
-        "Authorization":`Bearer ${BEEHIIV_KEY}`
-      },
-      body:JSON.stringify({email, reactivate_existing:true, send_welcome_email:false})
-    });
-
-    if(res.ok){
-      localStorage.setItem("bc_subscribed","1");
-      enterApp();
-    } else {
-      const data = await res.json().catch(()=>({}));
-      throw new Error(data.errors?.[0]?.message || "Subscription failed");
-    }
-  } catch(err){
-    if(err.name==="TypeError"){
-      // Network error — still let them in gracefully
-      localStorage.setItem("bc_subscribed","1");
-      enterApp();
-    } else {
-      errEl.textContent = "Something went wrong. Please try again.";
-      errEl.classList.add("on");
-      btnLabel.textContent = "Subscribe & Enter →";
-      btn.disabled = false;
-    }
-  }
-}
-
-// ─────────────────────────────────────────────
-// TOPBAR SEARCH
-// ─────────────────────────────────────────────
-let searchFocusIdx = -1;
-
-function getAllDataEntries(){
-  const all = [];
-  for(const [cat, items] of Object.entries(DATA)){
-    items.forEach(e => all.push(Object.assign({}, e, {_cat: cat})));
-  }
-  return all;
-}
-
-function tbSearch(q){
-  const res = document.getElementById("tb-results");
-  searchFocusIdx = -1;
-  q = q.trim().toLowerCase();
-  if(!q || q.length < 2){ res.classList.remove("on"); res.innerHTML=""; return; }
-  // search across ALL categories
-  const all = getAllDataEntries();
-  const seen = new Set();
-  const matches = all.filter(e => {
-    const key = e.campaign + "||" + e.brand;
-    if(seen.has(key)) return false;
-    seen.add(key);
-    return e.campaign.toLowerCase().includes(q) ||
-      e.brand.toLowerCase().includes(q) ||
-      e.agency.toLowerCase().includes(q) ||
-      e.country.toLowerCase().includes(q) ||
-      e.tier.toLowerCase().includes(q) ||
-      (e.tags && e.tags.some(t => t.toLowerCase().includes(q)));
-  }).slice(0, 10);
-  if(!matches.length){
-    res.innerHTML = '<div class="sr-empty">No winners found for &ldquo;'+q.replace(/</g,"&lt;")+'&rdquo;</div>';
-    res.classList.add("on");
-    return;
-  }
-  res.innerHTML = matches.map(e => {
-    const tc = tierClass(e.tier);
-    const imgStyle = e.imgUrl ? "background-image:url('"+e.imgUrl+"')" : "";
-    return '<div class="sr-item" data-id="'+e.id+'" onclick="searchJump('+e.id+')">'+
-      '<div class="sr-thumb" style="'+imgStyle+'"></div>'+
-      '<div class="sr-info"><div class="sr-title">'+e.campaign+'</div>'+
-      '<div class="sr-meta">'+e._cat+' &mdash; '+e.brand.split("/")[0].trim()+'</div></div>'+
-      '<span class="sr-badge '+tc+'">'+e.tier+'</span></div>';
-  }).join("");
-  res.classList.add("on");
-}
-
-function tbSearchKey(ev){
-  const res = document.getElementById("tb-results");
-  const items = res.querySelectorAll(".sr-item");
-  if(!items.length) return;
-  if(ev.key === "ArrowDown"){ ev.preventDefault(); searchFocusIdx = Math.min(searchFocusIdx+1, items.length-1); highlightSearchItem(items); }
-  else if(ev.key === "ArrowUp"){ ev.preventDefault(); searchFocusIdx = Math.max(searchFocusIdx-1, 0); highlightSearchItem(items); }
-  else if(ev.key === "Enter" && searchFocusIdx >= 0){
-    ev.preventDefault();
-    const id = parseInt(items[searchFocusIdx].dataset.id);
-    searchJump(id);
-  }
-  else if(ev.key === "Escape"){ res.classList.remove("on"); document.getElementById("tb-q").blur(); }
-}
-
-function highlightSearchItem(items){
-  items.forEach((el,i) => el.classList.toggle("focused", i === searchFocusIdx));
-  if(items[searchFocusIdx]) items[searchFocusIdx].scrollIntoView({block:"nearest"});
-}
-
-function searchJump(id){
-  // close search
-  document.getElementById("tb-results").classList.remove("on");
-  document.getElementById("tb-q").value = "";
-  document.getElementById("tb-q").blur();
-  // switch to "All" category so the entry is always visible
-  curCat = "All";
-  document.querySelectorAll(".sb-cat").forEach(c => {
-    c.classList.toggle("on", !c.classList.contains("cs") && c.textContent.trim() === "All");
-  });
-  // reset to all tiers
-  curTier = "all";
-  document.querySelectorAll(".fb").forEach(b=>b.classList.remove("on"));
-  document.querySelector('.fb[data-t="all"]').classList.add("on");
-  refresh();
-  const idx = entries.findIndex(e => e.id === id);
-  if(idx < 0) return;
-  gridFocusIdx = idx;
-  curIdx = idx;
-  paintGridFocus();
-  openModal();
-}
-
-function surpriseMe(){
-  // switch to "All" category so we pick from every entry
-  curCat = "All";
-  document.querySelectorAll(".sb-cat").forEach(c => {
-    c.classList.toggle("on", !c.classList.contains("cs") && c.textContent.trim() === "All");
-  });
-  curTier = "all";
-  document.querySelectorAll(".fb").forEach(b=>b.classList.remove("on"));
-  document.querySelector('.fb[data-t="all"]').classList.add("on");
-  refresh();
-  gridFocusIdx = Math.floor(Math.random() * entries.length);
-  curIdx = gridFocusIdx;
-  paintGridFocus();
-  openModal();
-}
-
-// close search results when clicking outside
-document.addEventListener("click", function(ev){
-  const wrap = document.querySelector(".tb-search-wrap");
-  if(wrap && !wrap.contains(ev.target)){
-    document.getElementById("tb-results").classList.remove("on");
-  }
-});
-
-// ─────────────────────────────────────────────
-// SHARE — copy deep-link URL to clipboard
-// ─────────────────────────────────────────────
-function shareEntry(id){
-  const url = location.origin + location.pathname + "#entry-" + id;
-  navigator.clipboard.writeText(url).then(()=>{
-    // visual feedback on modal share button
-    const btn = document.getElementById("mdl-share-btn");
-    if(btn){ btn.textContent = "✓ Copied!"; btn.classList.add("copied"); setTimeout(()=>{ btn.innerHTML="&#128279; Share"; btn.classList.remove("copied"); },2000); }
-  }).catch(()=>{
-    // fallback: show URL in prompt
-    prompt("Copy this link:", url);
-  });
-}
-
-// ─────────────────────────────────────────────
-// PAN-ZOOM — full-frame zoom on modal images
-// ─────────────────────────────────────────────
-const ZOOM = 2.5;
-function toggleZoom(ev){
-  zoomActive = !zoomActive;
-  const inner = document.getElementById("mdl-img-inner");
-  const img   = document.getElementById("mdl-img");
-  const hint  = document.getElementById("mdl-zoom-prompt");
-  if(zoomActive){
-    // Zoom immediately to the click point
-    if(ev){
-      const rect = img.getBoundingClientRect();
-      const x = ev.clientX - rect.left;
-      const y = ev.clientY - rect.top;
-      inner.style.transformOrigin = x + "px " + y + "px";
-    } else {
-      inner.style.transformOrigin = "center center";
-    }
-    inner.style.transform = "scale(" + ZOOM + ")";
-    img.style.cursor = "zoom-out";
-    if(hint){ hint.textContent = "Click to zoom out"; hint.classList.add("active"); }
-  } else {
-    magHide();
-    img.style.cursor = "crosshair";
-    if(hint){ hint.textContent = "Click image to zoom"; hint.classList.remove("active"); }
-  }
-}
-function magMove(ev){
-  // While zoomed in, pan the zoom origin as the mouse moves
-  if(!zoomActive) return;
-  const img   = document.getElementById("mdl-img");
-  const inner = document.getElementById("mdl-img-inner");
-  const rect  = img.getBoundingClientRect();
-  const x = ev.clientX - rect.left;
-  const y = ev.clientY - rect.top;
-  if(x < 0 || y < 0 || x > rect.width || y > rect.height){ return; }
-  inner.style.transformOrigin = x + "px " + y + "px";
-}
-function magHide(){
-  const inner = document.getElementById("mdl-img-inner");
-  inner.style.transform = "scale(1)";
-  inner.style.transformOrigin = "center center";
-}
-
-// ─────────────────────────────────────────────
-// GRID ARROW KEY NAVIGATION
-// ─────────────────────────────────────────────
-function gridArrow(dir){
-  const cards = document.querySelectorAll("#grid-inner .grid-card");
-  if(!cards.length) return false;
-  // figure out columns from grid layout
-  const firstTop = cards[0].getBoundingClientRect().top;
-  let cols = 0;
-  for(let i=0;i<cards.length;i++){
-    if(cards[i].getBoundingClientRect().top > firstTop + 5) break;
-    cols++;
-  }
-  if(!cols) cols = 1;
-  let next = gridFocusIdx;
-  if(dir === "left")  next = Math.max(0, gridFocusIdx - 1);
-  if(dir === "right") next = Math.min(cards.length - 1, gridFocusIdx + 1);
-  if(dir === "up")    next = Math.max(0, gridFocusIdx - cols);
-  if(dir === "down")  next = Math.min(cards.length - 1, gridFocusIdx + cols);
-  if(next !== gridFocusIdx){
-    gridFocusIdx = next;
-    curIdx = next;
-    paintGridFocus(cards);
-    cards[gridFocusIdx].scrollIntoView({block:"nearest",behavior:"smooth"});
-  }
-  return true;
-}
-
-function paintGridFocus(cards){
-  if(!cards) cards = document.querySelectorAll("#grid-inner .grid-card");
-  cards.forEach((c,i) => c.classList.toggle("arrow-focus", i === gridFocusIdx));
-}
-
-// ─────────────────────────────────────────────
-// TIER FILTER
-// ─────────────────────────────────────────────
-function setTier(btn){
-  document.querySelectorAll(".fb").forEach(b=>b.classList.remove("on"));
-  btn.classList.add("on");
-  curTier = btn.dataset.t;
-  curIdx  = 0;
-  refresh();
-}
-
-function selCat(el){
-  if(el.classList.contains("cs")) return;
-  document.querySelectorAll(".sb-cat").forEach(c=>c.classList.remove("on"));
-  el.classList.add("on");
-  curCat  = el.textContent.trim();
-  curTier = "all";
-  document.querySelectorAll(".fb").forEach(b=>b.classList.remove("on"));
-  document.querySelector('.fb[data-t="all"]').classList.add("on");
-  curIdx = 0;
-  refresh();
-}
-
-// ─────────────────────────────────────────────
-// REFRESH — rebuild entries list + repaint
-// ─────────────────────────────────────────────
-// ─────────────────────────────────────────────
-// DEDUPLICATION — merge entries with same campaign+brand
-// ─────────────────────────────────────────────
-function dedup(arr){
-  const map = new Map();
-  arr.forEach(e => {
-    const key = e.campaign + "||" + e.brand;
-    if(map.has(key)){
-      const existing = map.get(key);
-      // merge tier
-      existing.tiers.push(e.tier);
-      // keep the best image
-      if(!existing.imgUrl && e.imgUrl) existing.imgUrl = e.imgUrl;
-      // accumulate distinct categories
-      if(e._cat && !existing._cats.includes(e._cat)) existing._cats.push(e._cat);
-    } else {
-      map.set(key, Object.assign({}, e, {tiers: [e.tier], _cats: e._cat ? [e._cat] : []}));
-    }
-  });
-  return Array.from(map.values());
-}
-
-function tierOrder(t){ return t==="Grand Prix"?0:t==="Gold"?1:t==="Silver"?2:t==="Bronze"?3:4; }
-
-function refresh(){
-  let raw;
-  if(curCat === "All"){
-    raw = getAllDataEntries();
-  } else {
-    raw = (DATA[curCat] || []).map(e => Object.assign({}, e, {_cat: curCat}));
-  }
-  const deduped = dedup(raw);
-  if(curTier === "all"){
-    entries = deduped;
-  } else if(curTier === "favorites"){
-    const favs = getFavs();
-    entries = deduped.filter(e => favs.has(e.id));
-  } else {
-    entries = deduped.filter(e => e.tiers.includes(curTier));
-  }
-  // Sort
-  if(curSort === "most-liked"){
-    entries = [...entries].sort((a, b) => (likeCounts[b.id] || 0) - (likeCounts[a.id] || 0));
-  }
-  if(curIdx >= entries.length) curIdx = 0;
-  gridFocusIdx = curIdx;
-  document.getElementById("cnt").textContent =
-    entries.length + " winner" + (entries.length === 1 ? "" : "s");
-  buildGrid();
-}
-
-// ─────────────────────────────────────────────
-// HELPERS
-// ─────────────────────────────────────────────
-function tierClass(t){
-  if(t==="Grand Prix") return "gp";
-  return t.toLowerCase();
-}
-
-function tierBadges(tiers){
-  // count and sort tiers
-  const counts = {};
-  tiers.forEach(t => counts[t] = (counts[t]||0)+1);
-  const sorted = Object.keys(counts).sort((a,b) => tierOrder(a)-tierOrder(b));
-  return sorted.map(t => {
-    const tc = tierClass(t);
-    const label = t==="Grand Prix" ? "🏆 GP" : t;
-    const ct = counts[t];
-    return `<span class="gc-badge ${tc}">${ct > 1 ? ct+"x " : ""}${label}</span>`;
-  }).join(" ");
-}
-
-// ─────────────────────────────────────────────
-// GRID
-// ─────────────────────────────────────────────
-function buildGrid(){
-  const g = document.getElementById("grid-inner");
-  const favs = getFavs();
-  g.innerHTML = entries.map((e,i) => {
-    const tc = tierClass(e.tiers[0]);
-    const imgStyle = e.imgUrl ? `background-image:url('${e.imgUrl}')` : "";
-    const gradClass = !e.imgUrl ? e.grad : "";
-    const focused = i === gridFocusIdx ? " arrow-focus" : "";
-    const isFav = favs.has(e.id);
-    const likeCount = likeCounts[e.id] || 0;
-    const isLiked = localStorage.getItem('bc_liked_' + e.id) === '1';
-    return `<div class="grid-card ${tc}${focused}" onclick="gridClick(${i})">
-      <div class="gc-img ${gradClass}" style="${imgStyle}"></div>
-      <button class="gc-share" onclick="event.stopPropagation();shareEntry(${e.id})" title="Copy link">&#128279;</button>
-      <div class="gc-body">
-        ${tierBadges(e.tiers)}
-        <div class="gc-title">${e.campaign}</div>
-        <div class="gc-meta">${e.brand.split("/")[0].trim()} &mdash; ${e.agency.split(",")[0]}</div>
-        <div class="gc-actions">
-          <button class="gc-heart${isFav ? ' on' : ''}" data-id="${e.id}" onclick="event.stopPropagation();toggleFav(${e.id})" title="Save to favorites">${isFav ? '&#9829;' : '&#9825;'}</button>
-          <button class="gc-like-btn${isLiked ? ' on' : ''}" data-id="${e.id}" onclick="event.stopPropagation();toggleLike(${e.id})" title="Like">&#128077; <span class="gc-like-count">${likeCount > 0 ? likeCount : ''}</span></button>
-        </div>
-      </div>
-    </div>`;
-  }).join("");
-}
-
-function gridClick(i){
-  curIdx = i;
-  gridFocusIdx = i;
-  paintGridFocus();
-  openModal();
-}
-
-// ─────────────────────────────────────────────
-// VIDEO EMBED
-// ─────────────────────────────────────────────
-function playVideo(youtubeId, searchUrl){
-  const img = document.getElementById('mdl-img');
-  let vw = document.getElementById('mdl-video-wrap');
-  if(!vw){
-    vw = document.createElement('div');
-    vw.id = 'mdl-video-wrap';
-    vw.className = 'mdl-video-wrap';
-    img.parentNode.insertBefore(vw, img);
-  }
-  vw.innerHTML = `<iframe src="https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-  img.style.display = 'none';
-  vw.style.display = 'block';
-  const btn = document.getElementById('mdl-video-btn');
-  if(btn){
-    btn.innerHTML = '&#9632; Close Video';
-    btn.onclick = function(){ stopVideo(youtubeId, searchUrl); };
-  }
-  if(searchUrl && !document.getElementById('mdl-video-search')){
-    const acts = document.getElementById('mdl-acts');
-    const link = document.createElement('a');
-    link.id = 'mdl-video-search';
-    link.href = searchUrl;
-    link.target = '_blank';
-    link.className = 'mdl-video-fallback';
-    link.textContent = 'Wrong video? Search YouTube \u2197';
-    acts.appendChild(link);
-  }
-}
-
-function stopVideo(youtubeId, searchUrl){
-  const vw = document.getElementById('mdl-video-wrap');
-  if(vw){ vw.innerHTML = ''; vw.style.display = 'none'; }
-  document.getElementById('mdl-img').style.display = '';
-  const btn = document.getElementById('mdl-video-btn');
-  if(btn){
-    btn.innerHTML = '&#9654; Watch Case Study <span style="opacity:.5;font-size:10px;margin-left:4px">[Space]</span>';
-    btn.onclick = function(){ playVideo(youtubeId, searchUrl); };
-  }
-  const fl = document.getElementById('mdl-video-search');
-  if(fl) fl.remove();
-}
-
-// ─────────────────────────────────────────────
-// MODAL
-// ─────────────────────────────────────────────
-function openModal(){
-  if(!entries.length) return;
-  const e  = entries[curIdx];
-  const tc = tierClass(e.tiers[0]);
-  const mi = document.getElementById("mdl-img");
-  const miInner = document.getElementById("mdl-img-inner");
-  // reset any active zoom when switching entries
-  zoomActive = false;
-  const zoomPrompt = document.getElementById("mdl-zoom-prompt");
-  if(zoomPrompt){ zoomPrompt.textContent = "Click image to zoom"; zoomPrompt.classList.remove("active"); }
-  magHide();
-  // reset video player when switching entries
-  const vwReset = document.getElementById('mdl-video-wrap');
-  if(vwReset){ vwReset.innerHTML=''; vwReset.style.display='none'; }
-  mi.style.display='';
-  if(e.imgUrl){
-    miInner.style.backgroundImage=`url('${e.imgUrl}')`;
-    mi.style.backgroundImage="";
-    mi.className="mdl-img";
-  } else {
-    miInner.style.backgroundImage="";
-    mi.style.backgroundImage="";
-    mi.className=`mdl-img ${e.grad}`;
-  }
-  const tb=document.getElementById("mdl-tb");
-  // show all tiers in modal badge — deduplicated with counts (e.g. "2x Gold")
-  const tierCounts = {,
+  ],
 
   "Film": [
     {id:401,tier:"Grand Prix",campaign:"Paris Paralympics 2024: Considering What?",
@@ -3095,6 +2455,219 @@ function openModal(){
      videoUrl:"https://www.youtube.com/results?search_query=Skin+RA%C3%87A+MAGAZINE+Cannes+2025",
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/ef4b40ec11db45f790394c9226a1d119/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"}
+  ],
+
+  "Audio & Radio": [
+    {id:501,tier:"Grand Prix",campaign:"One Second Ads",
+     brand:"Budweiser",
+     agency:"Africa Creative DDB",country:"Brazil",grad:"g501",
+     desc:"Budweiser distilled its entire brand into a single unforgettable second — a sonic logo experiment that proved one beer note could carry more cultural memory than a full 30-second spot.",
+     tags:["Use of Music", "Brazil"],
+     keywords:["budweiser", "beer", "brazil", "sonic branding", "music", "one second", "minimalism"],
+     youtubeId:"RpvlshoKIrE",
+     videoUrl:"https://www.youtube.com/results?search_query=One+Second+Ads+Budweiser+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/3ed15a7b9f6044dcbfddb34f26865591/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:502,tier:"Gold",campaign:"Name This Oreo",
+     brand:"Oreo",
+     agency:"VML",country:"United States",grad:"g502",
+     desc:"VML turned Oreo's blank center into an interactive radio moment, inviting listeners to name a new flavor live on air — turning a cookie into a co-creation platform powered by voice.",
+     tags:["Voice Activation", "United States"],
+     keywords:["oreo", "voice", "radio", "interactive", "co-creation", "food", "activation"],
+     youtubeId:"hRp6cBmbfIw",
+     videoUrl:"https://www.youtube.com/results?search_query=Name+This+Oreo+Oreo+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/ef3247bf826c4a83838f548add166694/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:503,tier:"Gold",campaign:"One Second Ads",
+     brand:"Budweiser",
+     agency:"Africa Creative DDB",country:"Brazil",grad:"g503",
+     desc:"Budweiser proved that one second of audio could do more brand work than most 30-second spots, compressing recognition, nostalgia, and desire into a single sonic signature.",
+     tags:["Audio-Led Creativity", "Brazil"],
+     keywords:["budweiser", "beer", "brazil", "audio", "sonic", "minimalism", "radio"],
+     youtubeId:"RpvlshoKIrE",
+     videoUrl:"https://www.youtube.com/results?search_query=One+Second+Ads+Budweiser+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/3ed15a7b9f6044dcbfddb34f26865591/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:504,tier:"Gold",campaign:"The Second Release",
+     brand:"Billboard Arabia",
+     agency:"SRMG Labs",country:"Saudi Arabia",grad:"g504",
+     desc:"SRMG Labs gave Saudi Arabia's music scene its second chance — resurfacing shelved recordings by artists whose songs were never officially released, using Billboard Arabia as the platform for their belated debut.",
+     tags:["Single-Market Campaign", "Saudi Arabia"],
+     keywords:["music", "saudi arabia", "billboard", "archive", "cultural", "release", "audio"],
+     youtubeId:"gD1XqvQaMR0",
+     videoUrl:"https://www.youtube.com/results?search_query=The+Second+Release+Billboard+Arabia+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/3d395c305b9f443fa71a53d5de3a0c69/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:505,tier:"Silver",campaign:"Name This Oreo",
+     brand:"Oreo",
+     agency:"VML",country:"United States",grad:"g505",
+     desc:"VML's Oreo campaign showed how radio could become a participation engine, inviting audiences to name a new flavor and turning passive listeners into active brand collaborators.",
+     tags:["Use of Audio & Radio as a Medium", "United States"],
+     keywords:["oreo", "radio", "participation", "audio", "interactive", "food", "us"],
+     youtubeId:"hRp6cBmbfIw",
+     videoUrl:"https://www.youtube.com/results?search_query=Name+This+Oreo+Oreo+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/ef3247bf826c4a83838f548add166694/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:506,tier:"Silver",campaign:"Fishermen Storytellers",
+     brand:"Corona",
+     agency:"Africa Creative DDB",country:"Brazil",grad:"g506",
+     desc:"Africa Creative DDB sent Corona to sea with Brazilian fishermen whose oral storytelling traditions became the brand's podcast content — raw, unhurried, and deeply authentic.",
+     tags:["Branded Content/Podcasts", "Brazil"],
+     keywords:["corona", "beer", "brazil", "podcast", "storytelling", "fishermen", "branded content"],
+     youtubeId:"LDbcqtL9zP8",
+     videoUrl:"https://www.youtube.com/results?search_query=Fishermen+Storytellers+Corona+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/6bbb4c442a3642d1b9da756e908f96ba/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:507,tier:"Silver",campaign:"1. High Energy Intern",
+     brand:"Fusion Energy Drink",
+     agency:"David",country:"Spain",grad:"g507",
+     desc:"David's radio script for Fusion Energy Drink cast an intern with limitless enthusiasm as the brand's unlikely voice — a comedic portrait of energy-drink culture taken to absurd extremes.",
+     tags:["Script", "Spain"],
+     keywords:["energy drink", "humor", "radio", "script", "spain", "intern", "comedy"],
+     youtubeId:"",
+     videoUrl:"https://www.youtube.com/results?search_query=1.+High+Energy+Intern+Fusion+Energy+Drink+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/846afe3e468240929823119e42cf3b99/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:508,tier:"Silver",campaign:"Chill Enough",
+     brand:"Coors Light",
+     agency:"Alma Advertising Agency",country:"United States",grad:"g508",
+     desc:"Alma Advertising Agency captured the exact frequency of chill for Coors Light, casting a voice so relentlessly laid-back it made the beer's promise of relaxation feel physically inevitable.",
+     tags:["Casting & Performance", "United States"],
+     keywords:["coors light", "beer", "radio", "chill", "relaxation", "casting", "humor"],
+     youtubeId:"",
+     videoUrl:"https://www.youtube.com/results?search_query=Chill+Enough+Coors+Light+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/d280437042604b28b05e4a6ff87b4918/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:509,tier:"Silver",campaign:"Burger to King",
+     brand:"Burger King",
+     agency:"Happiness, an FCB Alliance",country:"Belgium",grad:"g509",
+     desc:"Burger King Belgium used radio to declare an audio coup — playing a jingle that borrowed heavily from McDonald's sonic territory and daring listeners to tell the difference.",
+     tags:["Challenger Brand", "Belgium"],
+     keywords:["burger king", "mcdonalds", "radio", "challenger", "belgium", "jingle", "fast food"],
+     youtubeId:"RQVaoU4CGRk",
+     videoUrl:"https://www.youtube.com/results?search_query=Burger+to+King+Burger+King+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/2758636e8d504995aada10a961b5e89e/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:510,tier:"Silver",campaign:"The Second Release",
+     brand:"Billboard Arabia",
+     agency:"SRMG Labs",country:"Saudi Arabia",grad:"g510",
+     desc:"SRMG Labs used Billboard Arabia's cultural authority to surface suppressed Saudi music and spark a national conversation about creative freedom and the right to be heard.",
+     tags:["Social Behaviour", "Saudi Arabia"],
+     keywords:["billboard", "saudi arabia", "music", "censorship", "culture", "freedom", "social impact"],
+     youtubeId:"gD1XqvQaMR0",
+     videoUrl:"https://www.youtube.com/results?search_query=The+Second+Release+Billboard+Arabia+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/3d395c305b9f443fa71a53d5de3a0c69/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:511,tier:"Silver",campaign:"From Hurt to Hit",
+     brand:"Brahma",
+     agency:"Africa Creative DDB",country:"Brazil",grad:"g511",
+     desc:"Africa Creative DDB turned Brahma's sponsorship of a failed football tournament into the world's most self-aware radio ad — transforming commercial disappointment into pure comic gold.",
+     tags:["Use of Humour", "Brazil"],
+     keywords:["brahma", "beer", "brazil", "football", "humor", "radio", "self-aware"],
+     youtubeId:"",
+     videoUrl:"https://www.youtube.com/results?search_query=From+Hurt+to+Hit+Brahma+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/2c4c0601d34e42cf931304cf072f6fa8?resize=1024%2C768&quality=85&format=webp"},
+    {id:512,tier:"Silver",campaign:"Me Feat. Me",
+     brand:"Nosotras",
+     agency:"DDB Chile",country:"Chile",grad:"g512",
+     desc:"DDB Chile created an original song entirely from quotes by women talking about themselves, building a feminist anthem from the raw material of real voices for feminine hygiene brand Nosotras.",
+     tags:["Cultural Engagement", "Chile"],
+     keywords:["nosotras", "women", "chile", "music", "feminism", "empowerment", "audio"],
+     youtubeId:"KBcSEzHf5DA",
+     videoUrl:"https://www.youtube.com/results?search_query=Me+Feat.+Me+Nosotras+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/a6ac5c5dd4fc4487966ae01ac52f95ff?resize=1024%2C768&quality=85&format=webp"},
+    {id:513,tier:"Bronze",campaign:"The Future Fan Stage",
+     brand:"Way Out West",
+     agency:"Nord DDB",country:"Sweden",grad:"g513",
+     desc:"Nord DDB gave Sweden's Way Out West festival a new stage powered by AI — where future fans could experience performances that haven't happened yet, blending music discovery with generative audio.",
+     tags:["Branded Content/Podcasts", "Sweden"],
+     keywords:["music festival", "sweden", "ai", "audio", "podcast", "future", "branded content"],
+     youtubeId:"cjnTY_qX2wM",
+     videoUrl:"https://www.youtube.com/results?search_query=The+Future+Fan+Stage+Way+Out+West+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/4e75651ba0a54a7fbba80de2e2684670?resize=1024%2C768&quality=85&format=webp"},
+    {id:514,tier:"Bronze",campaign:"Roobadge",
+     brand:"Volkswagen",
+     agency:"DDB Sydney",country:"Australia",grad:"g514",
+     desc:"DDB Sydney created a sonic badge for VW's kangaroo safety feature — a distinctive audio cue that turned a practical alert into a distinctly Australian brand asset.",
+     tags:["Audio-Led Creativity", "Australia"],
+     keywords:["volkswagen", "australia", "kangaroo", "safety", "sonic branding", "automotive", "audio"],
+     youtubeId:"",
+     videoUrl:"https://www.youtube.com/results?search_query=Roobadge+Volkswagen+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/0fc6fc20f09f4688ad2f2ef080c8d91a/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:515,tier:"Bronze",campaign:"The Sound of Divorce",
+     brand:"Calm",
+     agency:"Ogilvy Argentina",country:"Argentina",grad:"g515",
+     desc:"Ogilvy Argentina used the dissonant soundscape of a breaking marriage to promote Calm, making the case for the app through the most viscerally un-calm audio experience imaginable.",
+     tags:["Audio-Led Creativity", "Argentina"],
+     keywords:["calm", "meditation", "divorce", "argentina", "audio", "mental health", "contrast"],
+     youtubeId:"FVsx6MQYNRc",
+     videoUrl:"https://www.youtube.com/results?search_query=The+Sound+of+Divorce+Calm+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/ba21ee8e4ae340bdbb2a0ad904835ef2/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:516,tier:"Bronze",campaign:"Megan Thee [____]",
+     brand:"Amazon",
+     agency:"Amazon XCM",country:"United States",grad:"g516",
+     desc:"Amazon XCM's playful audio campaign let Megan Thee Stallion fill in the blank — building suspense and social conversation around a bleeped product name that became the campaign's punchline.",
+     tags:["Use of Music", "United States"],
+     keywords:["amazon", "megan thee stallion", "music", "humor", "prime day", "celebrity", "audio"],
+     youtubeId:"",
+     videoUrl:"https://www.youtube.com/results?search_query=Megan+Thee+%5B____%5D+Amazon+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/3e26bcda38d64f2aba747511ae8aa1b6/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:517,tier:"Bronze",campaign:"Me Feat. Me",
+     brand:"Nosotras",
+     agency:"DDB Chile",country:"Chile",grad:"g517",
+     desc:"DDB Chile's audio entry for Nosotras built a song from women's self-descriptions, turning everyday language into a musical celebration of female identity and self-worth.",
+     tags:["Use of Music", "Chile"],
+     keywords:["nosotras", "women", "music", "chile", "identity", "feminism", "audio"],
+     youtubeId:"KBcSEzHf5DA",
+     videoUrl:"https://www.youtube.com/results?search_query=Me+Feat.+Me+Nosotras+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/a6ac5c5dd4fc4487966ae01ac52f95ff?resize=1024%2C768&quality=85&format=webp"},
+    {id:518,tier:"Bronze",campaign:"What's Gucci?",
+     brand:"Hansa Pilsener",
+     agency:"Joe Public",country:"South Africa",grad:"g518",
+     desc:"Joe Public's radio script for Hansa Pilsener played with South African slang at its most untranslatable, celebrating local culture through the one question that perfectly captures a certain vibe.",
+     tags:["Script", "South Africa"],
+     keywords:["hansa", "beer", "south africa", "slang", "humor", "radio", "local culture"],
+     youtubeId:"",
+     videoUrl:"https://www.youtube.com/results?search_query=What%27s+Gucci%3F+Hansa+Pilsener+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/0bca684772274dd9a6e2c0c6cd401876/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
+    {id:519,tier:"Bronze",campaign:"Harmoniser",
+     brand:"Twix",
+     agency:"adam&eveDDB",country:"United Kingdom",grad:"g519",
+     desc:"adam&eveDDB's Twix campaign used audio to literally harmonize opposing viewpoints — a sonic experiment in conflict resolution that made the left-right debate deliciously irrelevant.",
+     tags:["Social Behaviour", "United Kingdom"],
+     keywords:["twix", "chocolate", "uk", "audio", "harmony", "social", "humor"],
+     youtubeId:"OFY3DkMtpEk",
+     videoUrl:"https://www.youtube.com/results?search_query=Harmoniser+Twix+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/bd69a0303076425391bbc54c35136f07?resize=1024%2C768&quality=85&format=webp"},
+    {id:520,tier:"Bronze",campaign:"Football Lover FM",
+     brand:"So Foot",
+     agency:"BETC",country:"France",grad:"g520",
+     desc:"BETC created a radio station for people who are pathologically, obsessively, wonderfully in love with football — a satirical broadcast that knew its audience better than any algorithm.",
+     tags:["Use of Humour", "France"],
+     keywords:["so foot", "football", "soccer", "france", "humor", "radio", "fan culture"],
+     youtubeId:"j0eeoSEDFn0",
+     videoUrl:"https://www.youtube.com/results?search_query=Football+Lover+FM+So+Foot+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/0b397234b3d74a5aa798ad871042c23c?resize=1024%2C768&quality=85&format=webp"},
+    {id:521,tier:"Bronze",campaign:"Sounds Right",
+     brand:"Museum for the United Nations - UN Live, Spotify",
+     agency:"AKQA",country:"Denmark",grad:"g521",
+     desc:"AKQA and Spotify gave nature a royalty — registering the sounds of endangered species as official music tracks so that every stream generates conservation funding for the natural world.",
+     tags:["Corporate Purpose & Social Responsibility", "Denmark"],
+     keywords:["spotify", "nature", "sustainability", "conservation", "music", "denmark", "purpose"],
+     youtubeId:"5newTxSZ9bU",
+     videoUrl:"https://www.youtube.com/results?search_query=Sounds+Right+Museum+for+the+United+Nations+-+UN+Live%2C+Spotify+Cannes+2025",
+     caseUrl:"",
+     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/b6b3d3d70b4947f0823f4a8f653bc0aa/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"}
   ]
 
 };
@@ -3739,218 +3312,7 @@ function openModal(){
   // show all tiers in modal badge — deduplicated with counts (e.g. "2x Gold")
   const tierCounts = {,
 
-  "Audio & Radio": [
-    {id:501,tier:"Grand Prix",campaign:"One Second Ads",
-     brand:"Budweiser",
-     agency:"Africa Creative DDB",country:"Brazil",grad:"g501",
-     desc:"Budweiser distilled its entire brand into a single unforgettable second — a sonic logo experiment that proved one beer note could carry more cultural memory than a full 30-second spot.",
-     tags:["Use of Music", "Brazil"],
-     keywords:["budweiser", "beer", "brazil", "sonic branding", "music", "one second", "minimalism"],
-     youtubeId:"RpvlshoKIrE",
-     videoUrl:"https://www.youtube.com/results?search_query=One+Second+Ads+Budweiser+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/3ed15a7b9f6044dcbfddb34f26865591/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:502,tier:"Gold",campaign:"Name This Oreo",
-     brand:"Oreo",
-     agency:"VML",country:"United States",grad:"g502",
-     desc:"VML turned Oreo's blank center into an interactive radio moment, inviting listeners to name a new flavor live on air — turning a cookie into a co-creation platform powered by voice.",
-     tags:["Voice Activation", "United States"],
-     keywords:["oreo", "voice", "radio", "interactive", "co-creation", "food", "activation"],
-     youtubeId:"hRp6cBmbfIw",
-     videoUrl:"https://www.youtube.com/results?search_query=Name+This+Oreo+Oreo+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/ef3247bf826c4a83838f548add166694/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:503,tier:"Gold",campaign:"One Second Ads",
-     brand:"Budweiser",
-     agency:"Africa Creative DDB",country:"Brazil",grad:"g503",
-     desc:"Budweiser proved that one second of audio could do more brand work than most 30-second spots, compressing recognition, nostalgia, and desire into a single sonic signature.",
-     tags:["Audio-Led Creativity", "Brazil"],
-     keywords:["budweiser", "beer", "brazil", "audio", "sonic", "minimalism", "radio"],
-     youtubeId:"RpvlshoKIrE",
-     videoUrl:"https://www.youtube.com/results?search_query=One+Second+Ads+Budweiser+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/3ed15a7b9f6044dcbfddb34f26865591/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:504,tier:"Gold",campaign:"The Second Release",
-     brand:"Billboard Arabia",
-     agency:"SRMG Labs",country:"Saudi Arabia",grad:"g504",
-     desc:"SRMG Labs gave Saudi Arabia's music scene its second chance — resurfacing shelved recordings by artists whose songs were never officially released, using Billboard Arabia as the platform for their belated debut.",
-     tags:["Single-Market Campaign", "Saudi Arabia"],
-     keywords:["music", "saudi arabia", "billboard", "archive", "cultural", "release", "audio"],
-     youtubeId:"gD1XqvQaMR0",
-     videoUrl:"https://www.youtube.com/results?search_query=The+Second+Release+Billboard+Arabia+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/3d395c305b9f443fa71a53d5de3a0c69/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:505,tier:"Silver",campaign:"Name This Oreo",
-     brand:"Oreo",
-     agency:"VML",country:"United States",grad:"g505",
-     desc:"VML's Oreo campaign showed how radio could become a participation engine, inviting audiences to name a new flavor and turning passive listeners into active brand collaborators.",
-     tags:["Use of Audio & Radio as a Medium", "United States"],
-     keywords:["oreo", "radio", "participation", "audio", "interactive", "food", "us"],
-     youtubeId:"hRp6cBmbfIw",
-     videoUrl:"https://www.youtube.com/results?search_query=Name+This+Oreo+Oreo+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/ef3247bf826c4a83838f548add166694/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:506,tier:"Silver",campaign:"Fishermen Storytellers",
-     brand:"Corona",
-     agency:"Africa Creative DDB",country:"Brazil",grad:"g506",
-     desc:"Africa Creative DDB sent Corona to sea with Brazilian fishermen whose oral storytelling traditions became the brand's podcast content — raw, unhurried, and deeply authentic.",
-     tags:["Branded Content/Podcasts", "Brazil"],
-     keywords:["corona", "beer", "brazil", "podcast", "storytelling", "fishermen", "branded content"],
-     youtubeId:"LDbcqtL9zP8",
-     videoUrl:"https://www.youtube.com/results?search_query=Fishermen+Storytellers+Corona+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/6bbb4c442a3642d1b9da756e908f96ba/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:507,tier:"Silver",campaign:"1. High Energy Intern",
-     brand:"Fusion Energy Drink",
-     agency:"David",country:"Spain",grad:"g507",
-     desc:"David's radio script for Fusion Energy Drink cast an intern with limitless enthusiasm as the brand's unlikely voice — a comedic portrait of energy-drink culture taken to absurd extremes.",
-     tags:["Script", "Spain"],
-     keywords:["energy drink", "humor", "radio", "script", "spain", "intern", "comedy"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=1.+High+Energy+Intern+Fusion+Energy+Drink+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/846afe3e468240929823119e42cf3b99/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:508,tier:"Silver",campaign:"Chill Enough",
-     brand:"Coors Light",
-     agency:"Alma Advertising Agency",country:"United States",grad:"g508",
-     desc:"Alma Advertising Agency captured the exact frequency of chill for Coors Light, casting a voice so relentlessly laid-back it made the beer's promise of relaxation feel physically inevitable.",
-     tags:["Casting & Performance", "United States"],
-     keywords:["coors light", "beer", "radio", "chill", "relaxation", "casting", "humor"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=Chill+Enough+Coors+Light+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/d280437042604b28b05e4a6ff87b4918/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:509,tier:"Silver",campaign:"Burger to King",
-     brand:"Burger King",
-     agency:"Happiness, an FCB Alliance",country:"Belgium",grad:"g509",
-     desc:"Burger King Belgium used radio to declare an audio coup — playing a jingle that borrowed heavily from McDonald's sonic territory and daring listeners to tell the difference.",
-     tags:["Challenger Brand", "Belgium"],
-     keywords:["burger king", "mcdonalds", "radio", "challenger", "belgium", "jingle", "fast food"],
-     youtubeId:"RQVaoU4CGRk",
-     videoUrl:"https://www.youtube.com/results?search_query=Burger+to+King+Burger+King+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/2758636e8d504995aada10a961b5e89e/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:510,tier:"Silver",campaign:"The Second Release",
-     brand:"Billboard Arabia",
-     agency:"SRMG Labs",country:"Saudi Arabia",grad:"g510",
-     desc:"SRMG Labs used Billboard Arabia's cultural authority to surface suppressed Saudi music and spark a national conversation about creative freedom and the right to be heard.",
-     tags:["Social Behaviour", "Saudi Arabia"],
-     keywords:["billboard", "saudi arabia", "music", "censorship", "culture", "freedom", "social impact"],
-     youtubeId:"gD1XqvQaMR0",
-     videoUrl:"https://www.youtube.com/results?search_query=The+Second+Release+Billboard+Arabia+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/3d395c305b9f443fa71a53d5de3a0c69/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:511,tier:"Silver",campaign:"From Hurt to Hit",
-     brand:"Brahma",
-     agency:"Africa Creative DDB",country:"Brazil",grad:"g511",
-     desc:"Africa Creative DDB turned Brahma's sponsorship of a failed football tournament into the world's most self-aware radio ad — transforming commercial disappointment into pure comic gold.",
-     tags:["Use of Humour", "Brazil"],
-     keywords:["brahma", "beer", "brazil", "football", "humor", "radio", "self-aware"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=From+Hurt+to+Hit+Brahma+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/2c4c0601d34e42cf931304cf072f6fa8?resize=1024%2C768&quality=85&format=webp"},
-    {id:512,tier:"Silver",campaign:"Me Feat. Me",
-     brand:"Nosotras",
-     agency:"DDB Chile",country:"Chile",grad:"g512",
-     desc:"DDB Chile created an original song entirely from quotes by women talking about themselves, building a feminist anthem from the raw material of real voices for feminine hygiene brand Nosotras.",
-     tags:["Cultural Engagement", "Chile"],
-     keywords:["nosotras", "women", "chile", "music", "feminism", "empowerment", "audio"],
-     youtubeId:"KBcSEzHf5DA",
-     videoUrl:"https://www.youtube.com/results?search_query=Me+Feat.+Me+Nosotras+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/a6ac5c5dd4fc4487966ae01ac52f95ff?resize=1024%2C768&quality=85&format=webp"},
-    {id:513,tier:"Bronze",campaign:"The Future Fan Stage",
-     brand:"Way Out West",
-     agency:"Nord DDB",country:"Sweden",grad:"g513",
-     desc:"Nord DDB gave Sweden's Way Out West festival a new stage powered by AI — where future fans could experience performances that haven't happened yet, blending music discovery with generative audio.",
-     tags:["Branded Content/Podcasts", "Sweden"],
-     keywords:["music festival", "sweden", "ai", "audio", "podcast", "future", "branded content"],
-     youtubeId:"cjnTY_qX2wM",
-     videoUrl:"https://www.youtube.com/results?search_query=The+Future+Fan+Stage+Way+Out+West+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/4e75651ba0a54a7fbba80de2e2684670?resize=1024%2C768&quality=85&format=webp"},
-    {id:514,tier:"Bronze",campaign:"Roobadge",
-     brand:"Volkswagen",
-     agency:"DDB Sydney",country:"Australia",grad:"g514",
-     desc:"DDB Sydney created a sonic badge for VW's kangaroo safety feature — a distinctive audio cue that turned a practical alert into a distinctly Australian brand asset.",
-     tags:["Audio-Led Creativity", "Australia"],
-     keywords:["volkswagen", "australia", "kangaroo", "safety", "sonic branding", "automotive", "audio"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=Roobadge+Volkswagen+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/0fc6fc20f09f4688ad2f2ef080c8d91a/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:515,tier:"Bronze",campaign:"The Sound of Divorce",
-     brand:"Calm",
-     agency:"Ogilvy Argentina",country:"Argentina",grad:"g515",
-     desc:"Ogilvy Argentina used the dissonant soundscape of a breaking marriage to promote Calm, making the case for the app through the most viscerally un-calm audio experience imaginable.",
-     tags:["Audio-Led Creativity", "Argentina"],
-     keywords:["calm", "meditation", "divorce", "argentina", "audio", "mental health", "contrast"],
-     youtubeId:"FVsx6MQYNRc",
-     videoUrl:"https://www.youtube.com/results?search_query=The+Sound+of+Divorce+Calm+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/ba21ee8e4ae340bdbb2a0ad904835ef2/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:516,tier:"Bronze",campaign:"Megan Thee [____]",
-     brand:"Amazon",
-     agency:"Amazon XCM",country:"United States",grad:"g516",
-     desc:"Amazon XCM's playful audio campaign let Megan Thee Stallion fill in the blank — building suspense and social conversation around a bleeped product name that became the campaign's punchline.",
-     tags:["Use of Music", "United States"],
-     keywords:["amazon", "megan thee stallion", "music", "humor", "prime day", "celebrity", "audio"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=Megan+Thee+%5B____%5D+Amazon+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/3e26bcda38d64f2aba747511ae8aa1b6/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:517,tier:"Bronze",campaign:"Me Feat. Me",
-     brand:"Nosotras",
-     agency:"DDB Chile",country:"Chile",grad:"g517",
-     desc:"DDB Chile's audio entry for Nosotras built a song from women's self-descriptions, turning everyday language into a musical celebration of female identity and self-worth.",
-     tags:["Use of Music", "Chile"],
-     keywords:["nosotras", "women", "music", "chile", "identity", "feminism", "audio"],
-     youtubeId:"KBcSEzHf5DA",
-     videoUrl:"https://www.youtube.com/results?search_query=Me+Feat.+Me+Nosotras+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/a6ac5c5dd4fc4487966ae01ac52f95ff?resize=1024%2C768&quality=85&format=webp"},
-    {id:518,tier:"Bronze",campaign:"What's Gucci?",
-     brand:"Hansa Pilsener",
-     agency:"Joe Public",country:"South Africa",grad:"g518",
-     desc:"Joe Public's radio script for Hansa Pilsener played with South African slang at its most untranslatable, celebrating local culture through the one question that perfectly captures a certain vibe.",
-     tags:["Script", "South Africa"],
-     keywords:["hansa", "beer", "south africa", "slang", "humor", "radio", "local culture"],
-     youtubeId:"",
-     videoUrl:"https://www.youtube.com/results?search_query=What%27s+Gucci%3F+Hansa+Pilsener+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/0bca684772274dd9a6e2c0c6cd401876/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"},
-    {id:519,tier:"Bronze",campaign:"Harmoniser",
-     brand:"Twix",
-     agency:"adam&eveDDB",country:"United Kingdom",grad:"g519",
-     desc:"adam&eveDDB's Twix campaign used audio to literally harmonize opposing viewpoints — a sonic experiment in conflict resolution that made the left-right debate deliciously irrelevant.",
-     tags:["Social Behaviour", "United Kingdom"],
-     keywords:["twix", "chocolate", "uk", "audio", "harmony", "social", "humor"],
-     youtubeId:"OFY3DkMtpEk",
-     videoUrl:"https://www.youtube.com/results?search_query=Harmoniser+Twix+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/bd69a0303076425391bbc54c35136f07?resize=1024%2C768&quality=85&format=webp"},
-    {id:520,tier:"Bronze",campaign:"Football Lover FM",
-     brand:"So Foot",
-     agency:"BETC",country:"France",grad:"g520",
-     desc:"BETC created a radio station for people who are pathologically, obsessively, wonderfully in love with football — a satirical broadcast that knew its audience better than any algorithm.",
-     tags:["Use of Humour", "France"],
-     keywords:["so foot", "football", "soccer", "france", "humor", "radio", "fan culture"],
-     youtubeId:"j0eeoSEDFn0",
-     videoUrl:"https://www.youtube.com/results?search_query=Football+Lover+FM+So+Foot+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/0b397234b3d74a5aa798ad871042c23c?resize=1024%2C768&quality=85&format=webp"},
-    {id:521,tier:"Bronze",campaign:"Sounds Right",
-     brand:"Museum for the United Nations - UN Live, Spotify",
-     agency:"AKQA",country:"Denmark",grad:"g521",
-     desc:"AKQA and Spotify gave nature a royalty — registering the sounds of endangered species as official music tracks so that every stream generates conservation funding for the natural world.",
-     tags:["Corporate Purpose & Social Responsibility", "Denmark"],
-     keywords:["spotify", "nature", "sustainability", "conservation", "music", "denmark", "purpose"],
-     youtubeId:"5newTxSZ9bU",
-     videoUrl:"https://www.youtube.com/results?search_query=Sounds+Right+Museum+for+the+United+Nations+-+UN+Live%2C+Spotify+Cannes+2025",
-     caseUrl:"",
-     imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/b6b3d3d70b4947f0823f4a8f653bc0aa/storyboard_000008.jpg?resize=1024%2C768&quality=85&format=webp"}
-  ]
+  
 
 };
   e.tiers.forEach(t => tierCounts[t] = (tierCounts[t]||0)+1);
