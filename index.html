@@ -9810,16 +9810,52 @@ function getAllDataEntries(){
   return all;
 }
 
+// ─────────────────────────────────────────────
+// SEARCH — normalize + tokenize + prefix-on-word-boundary matching
+// ─────────────────────────────────────────────
+// Lowercase, drop apostrophes (mcdonald's -> mcdonalds), and collapse every
+// other separator (hyphens, slashes, punctuation, whitespace) to a single
+// space so "credit-card", "credit card" and "credit/card" all tokenize alike.
+function _normalizeSearchText(s){
+  return (s == null ? "" : String(s))
+    .toLowerCase()
+    .replace(/['‘’]/g, "")   // strip apostrophes
+    .replace(/[^a-z0-9]+/g, " ")        // any other char -> separator
+    .trim();
+}
+// Fold a trailing plural so airline/airlines and beer/beers match either way.
+function _foldPlural(tok){
+  if(tok.length > 4 && tok.endsWith("es")) return tok.slice(0, -2);
+  if(tok.length > 3 && tok.endsWith("s") && !tok.endsWith("ss")) return tok.slice(0, -1);
+  return tok;
+}
+function _tokenizeSearch(s){
+  const n = _normalizeSearchText(s);
+  if(!n) return [];
+  return n.split(/\s+/).map(_foldPlural);
+}
+// Build the searchable token list for an entry (cached by id across keystrokes).
+const _searchTokenCache = {};
+function _entryTokens(e){
+  const parts = [e.campaign, e.brand, e.agency, e.country, e.desc, e.tier];
+  if(e.tiers) parts.push(e.tiers.join(" "));
+  if(e.tags) parts.push(e.tags.join(" "));
+  if(e.keywords) parts.push(e.keywords.join(" "));
+  return _tokenizeSearch(parts.join(" "));
+}
+// A query token matches an entry token by prefix on a word boundary, so "art"
+// matches the word "artist" but never the "art" buried inside "spartacus", and
+// "oreo" no longer matches "choreography".
 function searchMatchesEntry(e, q){
-  return e.campaign.toLowerCase().includes(q) ||
-    e.brand.toLowerCase().includes(q) ||
-    e.agency.toLowerCase().includes(q) ||
-    e.country.toLowerCase().includes(q) ||
-    (e.tiers && e.tiers.some(t => t.toLowerCase().includes(q))) ||
-    (e.tier && e.tier.toLowerCase().includes(q)) ||
-    (e.tags && e.tags.some(t => t.toLowerCase().includes(q))) ||
-    (e.keywords && e.keywords.some(k => k.toLowerCase().includes(q))) ||
-    (e.desc && e.desc.toLowerCase().includes(q));
+  const qTokens = _tokenizeSearch(q);
+  if(qTokens.length === 0) return true;
+  let toks = e.id != null ? _searchTokenCache[e.id] : null;
+  if(!toks){
+    toks = _entryTokens(e);
+    if(e.id != null) _searchTokenCache[e.id] = toks;
+  }
+  // Every query word must match somewhere in the entry (multi-word = AND).
+  return qTokens.every(qt => toks.some(t => t.startsWith(qt)));
 }
 
 function tbSearch(q){
