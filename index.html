@@ -9748,8 +9748,10 @@ function toggleSortLiked(){
 // ─────────────────────────────────────────────
 // STATE
 // ─────────────────────────────────────────────
-const BEEHIIV_PUB = "pub_3c24cdd1-b9c3-4192-aa8b-8a2b98f78a83";
-const BEEHIIV_KEY = "xzvemwDZrBkLuYVAkhQnA0vZ6WvRWKwWqxyhga0aauweYnsdrKEtttkyTWWOSf6i";
+// Email signup posts to a Cloudflare Worker proxy that holds the Beehiiv API
+// key server-side, so the key is never exposed in this page's source.
+// ⚠ Replace the URL below with your deployed Worker URL (see EXTERNAL_SERVICES.md §2).
+const SUBSCRIBE_ENDPOINT = "https://beehiiv-proxy.curl-brandon.workers.dev";
 let curTier = "all";
 let curCat  = "All";
 // Year filter. Defaults to the most recent year present in DATA; "all" shows
@@ -9825,13 +9827,10 @@ async function unlock(e){
   btn.disabled = true;
 
   try {
-    const res = await fetch(`https://api.beehiiv.com/v2/publications/${BEEHIIV_PUB}/subscriptions`,{
+    const res = await fetch(SUBSCRIBE_ENDPOINT,{
       method:"POST",
-      headers:{
-        "Content-Type":"application/json",
-        "Authorization":`Bearer ${BEEHIIV_KEY}`
-      },
-      body:JSON.stringify({email, reactivate_existing:true, send_welcome_email:false})
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({email})
     });
 
     if(res.ok){
