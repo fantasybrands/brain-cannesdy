@@ -250,7 +250,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 /* ── DETAIL MODAL ── */
 #modal{position:fixed;inset:0;z-index:200;background:rgba(8,6,18,.82);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:24px}
 #modal.on{display:flex}
-#mdl{background:linear-gradient(160deg,#16132e,#12102a);border-radius:20px;max-width:1000px;width:95%;max-height:92vh;overflow-y:auto;position:relative;box-shadow:0 40px 100px rgba(0,0,0,.6),0 0 60px rgba(142,184,255,.04);border:1px solid rgba(255,255,255,.08);animation:pop .3s cubic-bezier(.34,1.56,.64,1)}
+#mdl{background:linear-gradient(160deg,#16132e,#12102a);border-radius:20px;max-width:1000px;width:95%;max-height:92vh;overflow-y:auto;position:relative;box-shadow:0 40px 100px rgba(0,0,0,.6),0 0 60px rgba(142,184,255,.04);border:1px solid rgba(255,255,255,.08);animation:pop .3s cubic-bezier(.34,1.56,.64,1);scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.18) transparent}
+#mdl::-webkit-scrollbar{width:8px}
+#mdl::-webkit-scrollbar-track{background:transparent}
+#mdl::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:8px;border:2px solid transparent;background-clip:content-box}
+#mdl:hover::-webkit-scrollbar-thumb{background:rgba(255,255,255,.26);background-clip:content-box}
 @keyframes pop{from{transform:scale(.93) translateY(18px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
 .mdl-img{width:100%;aspect-ratio:4/3;background-size:contain;background-position:center;background-repeat:no-repeat;background-color:rgba(8,6,18,.8);border-radius:20px 20px 0 0;position:relative;overflow:hidden;cursor:zoom-in}
 .mdl-img.zoomed{cursor:zoom-out}
