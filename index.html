@@ -3,7 +3,44 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Brain Cannesdy 2025</title>
+<title>Brain Cannesdy — Cannes Lions 2025 Winners</title>
+<meta name="description" content="A searchable archive of Cannes Lions award-winning work — browse winning campaigns by category, medal, and year, with case-study videos. Built for creatives and ad professionals.">
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="Brain-Cannesdy-Logo-Icon.png">
+<link rel="apple-touch-icon" href="Brain-Cannesdy-Logo-Icon.png">
+
+<!-- Open Graph (Facebook, LinkedIn, iMessage, Slack, etc.) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Brain Cannesdy">
+<meta property="og:title" content="Brain Cannesdy — Cannes Lions 2025 Winners">
+<meta property="og:description" content="A searchable archive of Cannes Lions award-winning work — browse winning campaigns by category, medal, and year, with case-study videos.">
+<meta property="og:url" content="https://braincannesdy.com/">
+<meta property="og:image" content="https://braincannesdy.com/Brain-Cannesdy-Logo-Horizontal-Black.png">
+
+<!-- Twitter / X card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Brain Cannesdy — Cannes Lions 2025 Winners">
+<meta name="twitter:description" content="A searchable archive of Cannes Lions award-winning work — browse winning campaigns by category, medal, and year, with case-study videos.">
+<meta name="twitter:image" content="https://braincannesdy.com/Brain-Cannesdy-Logo-Horizontal-Black.png">
+
+<!-- ───────────── Google Analytics 4 ─────────────
+     TO ACTIVATE: replace G-XXXXXXXXXX below with your GA4 Measurement ID
+     (from analytics.google.com → Admin → Data Streams). Until you do, this
+     stays completely inert and makes no network requests. -->
+<script>
+  window.GA4_ID = "G-XXXXXXXXXX";
+  if(window.GA4_ID && window.GA4_ID.indexOf("G-XXXX") !== 0){
+    var _ga = document.createElement("script");
+    _ga.async = true;
+    _ga.src = "https://www.googletagmanager.com/gtag/js?id=" + window.GA4_ID;
+    document.head.appendChild(_ga);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ dataLayer.push(arguments); };
+    gtag("js", new Date());
+    gtag("config", window.GA4_ID);
+  }
+</script>
 <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@700&family=Nunito:wght@800;900&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -105,6 +142,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .sb-logo{padding:20px 14px 10px;display:flex;justify-content:center}
 .sb-yr{padding:0 18px 16px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.25);border-bottom:1px solid rgba(255,255,255,0.05);margin-bottom:10px}
 .sb-sec{padding:10px 18px 5px;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.2);font-weight:600}
+.sb-group{padding:13px 18px 4px;font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,157,226,0.5);font-weight:700;margin-top:5px;border-top:1px solid rgba(255,255,255,0.06)}
 .sb-cat{padding:8px 18px;font-size:12.5px;font-weight:500;color:var(--sidebar-text);cursor:pointer;transition:all var(--tr);border-left:2px solid transparent;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sb-cat:hover{color:var(--sidebar-active);background:rgba(255,255,255,0.03)}
 .sb-cat.on{color:var(--sidebar-active);font-weight:700;border-left-color:var(--holo-pink);background:rgba(255,157,226,0.06)}
@@ -193,7 +231,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 #modal.on{display:flex}
 #mdl{background:linear-gradient(160deg,#16132e,#12102a);border-radius:20px;max-width:1000px;width:95%;max-height:92vh;overflow-y:auto;position:relative;box-shadow:0 40px 100px rgba(0,0,0,.6),0 0 60px rgba(142,184,255,.04);border:1px solid rgba(255,255,255,.08);animation:pop .3s cubic-bezier(.34,1.56,.64,1)}
 @keyframes pop{from{transform:scale(.93) translateY(18px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
-.mdl-img{width:100%;aspect-ratio:4/3;background-size:contain;background-position:center;background-repeat:no-repeat;background-color:rgba(8,6,18,.8);border-radius:20px 20px 0 0;position:relative;overflow:hidden;cursor:crosshair}
+.mdl-img{width:100%;aspect-ratio:4/3;background-size:contain;background-position:center;background-repeat:no-repeat;background-color:rgba(8,6,18,.8);border-radius:20px 20px 0 0;position:relative;overflow:hidden;cursor:zoom-in}
+.mdl-img.zoomed{cursor:zoom-out}
 .mdl-video-wrap{width:100%;aspect-ratio:16/9;border-radius:20px 20px 0 0;overflow:hidden;background:#000;display:none}
 .mdl-video-wrap iframe{width:100%;height:100%;border:none;display:block}
 .mdl-video-fallback{font-size:11px;color:rgba(255,255,255,.35);text-decoration:none;padding:6px 12px;border-radius:50px;border:1px solid rgba(255,255,255,.12);transition:all .2s;letter-spacing:.2px}
@@ -230,9 +269,10 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 /* ── MAGNIFIER ── */
 .mdl-magnifier{display:none}
 #mdl-img-inner{position:absolute;inset:0;background-size:contain;background-position:center;background-repeat:no-repeat;transform-origin:center center;will-change:transform}
-/* zoom hint pill */
-.mdl-zoom-hint{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(255,157,226,.18);color:rgba(255,157,226,.95);border:1px solid rgba(255,157,226,.35);padding:5px 16px;border-radius:20px;font-size:11px;pointer-events:none;backdrop-filter:blur(8px);z-index:4;letter-spacing:.4px;transition:all .2s;white-space:nowrap;font-weight:600;box-shadow:0 2px 12px rgba(255,157,226,.15)}
-.mdl-zoom-hint.active{color:var(--holo-mint);background:rgba(126,252,219,.14);border-color:rgba(126,252,219,.35);box-shadow:0 2px 12px rgba(126,252,219,.15)}
+/* "press space to play" hint pill */
+.mdl-space-hint{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(8,6,18,.55);color:rgba(255,255,255,.82);border:1px solid rgba(255,255,255,.18);padding:5px 14px;border-radius:20px;font-size:11px;pointer-events:none;backdrop-filter:blur(8px);z-index:4;letter-spacing:.3px;transition:opacity .25s;white-space:nowrap;font-weight:500;display:flex;align-items:center;gap:7px}
+.mdl-space-hint .kbd{display:inline-block;padding:2px 8px;border-radius:5px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);font-size:10px;font-weight:700;letter-spacing:.5px;line-height:1.3}
+.mdl-space-hint.hide{opacity:0}
 
 /* iridescent chrome gradients */
 .g1{background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)}
@@ -274,7 +314,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .grid-card{border-radius:12px;overflow:hidden;cursor:pointer;background:rgba(255,255,255,.04);backdrop-filter:blur(6px);transition:all .3s;border:2px solid rgba(255,255,255,.06);position:relative}
 .grid-card:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(142,184,255,.12),0 4px 16px rgba(255,157,226,.08);border-color:rgba(255,157,226,.2);animation:holoBorder 3s ease-in-out infinite}
 .grid-card.on{border-width:2px;border-color:transparent}
-.gc-img{width:100%;aspect-ratio:4/3;background-size:contain;background-position:center;background-repeat:no-repeat;background-color:rgba(8,6,18,.7)}
+.gc-img{width:100%;aspect-ratio:4/3;background-size:contain;background-position:center;background-repeat:no-repeat;background-color:rgba(8,6,18,.7);position:relative;overflow:hidden}
+.gc-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .4s ease}
+.gc-img img.loaded{opacity:1}
+.gc-img.skel::before{content:"";position:absolute;inset:0;background:linear-gradient(100deg,rgba(255,255,255,.03) 30%,rgba(255,255,255,.10) 50%,rgba(255,255,255,.03) 70%);background-size:200% 100%;animation:gcShimmer 1.3s ease-in-out infinite}
+@keyframes gcShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .gc-body{padding:12px 14px 14px}
 .gc-badge{display:inline-block;padding:2px 8px;border-radius:50px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#fff;margin-bottom:8px}
 .gc-badge.gp{background:var(--gp)}
@@ -379,39 +423,48 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     </div>
     <div class="sb-yr"><select id="yr-sel" onchange="selYear(this.value)" style="background:transparent;color:inherit;font:inherit;border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:3px 8px;cursor:pointer;width:100%"></select></div>
     <div class="sb-sec">Categories</div>
-    <div class="sb-cat on" onclick="selCat(this)">All</div>
-    <div class="sb-cat" onclick="selCat(this)">Audio &amp; Radio</div>
-    <div class="sb-cat" onclick="selCat(this)">Film</div>
-    <div class="sb-cat" onclick="selCat(this)">Outdoor</div>
-    <div class="sb-cat" onclick="selCat(this)">Print &amp; Publishing</div>
-    <div class="sb-cat" onclick="selCat(this)">Design</div>
-    <div class="sb-cat" onclick="selCat(this)">Digital Craft</div>
-    <div class="sb-cat" onclick="selCat(this)">Film Craft</div>
-    <div class="sb-cat" onclick="selCat(this)">Industry Craft</div>
-    <div class="sb-cat" onclick="selCat(this)">Creative B2B</div>
-    <div class="sb-cat" onclick="selCat(this)">Creative Data</div>
-    <div class="sb-cat" onclick="selCat(this)">Direct</div>
-    <div class="sb-cat" onclick="selCat(this)">Media</div>
-    <div class="sb-cat" onclick="selCat(this)">PR</div>
-    <div class="sb-cat" onclick="selCat(this)">Social &amp; Creator</div>
-    <div class="sb-cat" onclick="selCat(this)">Entertainment</div>
-    <div class="sb-cat" onclick="selCat(this)">Entertainment Lions for Gaming</div>
-    <div class="sb-cat" onclick="selCat(this)">Entertainment Lions for Music</div>
-    <div class="sb-cat" onclick="selCat(this)">Entertainment Lions for Sport</div>
-    <div class="sb-cat" onclick="selCat(this)">Brand Experience &amp; Activation</div>
-    <div class="sb-cat" onclick="selCat(this)">Creative Business Transformation</div>
-    <div class="sb-cat" onclick="selCat(this)">Creative Commerce</div>
-    <div class="sb-cat" onclick="selCat(this)">Innovation</div>
-    <div class="sb-cat" onclick="selCat(this)">Luxury</div>
-    <div class="sb-cat" onclick="selCat(this)">Glass: The Lion for Change</div>
-    <div class="sb-cat" onclick="selCat(this)">Grand Prix for Good</div>
-    <div class="sb-cat" onclick="selCat(this)">Sustainable Development Goals</div>
-    <div class="sb-cat" onclick="selCat(this)">Health &amp; Wellness</div>
-    <div class="sb-cat" onclick="selCat(this)">Lions Health Grand Prix for Good</div>
-    <div class="sb-cat" onclick="selCat(this)">Pharma</div>
-    <div class="sb-cat" onclick="selCat(this)">Creative Effectiveness</div>
-    <div class="sb-cat" onclick="selCat(this)">Creative Strategy</div>
-    <div class="sb-cat" onclick="selCat(this)">Titanium</div>
+    <div class="sb-cat on" data-cat="All" onclick="selCat(this)">All</div>
+    <div class="sb-group">Classic</div>
+    <div class="sb-cat" data-cat="Audio &amp; Radio" onclick="selCat(this)">Audio &amp; Radio</div>
+    <div class="sb-cat" data-cat="Film" onclick="selCat(this)">Film</div>
+    <div class="sb-cat" data-cat="Outdoor" onclick="selCat(this)">Outdoor</div>
+    <div class="sb-cat" data-cat="Print &amp; Publishing" onclick="selCat(this)">Print &amp; Publishing</div>
+    <div class="sb-group">Craft</div>
+    <div class="sb-cat" data-cat="Design" onclick="selCat(this)">Design</div>
+    <div class="sb-cat" data-cat="Digital Craft" onclick="selCat(this)">Digital Craft</div>
+    <div class="sb-cat" data-cat="Film Craft" onclick="selCat(this)">Film Craft</div>
+    <div class="sb-cat" data-cat="Industry Craft" onclick="selCat(this)">Industry Craft</div>
+    <div class="sb-group">Engagement</div>
+    <div class="sb-cat" data-cat="Creative B2B" onclick="selCat(this)">Creative B2B</div>
+    <div class="sb-cat" data-cat="Creative Data" onclick="selCat(this)">Creative Data</div>
+    <div class="sb-cat" data-cat="Direct" onclick="selCat(this)">Direct</div>
+    <div class="sb-cat" data-cat="Media" onclick="selCat(this)">Media</div>
+    <div class="sb-cat" data-cat="PR" onclick="selCat(this)">PR</div>
+    <div class="sb-cat" data-cat="Social &amp; Creator" onclick="selCat(this)">Social &amp; Creator</div>
+    <div class="sb-group">Entertainment</div>
+    <div class="sb-cat" data-cat="Entertainment" onclick="selCat(this)">Entertainment</div>
+    <div class="sb-cat" data-cat="Entertainment Lions for Gaming" onclick="selCat(this)">Gaming</div>
+    <div class="sb-cat" data-cat="Entertainment Lions for Music" onclick="selCat(this)">Music</div>
+    <div class="sb-cat" data-cat="Entertainment Lions for Sport" onclick="selCat(this)">Sport</div>
+    <div class="sb-group">Experience</div>
+    <div class="sb-cat" data-cat="Brand Experience &amp; Activation" onclick="selCat(this)">Brand Experience &amp; Activation</div>
+    <div class="sb-cat" data-cat="Creative Business Transformation" onclick="selCat(this)">Business Transformation</div>
+    <div class="sb-cat" data-cat="Creative Commerce" onclick="selCat(this)">Creative Commerce</div>
+    <div class="sb-cat" data-cat="Innovation" onclick="selCat(this)">Innovation</div>
+    <div class="sb-cat" data-cat="Luxury" onclick="selCat(this)">Luxury</div>
+    <div class="sb-group">Good</div>
+    <div class="sb-cat" data-cat="Glass: The Lion for Change" onclick="selCat(this)">Glass</div>
+    <div class="sb-cat" data-cat="Grand Prix for Good" onclick="selCat(this)">Grand Prix for Good</div>
+    <div class="sb-cat" data-cat="Sustainable Development Goals" onclick="selCat(this)">Sustainable Development</div>
+    <div class="sb-group">Health</div>
+    <div class="sb-cat" data-cat="Health &amp; Wellness" onclick="selCat(this)">Health &amp; Wellness</div>
+    <div class="sb-cat" data-cat="Lions Health Grand Prix for Good" onclick="selCat(this)">Health Grand Prix for Good</div>
+    <div class="sb-cat" data-cat="Pharma" onclick="selCat(this)">Pharma</div>
+    <div class="sb-group">Strategy</div>
+    <div class="sb-cat" data-cat="Creative Effectiveness" onclick="selCat(this)">Creative Effectiveness</div>
+    <div class="sb-cat" data-cat="Creative Strategy" onclick="selCat(this)">Creative Strategy</div>
+    <div class="sb-group">Titanium</div>
+    <div class="sb-cat" data-cat="Titanium" onclick="selCat(this)">Titanium</div>
     <div style="height:20px"></div>
   </nav>
 
@@ -448,7 +501,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   <button class="mdl-nav mdl-nav-l" id="mdl-prev" onclick="event.stopPropagation();mdlGo(-1)" title="Previous">&#8592;</button>
   <div id="mdl">
     <button class="mdl-close" onclick="closeMdl()">&#10005;</button>
-    <div class="mdl-img" id="mdl-img" onmousemove="magMove(event)" onmouseleave="magHide()" onclick="toggleZoom(event)"><div id="mdl-img-inner"></div><div class="mdl-tb" id="mdl-tb"></div><div class="mdl-magnifier" id="magnifier"></div><div class="mdl-zoom-hint" id="mdl-zoom-prompt">Click image to zoom</div></div>
+    <div class="mdl-img" id="mdl-img" onmousemove="magMove(event)" onmouseleave="magHide()" onclick="toggleZoom(event)"><div id="mdl-img-inner"></div><div class="mdl-tb" id="mdl-tb"></div><div class="mdl-magnifier" id="magnifier"></div><div class="mdl-space-hint" id="mdl-space-hint">Press <span class="kbd">Space</span> to play case study</div></div>
     <div class="mdl-body">
       <div class="mdl-ttl" id="mdl-ttl"></div>
       <div class="mdl-meta" id="mdl-meta"></div>
@@ -9595,10 +9648,14 @@ function initFirebase(){
   } catch(err){ console.warn('Firebase init failed:', err); }
 }
 
+function _sumLikeIds(idsAttr, fallbackId){
+  const ids = (idsAttr ? idsAttr.split(',') : [fallbackId]).map(x => parseInt(x, 10));
+  return ids.reduce((s, id) => s + (likeCounts[id] || 0), 0);
+}
 function refreshLikeCounts(){
   document.querySelectorAll('.gc-like-btn[data-id]').forEach(btn => {
     const id = parseInt(btn.dataset.id);
-    const count = likeCounts[id] || 0;
+    const count = _sumLikeIds(btn.dataset.ids, id);
     const isLiked = localStorage.getItem('bc_liked_' + id) === '1';
     btn.classList.toggle('on', isLiked);
     const ce = btn.querySelector('.gc-like-count');
@@ -9656,20 +9713,22 @@ function toggleLike(id){
     localStorage.setItem(likedKey, '1');
     likeCounts[id] = (likeCounts[id] || 0) + 1;
     applyLikeUI(id, true);
+    track("like", { id: id });
   }
   if(curSort === 'most-liked') buildGrid();
 }
 
 function applyLikeUI(id, isLiked){
-  const count = likeCounts[id] || 0;
   document.querySelectorAll('.gc-like-btn[data-id="' + id + '"]').forEach(b => {
     b.classList.toggle('on', isLiked);
+    const count = _sumLikeIds(b.dataset.ids, id);
     const ce = b.querySelector('.gc-like-count');
     if(ce) ce.textContent = count > 0 ? count : '';
   });
   const mdlLike = document.getElementById('mdl-like-btn');
   if(mdlLike && parseInt(mdlLike.dataset.id) === id){
     mdlLike.classList.toggle('on', isLiked);
+    const count = _sumLikeIds(mdlLike.dataset.ids, id);
     const ce = mdlLike.querySelector('.mdl-like-count');
     if(ce) ce.textContent = count > 0 ? ' ' + count : '';
   }
@@ -9738,12 +9797,8 @@ function enterApp(){
   setTimeout(() => document.body.focus(), 50);
   document.getElementById("app").classList.add("on");
   refresh();
-  const hash = location.hash;
-  if(hash && hash.startsWith("#entry-")){
-    const id = parseInt(hash.replace("#entry-",""),10);
-    const idx = entries.findIndex(en => en.id === id);
-    if(idx >= 0){ curIdx = idx; gridFocusIdx = idx; paintGridFocus(); openModal(); }
-  }
+  // Deep-link: open the shared entry (readable slug or legacy #entry-NNN).
+  openEntryFromHash();
 }
 
 function skipSubscribe(){
@@ -9878,6 +9933,7 @@ function tbSearchKey(ev){
   if(ev.key === "Escape"){ clearSearch(); document.getElementById("tb-q").blur(); }
   else if(ev.key === "Enter"){
     ev.preventDefault();
+    track("search", { query: searchQuery, results: entries.length });
     if(entries.length > 0){ gridFocusIdx = 0; curIdx = 0; paintGridFocus(); openModal(); }
   }
 }
@@ -9886,7 +9942,7 @@ function surpriseMe(){
   // switch to "All" category so we pick from every entry
   curCat = "All";
   document.querySelectorAll(".sb-cat").forEach(c => {
-    c.classList.toggle("on", !c.classList.contains("cs") && c.textContent.trim() === "All");
+    c.classList.toggle("on", !c.classList.contains("cs") && (c.dataset.cat || c.textContent.trim()) === "All");
   });
   curTier = "all";
   document.querySelectorAll(".fb").forEach(b=>b.classList.remove("on"));
@@ -9900,11 +9956,78 @@ function surpriseMe(){
 
 // (search results now live in the grid — no click-outside listener needed)
 
+// Analytics event helper — no-ops until GA4 is activated (see <head>).
+function track(name, params){ if(window.gtag) try{ gtag("event", name, params || {}); }catch(_){} }
+
+// ─────────────────────────────────────────────
+// DEEP-LINK SLUGS — readable URLs like #2025-cif-dirty-mouth-sponsorship
+// (GitHub Pages is static, so we use hash slugs rather than real paths.)
+// Legacy #entry-NNN links still resolve via the id→slug map.
+// ─────────────────────────────────────────────
+function slugify(s){
+  return (s == null ? "" : String(s))
+    .normalize("NFKD").replace(/[̀-ͯ]/g, "")  // strip diacritics
+    .toLowerCase()
+    .replace(/['’]/g, "")                                // drop apostrophes
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, "-")                          // everything else -> -
+    .replace(/-{2,}/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+function _leadBrand(b){
+  b = b || "";
+  for(const sep of [",", "/", "|"]){ if(b.includes(sep)) b = b.split(sep)[0]; }
+  return b.trim();
+}
+function entrySlug(e){
+  return [e.year, _leadBrand(e.brand), e.campaign].map(slugify).filter(Boolean).join("-");
+}
+
+// Canonical index over EVERY merged entry (all years/categories/tiers), so a
+// shared link resolves regardless of the visitor's current filters.
+let _slugIndex = null;   // slug -> merged entry
+let _idToSlug  = null;   // member award-row id -> slug
+function buildSlugIndex(){
+  if(_slugIndex) return;
+  _slugIndex = {}; _idToSlug = {};
+  dedup(getAllDataEntries()).forEach(e => {
+    let slug = entrySlug(e) || ("entry-" + e.id);
+    if(_slugIndex[slug]) slug = slug + "-" + e.id;   // disambiguate rare collisions
+    _slugIndex[slug] = e;
+    (e._ids && e._ids.length ? e._ids : [e.id]).forEach(id => { _idToSlug[id] = slug; });
+  });
+}
+function slugForId(id){ buildSlugIndex(); return _idToSlug[id] || ("entry-" + id); }
+
+// Resolve a hash (slug OR legacy entry-NNN) to a merged entry, then display it.
+function openEntryFromHash(){
+  let h = location.hash.replace(/^#/, "");
+  try { h = decodeURIComponent(h); } catch(_){}
+  if(!h) return false;
+  buildSlugIndex();
+  let target = _slugIndex[h];
+  if(!target && h.startsWith("entry-")){
+    const slug = _idToSlug[parseInt(h.slice(6), 10)];
+    if(slug) target = _slugIndex[slug];
+  }
+  if(!target) return false;
+  // Make sure the entry is in view: open it in the All-category view for its year.
+  const targetIds = target._ids && target._ids.length ? target._ids : [target.id];
+  curCat = "All"; curTier = "all"; curYear = target.year;
+  document.querySelectorAll(".sb-cat").forEach(c => c.classList.toggle("on", (c.dataset.cat || c.textContent.trim()) === "All"));
+  document.querySelectorAll(".fb").forEach(b => b.classList.toggle("on", b.dataset.t === "all"));
+  const ysel = document.getElementById("yr-sel"); if(ysel) ysel.value = String(curYear);
+  refresh();
+  const idx = entries.findIndex(en => (en._ids && en._ids.length ? en._ids : [en.id]).some(id => targetIds.includes(id)));
+  if(idx >= 0){ curIdx = idx; gridFocusIdx = idx; paintGridFocus(); openModal(); return true; }
+  return false;
+}
+
 // ─────────────────────────────────────────────
 // SHARE — copy deep-link URL to clipboard
 // ─────────────────────────────────────────────
 function shareEntry(id){
-  const url = location.origin + location.pathname + "#entry-" + id;
+  const url = location.origin + location.pathname + "#" + slugForId(id);
   navigator.clipboard.writeText(url).then(()=>{
     // visual feedback on modal share button
     const btn = document.getElementById("mdl-share-btn");
@@ -9923,7 +10046,7 @@ function toggleZoom(ev){
   zoomActive = !zoomActive;
   const inner = document.getElementById("mdl-img-inner");
   const img   = document.getElementById("mdl-img");
-  const hint  = document.getElementById("mdl-zoom-prompt");
+  const spaceHint = document.getElementById("mdl-space-hint");
   if(zoomActive){
     // Zoom immediately to the click point
     if(ev){
@@ -9935,12 +10058,12 @@ function toggleZoom(ev){
       inner.style.transformOrigin = "center center";
     }
     inner.style.transform = "scale(" + ZOOM + ")";
-    img.style.cursor = "zoom-out";
-    if(hint){ hint.textContent = "Click to zoom out"; hint.classList.add("active"); }
+    img.classList.add("zoomed");          // cursor: zoom-out (magnifier −)
+    if(spaceHint) spaceHint.classList.add("hide");
   } else {
     magHide();
-    img.style.cursor = "crosshair";
-    if(hint){ hint.textContent = "Click image to zoom"; hint.classList.remove("active"); }
+    img.classList.remove("zoomed");       // cursor: zoom-in (magnifier +)
+    if(spaceHint) spaceHint.classList.remove("hide");
   }
 }
 function magMove(ev){
@@ -10008,7 +10131,7 @@ function selCat(el){
   if(el.classList.contains("cs")) return;
   document.querySelectorAll(".sb-cat").forEach(c=>c.classList.remove("on"));
   el.classList.add("on");
-  curCat  = el.textContent.trim();
+  curCat  = el.dataset.cat || el.textContent.trim();
   curTier = "all";
   document.querySelectorAll(".fb").forEach(b=>b.classList.remove("on"));
   document.querySelector('.fb[data-t="all"]').classList.add("on");
@@ -10031,8 +10154,8 @@ function initYearSelect(){
   if(!sel) return;
   const yrs = availableYears();
   let html = "";
-  yrs.forEach(y => { html += `<option value="${y}">Cannes ${y}</option>`; });
-  html += `<option value="all">All years</option>`;
+  yrs.forEach(y => { html += `<option value="${y}">${y}</option>`; });
+  html += `<option value="all">All</option>`;
   sel.innerHTML = html;
   sel.value = (curYear == null) ? "all" : String(curYear);
 }
@@ -10047,43 +10170,80 @@ function selYear(v){
 // ─────────────────────────────────────────────
 // ─────────────────────────────────────────────
 // DEDUPLICATION — merge entries that represent the same creative work.
-// Preferred key: groupId (assigned by scripts/group_campaigns.py during
-// the curated review pass). Fallback: campaign+brand, which catches the
-// same row appearing across multiple categories (e.g. AXA — Three Words
-// in Direct, Creative Strategy, Titanium, etc.).
+// Preferred key: groupId (curated grouping). Fallback: campaign + year.
+// The same campaign wins across many categories/tiers but is one piece of
+// work, so we collapse on the campaign name within a single Cannes year
+// (different years stay separate, since a campaign's identity is year-bound).
+// Brand strings are ignored for matching because the same campaign is often
+// labelled inconsistently across categories ("Cif" vs "Cif, Droga5",
+// "L'Oréal" vs "L'Oréal Paris"). Verified: no two genuinely different
+// campaigns share a name within the same year in this dataset.
+//
+// REPRESENTATIVE CONTENT — highest tier wins. The merged tile shows the
+// description/image/video/brand/agency from the most prestigious win
+// (Grand Prix > Gold > Silver > Bronze > Titanium), filling any gaps from
+// lower-tier rows. _ids holds every member award-row id (for like-summing
+// and resolving legacy #entry-NNN deep links).
 // ─────────────────────────────────────────────
+function tierOrder(t){ return t==="Grand Prix"?0:t==="Gold"?1:t==="Silver"?2:t==="Bronze"?3:t==="Titanium"?4:5; }
+
 function dedup(arr){
   const map = new Map();
   const norm = s => (s || "").toLowerCase().replace(/\s+/g, " ").trim();
   arr.forEach(e => {
     const key = (e.groupId && e.groupId.length > 0)
       ? "g:" + e.groupId
-      // Case-insensitive fallback: 'AXA - THREE WORDS' and 'AXA - Three Words'
-      // should merge across categories.
-      : "cb:" + norm(e.campaign) + "||" + norm(e.brand);
+      : "cy:" + norm(e.campaign) + "||" + (e.year == null ? "" : e.year);
     if(map.has(key)){
-      const existing = map.get(key);
-      // merge tier
-      existing.tiers.push(e.tier);
-      // collect every campaign string so the modal can list each piece
-      if(!existing._campaigns) existing._campaigns = [existing.campaign];
-      if(!existing._campaigns.includes(e.campaign)) existing._campaigns.push(e.campaign);
-      // keep the best image
-      if(!existing.imgUrl && e.imgUrl) existing.imgUrl = e.imgUrl;
-      // accumulate distinct categories
-      if(e._cat && !existing._cats.includes(e._cat)) existing._cats.push(e._cat);
+      const ex = map.get(key);
+      ex.tiers.push(e.tier);
+      if(e.id != null && !ex._ids.includes(e.id)) ex._ids.push(e.id);
+      if(!ex._campaigns.includes(e.campaign)) ex._campaigns.push(e.campaign);
+      if(e._cat && !ex._cats.includes(e._cat)) ex._cats.push(e._cat);
+      if(tierOrder(e.tier) < ex._bestRank){
+        // This row is more prestigious — adopt its content as representative.
+        ex._bestRank = tierOrder(e.tier);
+        ex.id      = e.id;
+        ex.campaign = e.campaign;
+        ex.brand   = e.brand;
+        ex.agency  = e.agency;
+        ex.country = e.country;
+        if(e.desc)      ex.desc      = e.desc;
+        if(e.grad)      ex.grad      = e.grad;
+        if(e.imgUrl)    ex.imgUrl    = e.imgUrl;
+        if(e.youtubeId) ex.youtubeId = e.youtubeId;
+        if(e.videoUrl)  ex.videoUrl  = e.videoUrl;
+        if(e.caseUrl)   ex.caseUrl   = e.caseUrl;
+      } else {
+        // Lower tier — only fill gaps the representative is missing.
+        if(!ex.imgUrl && e.imgUrl)       ex.imgUrl    = e.imgUrl;
+        if(!ex.youtubeId && e.youtubeId) ex.youtubeId = e.youtubeId;
+        if(!ex.videoUrl && e.videoUrl)   ex.videoUrl  = e.videoUrl;
+        if(!ex.caseUrl && e.caseUrl)     ex.caseUrl   = e.caseUrl;
+        if(!ex.desc && e.desc)           ex.desc      = e.desc;
+      }
     } else {
       map.set(key, Object.assign({}, e, {
         tiers: [e.tier],
         _cats: e._cat ? [e._cat] : [],
         _campaigns: [e.campaign],
+        _ids: e.id != null ? [e.id] : [],
+        _bestRank: tierOrder(e.tier),
       }));
     }
   });
   return Array.from(map.values());
 }
 
-function tierOrder(t){ return t==="Grand Prix"?0:t==="Gold"?1:t==="Silver"?2:t==="Bronze"?3:4; }
+// Sum of like counts across every merged member award-row.
+function entryLikeCount(e){
+  const ids = (e._ids && e._ids.length) ? e._ids : (e.id != null ? [e.id] : []);
+  return ids.reduce((s, id) => s + (likeCounts[id] || 0), 0);
+}
+// Most prestigious tier on a (possibly merged) entry.
+function bestTier(e){
+  return e.tiers.slice().sort((a, b) => tierOrder(a) - tierOrder(b))[0];
+}
 
 function refresh(){
   let raw;
@@ -10107,7 +10267,7 @@ function refresh(){
   }
   // Sort
   if(curSort === "most-liked"){
-    entries = [...entries].sort((a, b) => (likeCounts[b.id] || 0) - (likeCounts[a.id] || 0));
+    entries = [...entries].sort((a, b) => entryLikeCount(b) - entryLikeCount(a));
   }
   // Apply search filter
   if(searchQuery.length >= 1){
@@ -10163,17 +10323,22 @@ function buildGrid(){
   }
   const favs = getFavs();
   g.innerHTML = entries.map((e,i) => {
-    const tc = tierClass(e.tiers[0]);
-    const imgStyle = e.imgUrl ? `background-image:url('${e.imgUrl}')` : "";
+    const tc = tierClass(bestTier(e));
     const gradClass = !e.imgUrl ? e.grad : "";
+    // Image cards get a shimmer skeleton that fades out once the <img> loads;
+    // gradient placeholder cards render instantly and need no skeleton.
+    const imgHtml = e.imgUrl
+      ? `<div class="gc-img skel"><img loading="lazy" src="${e.imgUrl}" alt="" onload="this.classList.add('loaded');this.parentNode.classList.remove('skel')" onerror="this.remove();this.parentNode.classList.remove('skel')"></div>`
+      : `<div class="gc-img ${gradClass}"></div>`;
     const focused = i === gridFocusIdx ? " arrow-focus" : "";
     const isFav = favs.has(e.id);
-    const likeCount = likeCounts[e.id] || 0;
+    const likeCount = entryLikeCount(e);
+    const likeIds = (e._ids && e._ids.length ? e._ids : [e.id]).join(',');
     const isLiked = localStorage.getItem('bc_liked_' + e.id) === '1';
     // stagger animation: each card pops in with a small delay, capped at 400ms total
     const delay = Math.min(i * 28, 400);
     return `<div class="grid-card ${tc}${focused} popping" style="animation-delay:${delay}ms" onclick="gridClick(${i})">
-      <div class="gc-img ${gradClass}" style="${imgStyle}"></div>
+      ${imgHtml}
       <button class="gc-share" onclick="event.stopPropagation();shareEntry(${e.id})" title="Copy link">&#128279;</button>
       <div class="gc-body">
         ${tierBadges(e.tiers)}
@@ -10181,7 +10346,7 @@ function buildGrid(){
         <div class="gc-meta">${e.brand.split("/")[0].trim()} &mdash; ${e.agency.split(",")[0]}</div>
         <div class="gc-actions">
           <button class="gc-heart${isFav ? ' on' : ''}" data-id="${e.id}" onclick="event.stopPropagation();toggleFav(${e.id})" title="Save to favorites">${isFav ? BKMK_ON : BKMK}</button>
-          <button class="gc-like-btn${isLiked ? ' on' : ''}" data-id="${e.id}" onclick="event.stopPropagation();toggleLike(${e.id})" title="Like">&#128077; <span class="gc-like-count">${likeCount > 0 ? likeCount : ''}</span></button>
+          <button class="gc-like-btn${isLiked ? ' on' : ''}" data-id="${e.id}" data-ids="${likeIds}" onclick="event.stopPropagation();toggleLike(${e.id})" title="Like">&#128077; <span class="gc-like-count">${likeCount > 0 ? likeCount : ''}</span></button>
         </div>
       </div>
     </div>`;
@@ -10199,6 +10364,7 @@ function gridClick(i){
 // VIDEO EMBED
 // ─────────────────────────────────────────────
 function playVideo(youtubeId, searchUrl){
+  track("play_video", { campaign: (entries[curIdx]||{}).campaign });
   const img = document.getElementById('mdl-img');
   let vw = document.getElementById('mdl-video-wrap');
   if(!vw){
@@ -10226,7 +10392,10 @@ function playVideo(youtubeId, searchUrl){
     const url = youtubeId.slice(4);
     embedHtml = `<video src="${url}" controls autoplay playsinline style="width:100%;height:100%;object-fit:contain;background:#000"></video>`;
   } else {
-    embedHtml = `<iframe src="https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+    // vq=hd1080 is a best-effort quality hint. YouTube ultimately serves the
+    // resolution that fits the player size and the viewer's bandwidth, so the
+    // large modal player is what actually drives high quality here.
+    embedHtml = `<iframe src="https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0&modestbranding=1&vq=hd1080" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
   }
   vw.innerHTML = embedHtml;
   img.style.display = 'none';
@@ -10267,13 +10436,19 @@ function stopVideo(youtubeId, searchUrl){
 function openModal(){
   if(!entries.length) return;
   const e  = entries[curIdx];
-  const tc = tierClass(e.tiers[0]);
+  const tc = tierClass(bestTier(e));
   const mi = document.getElementById("mdl-img");
   const miInner = document.getElementById("mdl-img-inner");
   // reset any active zoom when switching entries
   zoomActive = false;
-  const zoomPrompt = document.getElementById("mdl-zoom-prompt");
-  if(zoomPrompt){ zoomPrompt.textContent = "Click image to zoom"; zoomPrompt.classList.remove("active"); }
+  mi.classList.remove("zoomed");
+  // Spacebar-to-play hint: only meaningful when this entry has a case-study video
+  const spaceHint = document.getElementById("mdl-space-hint");
+  if(spaceHint){
+    const hasVideo = !!(e.youtubeId || e.videoUrl);
+    spaceHint.style.display = hasVideo ? "" : "none";
+    spaceHint.classList.remove("hide");
+  }
   magHide();
   // reset video player when switching entries
   const vwReset = document.getElementById('mdl-video-wrap');
@@ -10320,16 +10495,18 @@ function openModal(){
   const isFav = getFavs().has(e.id);
   acts+=`<button class="mdl-fav-btn${isFav ? ' on' : ''}" id="mdl-fav-btn" data-id="${e.id}" onclick="toggleFav(${e.id})">${isFav ? BKMK_ON + ' Saved' : BKMK + ' Save'}</button>`;
   // Global like
-  const likeCount = likeCounts[e.id] || 0;
+  const likeCount = entryLikeCount(e);
+  const likeIds = (e._ids && e._ids.length ? e._ids : [e.id]).join(',');
   const isLiked = localStorage.getItem('bc_liked_' + e.id) === '1';
-  acts+=`<button class="mdl-like-act${isLiked ? ' on' : ''}" id="mdl-like-btn" data-id="${e.id}" onclick="toggleLike(${e.id})">&#128077; Like<span class="mdl-like-count">${likeCount > 0 ? ' ' + likeCount : ''}</span></button>`;
+  acts+=`<button class="mdl-like-act${isLiked ? ' on' : ''}" id="mdl-like-btn" data-id="${e.id}" data-ids="${likeIds}" onclick="toggleLike(${e.id})">&#128077; Like<span class="mdl-like-count">${likeCount > 0 ? ' ' + likeCount : ''}</span></button>`;
   document.getElementById("mdl-acts").innerHTML=acts;
-  // update URL hash for deep-linking
-  history.replaceState(null,"","#entry-"+e.id);
+  // update URL hash for deep-linking (readable slug)
+  history.replaceState(null,"","#"+slugForId(e.id));
   // show/hide nav arrows
   document.getElementById("mdl-prev").style.display = curIdx > 0 ? "flex" : "none";
   document.getElementById("mdl-next").style.display = curIdx < entries.length-1 ? "flex" : "none";
   document.getElementById("modal").classList.add("on");
+  track("view_entry", { campaign: e.campaign, year: e.year, slug: slugForId(e.id) });
 }
 
 function mdlGo(dir){
@@ -10343,6 +10520,15 @@ function mdlGo(dir){
   const cards = document.querySelectorAll("#grid-inner .grid-card");
   if(cards[curIdx]) cards[curIdx].scrollIntoView({block:"nearest",behavior:"smooth"});
 }
+
+// External hash navigation (user pastes a slug URL or uses back/forward).
+// Our own openModal/closeMdl use replaceState, which does NOT fire hashchange,
+// so this only responds to genuine outside navigation.
+window.addEventListener("hashchange", () => {
+  const appOn = document.getElementById("app").classList.contains("on");
+  if(!appOn) return;                 // still behind the landing gate
+  if(location.hash.length > 1) openEntryFromHash();
+});
 
 function closeMdl(ev){
   if(ev && ev.target!==document.getElementById("modal")
@@ -10365,8 +10551,13 @@ document.addEventListener("keydown", ev => {
     if(modalOpen){ document.getElementById("modal").classList.remove("on"); return; }
     return;
   }
-  // Block shortcuts only when the topbar search input has focus
-  if(ev.target === document.getElementById("tb-q")) return;
+  // Never hijack browser/OS shortcuts (Cmd+R / Ctrl+R refresh, Alt combos, etc.)
+  if(ev.metaKey || ev.ctrlKey || ev.altKey) return;
+  // Don't capture keystrokes while the user is typing in any form field
+  // (search box, landing-page email input, etc.) — otherwise letters like "r"
+  // would trigger shortcuts instead of being typed.
+  const _t = ev.target;
+  if(_t && (_t.tagName === "INPUT" || _t.tagName === "TEXTAREA" || _t.tagName === "SELECT" || _t.isContentEditable)) return;
 
   // "R" = Surprise Me — works everywhere (grid or modal)
   if(ev.key.toLowerCase() === "r"){ ev.preventDefault(); surpriseMe(); return; }
