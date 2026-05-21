@@ -137,10 +137,26 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 #app.on{opacity:1}
 
 /* ── SIDEBAR ── */
-#sb{width:var(--sidebar-w);flex-shrink:0;background:var(--sidebar-bg);display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;border-right:1px solid rgba(255,255,255,0.06)}
-#sb::-webkit-scrollbar{display:none}
+#sb{width:var(--sidebar-w);flex-shrink:0;background:var(--sidebar-bg);display:flex;flex-direction:column;height:100vh;max-height:100vh;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.18) transparent;border-right:1px solid rgba(255,255,255,0.06)}
+#sb::-webkit-scrollbar{width:8px}
+#sb::-webkit-scrollbar-track{background:transparent}
+#sb::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:8px;border:2px solid transparent;background-clip:content-box}
+#sb:hover::-webkit-scrollbar-thumb{background:rgba(255,255,255,.26);background-clip:content-box}
 .sb-logo{padding:20px 14px 10px;display:flex;justify-content:center}
-.sb-yr{padding:0 18px 16px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.25);border-bottom:1px solid rgba(255,255,255,0.05);margin-bottom:10px}
+.sb-yr{padding:0 14px 16px;border-bottom:1px solid rgba(255,255,255,0.05);margin-bottom:10px}
+/* ── CUSTOM YEAR DROPDOWN (pill style) ── */
+.yr-dd{position:relative;width:100%}
+.yr-dd-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 14px;border-radius:50px;border:1px solid rgba(255,157,226,.28);background:rgba(255,157,226,.06);color:rgba(255,255,255,.82);cursor:pointer;font-family:var(--font);font-size:12px;font-weight:700;letter-spacing:1px;transition:all var(--tr)}
+.yr-dd-btn:hover{background:rgba(255,157,226,.15);color:#fff;border-color:rgba(255,157,226,.45)}
+.yr-dd.open .yr-dd-btn{background:rgba(255,157,226,.16);border-color:rgba(255,157,226,.5);color:#fff}
+.yr-dd-chev{flex-shrink:0;opacity:.65;transition:transform var(--tr)}
+.yr-dd.open .yr-dd-chev{transform:rotate(180deg);opacity:1}
+.yr-dd-menu{position:absolute;top:calc(100% + 6px);left:0;right:0;background:#16132e;border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:5px;box-shadow:0 12px 32px rgba(0,0,0,.5);z-index:60;display:none;flex-direction:column;gap:2px}
+.yr-dd.open .yr-dd-menu{display:flex;animation:yr-dd-in .16s ease}
+@keyframes yr-dd-in{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+.yr-dd-opt{padding:7px 13px;border-radius:50px;font-size:12px;font-weight:600;letter-spacing:.5px;color:rgba(255,255,255,.55);cursor:pointer;transition:all .15s;white-space:nowrap}
+.yr-dd-opt:hover{background:rgba(255,255,255,.06);color:#fff}
+.yr-dd-opt.sel{background:rgba(255,157,226,.14);color:var(--holo-pink);font-weight:700}
 .sb-sec{padding:10px 18px 5px;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.2);font-weight:600}
 .sb-group{padding:13px 18px 4px;font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,157,226,0.5);font-weight:700;margin-top:5px;border-top:1px solid rgba(255,255,255,0.06)}
 .sb-cat{padding:8px 18px;font-size:12.5px;font-weight:500;color:var(--sidebar-text);cursor:pointer;transition:all var(--tr);border-left:2px solid transparent;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -421,7 +437,15 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <div class="sb-logo">
       <img class="bc-logo-sm" src="Brain-Cannesdy-Logo-Horizontal-White-Lowercase.png" alt="Brain Cannesdy">
     </div>
-    <div class="sb-yr"><select id="yr-sel" onchange="selYear(this.value)" style="background:transparent;color:inherit;font:inherit;border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:3px 8px;cursor:pointer;width:100%"></select></div>
+    <div class="sb-yr">
+      <div class="yr-dd" id="yr-dd">
+        <button class="yr-dd-btn" id="yr-dd-btn" onclick="toggleYearMenu(event)" aria-haspopup="listbox" aria-expanded="false">
+          <span id="yr-dd-label">2025</span>
+          <svg class="yr-dd-chev" width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5L6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="yr-dd-menu" id="yr-dd-menu" role="listbox"></div>
+      </div>
+    </div>
     <div class="sb-sec">Categories</div>
     <div class="sb-cat on" data-cat="All" onclick="selCat(this)">All</div>
     <div class="sb-group">Classic</div>
@@ -10015,7 +10039,7 @@ function openEntryFromHash(){
   curCat = "All"; curTier = "all"; curYear = target.year;
   document.querySelectorAll(".sb-cat").forEach(c => c.classList.toggle("on", (c.dataset.cat || c.textContent.trim()) === "All"));
   document.querySelectorAll(".fb").forEach(b => b.classList.toggle("on", b.dataset.t === "all"));
-  const ysel = document.getElementById("yr-sel"); if(ysel) ysel.value = String(curYear);
+  updateYearLabel();
   refresh();
   const idx = entries.findIndex(en => (en._ids && en._ids.length ? en._ids : [en.id]).some(id => targetIds.includes(id)));
   if(idx >= 0){ curIdx = idx; gridFocusIdx = idx; paintGridFocus(); openModal(); return true; }
@@ -10149,15 +10173,51 @@ function availableYears(){
   return Array.from(s).sort((a,b) => b - a);  // most recent first
 }
 function initYearSelect(){
-  const sel = document.getElementById("yr-sel");
-  if(!sel) return;
+  const menu = document.getElementById("yr-dd-menu");
+  if(!menu) return;
   const yrs = availableYears();
-  let html = "";
-  yrs.forEach(y => { html += `<option value="${y}">${y}</option>`; });
-  html += `<option value="all">All</option>`;
-  sel.innerHTML = html;
-  sel.value = (curYear == null) ? "all" : String(curYear);
+  const opts = yrs.map(y => ({v: String(y), label: String(y)}));
+  opts.push({v: "all", label: "All Years"});
+  const cur = (curYear == null) ? "all" : String(curYear);
+  menu.innerHTML = opts.map(o =>
+    `<div class="yr-dd-opt${o.v === cur ? ' sel' : ''}" role="option" data-v="${o.v}" onclick="pickYear('${o.v}')">${o.label}</div>`
+  ).join("");
+  updateYearLabel();
 }
+function updateYearLabel(){
+  const lbl = document.getElementById("yr-dd-label");
+  if(!lbl) return;
+  const cur = (curYear == null || curYear === "all") ? "all" : String(curYear);
+  lbl.textContent = (cur === "all") ? "All Years" : cur;
+  document.querySelectorAll("#yr-dd-menu .yr-dd-opt").forEach(o => {
+    o.classList.toggle("sel", o.dataset.v === cur);
+  });
+}
+function toggleYearMenu(ev){
+  if(ev) ev.stopPropagation();
+  const dd = document.getElementById("yr-dd");
+  if(!dd) return;
+  const open = !dd.classList.contains("open");
+  dd.classList.toggle("open", open);
+  const btn = document.getElementById("yr-dd-btn");
+  if(btn) btn.setAttribute("aria-expanded", open ? "true" : "false");
+}
+function closeYearMenu(){
+  const dd = document.getElementById("yr-dd");
+  if(dd) dd.classList.remove("open");
+  const btn = document.getElementById("yr-dd-btn");
+  if(btn) btn.setAttribute("aria-expanded", "false");
+}
+function pickYear(v){
+  closeYearMenu();
+  selYear(v);
+  updateYearLabel();
+}
+// Close the year menu on any outside click.
+document.addEventListener("click", ev => {
+  const dd = document.getElementById("yr-dd");
+  if(dd && dd.classList.contains("open") && !dd.contains(ev.target)) closeYearMenu();
+});
 function selYear(v){
   curYear = (v === "all") ? "all" : Number(v);
   curIdx = 0;
@@ -10244,6 +10304,47 @@ function bestTier(e){
   return e.tiers.slice().sort((a, b) => tierOrder(a) - tierOrder(b))[0];
 }
 
+// ─────────────────────────────────────────────
+// DEFAULT SORT — most-awarded → category → brand → campaign → entry
+// Category order follows the nav (DATA key order), not alphabetical, so the
+// grid groups categories the way the sidebar lists them.
+// ─────────────────────────────────────────────
+const CAT_ORDER = Object.keys(DATA).reduce((m, k, i) => { m[k] = i; return m; }, {});
+function entryCatKey(e){
+  const cats = (e._cats && e._cats.length) ? e._cats : (e._cat ? [e._cat] : []);
+  if(!cats.length) return Number.MAX_SAFE_INTEGER;
+  return Math.min(...cats.map(c => (CAT_ORDER[c] != null ? CAT_ORDER[c] : Number.MAX_SAFE_INTEGER)));
+}
+// Prestige order for sorting (distinct from tierOrder, which ranks Titanium
+// last). Lower = more prestigious: Titanium > Grand Prix > Gold > Silver > Bronze.
+function prestigeRank(t){ return t==="Titanium"?0:t==="Grand Prix"?1:t==="Gold"?2:t==="Silver"?3:t==="Bronze"?4:5; }
+function bestPrestige(e){
+  return Math.min(...e.tiers.map(prestigeRank));
+}
+function defaultSortCmp(a, b){
+  // 1. Most awarded — total number of wins across the merged tile, descending.
+  const awardDiff = b.tiers.length - a.tiers.length;
+  if(awardDiff) return awardDiff;
+  // 2. Prestige — most prestigious win wins (Titanium > Grand Prix > Gold > Silver > Bronze).
+  const prestigeDiff = bestPrestige(a) - bestPrestige(b);
+  if(prestigeDiff) return prestigeDiff;
+  // 3. Category — only when no specific category is selected.
+  if(curCat === "All"){
+    const catDiff = entryCatKey(a) - entryCatKey(b);
+    if(catDiff) return catDiff;
+  }
+  // 4. Brand, alphabetical.
+  const brandDiff = (a.brand || "").localeCompare(b.brand || "", undefined, {sensitivity:'base'});
+  if(brandDiff) return brandDiff;
+  // 5. Campaign — groups entries from the same campaign together.
+  // 6. Entry name — natural/numeric-aware order within a campaign
+  //    (e.g. "1. High Energy Intern" before "2. High Energy Boyfriend").
+  const campDiff = (a.campaign || "").localeCompare(b.campaign || "", undefined, {numeric:true, sensitivity:'base'});
+  if(campDiff) return campDiff;
+  // Stable final tiebreak.
+  return (a.id || 0) - (b.id || 0);
+}
+
 function refresh(){
   let raw;
   if(curCat === "All"){
@@ -10266,7 +10367,14 @@ function refresh(){
   }
   // Sort
   if(curSort === "most-liked"){
-    entries = [...entries].sort((a, b) => entryLikeCount(b) - entryLikeCount(a));
+    // Most likes first, then fall back to the default ordering as tiebreak.
+    entries = [...entries].sort((a, b) => {
+      const likeDiff = entryLikeCount(b) - entryLikeCount(a);
+      if(likeDiff) return likeDiff;
+      return defaultSortCmp(a, b);
+    });
+  } else {
+    entries = [...entries].sort(defaultSortCmp);
   }
   // Apply search filter
   if(searchQuery.length >= 1){
@@ -10546,8 +10654,10 @@ function closeMdl(ev){
 document.addEventListener("keydown", ev => {
   const modalOpen = document.getElementById("modal").classList.contains("on");
   if(ev.key==="Escape"){
+    const ydd = document.getElementById("yr-dd");
+    if(ydd && ydd.classList.contains("open")){ closeYearMenu(); return; }
     if(searchQuery.length > 0){ clearSearch(); return; }
-    if(modalOpen){ document.getElementById("modal").classList.remove("on"); return; }
+    if(modalOpen){ closeMdl(); return; }
     return;
   }
   // Never hijack browser/OS shortcuts (Cmd+R / Ctrl+R refresh, Alt combos, etc.)
