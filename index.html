@@ -137,11 +137,16 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 #app.on{opacity:1}
 
 /* ── SIDEBAR ── */
-#sb{width:var(--sidebar-w);flex-shrink:0;background:var(--sidebar-bg);display:flex;flex-direction:column;height:100vh;max-height:100vh;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.18) transparent;border-right:1px solid rgba(255,255,255,0.06)}
-#sb::-webkit-scrollbar{width:8px}
-#sb::-webkit-scrollbar-track{background:transparent}
-#sb::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:8px;border:2px solid transparent;background-clip:content-box}
-#sb:hover::-webkit-scrollbar-thumb{background:rgba(255,255,255,.26);background-clip:content-box}
+#sb{width:var(--sidebar-w);flex-shrink:0;background:var(--sidebar-bg);display:flex;flex-direction:column;height:100vh;max-height:100vh;overflow:hidden;border-right:1px solid rgba(255,255,255,0.06)}
+/* Fixed header (logo + year picker) — never scrolls away. */
+.sb-head{flex:0 0 auto;position:relative;z-index:2}
+/* Scrollable category list. min-height:0 is essential: without it a flex
+   child keeps its full content height and its overflow never scrolls. */
+.sb-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.18) transparent}
+.sb-scroll::-webkit-scrollbar{width:8px}
+.sb-scroll::-webkit-scrollbar-track{background:transparent}
+.sb-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:8px;border:2px solid transparent;background-clip:content-box}
+.sb-scroll:hover::-webkit-scrollbar-thumb{background:rgba(255,255,255,.26);background-clip:content-box}
 .sb-logo{padding:20px 14px 10px;display:flex;justify-content:center}
 .sb-yr{padding:0 14px 16px;border-bottom:1px solid rgba(255,255,255,0.05);margin-bottom:10px}
 /* ── CUSTOM YEAR DROPDOWN (pill style) ── */
@@ -434,18 +439,21 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
   <!-- SIDEBAR -->
   <nav id="sb">
-    <div class="sb-logo">
-      <img class="bc-logo-sm" src="Brain-Cannesdy-Logo-Horizontal-White-Lowercase.png" alt="Brain Cannesdy">
-    </div>
-    <div class="sb-yr">
-      <div class="yr-dd" id="yr-dd">
-        <button class="yr-dd-btn" id="yr-dd-btn" onclick="toggleYearMenu(event)" aria-haspopup="listbox" aria-expanded="false">
-          <span id="yr-dd-label">2025</span>
-          <svg class="yr-dd-chev" width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5L6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <div class="yr-dd-menu" id="yr-dd-menu" role="listbox"></div>
+    <div class="sb-head">
+      <div class="sb-logo">
+        <img class="bc-logo-sm" src="Brain-Cannesdy-Logo-Horizontal-White-Lowercase.png" alt="Brain Cannesdy">
+      </div>
+      <div class="sb-yr">
+        <div class="yr-dd" id="yr-dd">
+          <button class="yr-dd-btn" id="yr-dd-btn" onclick="toggleYearMenu(event)" aria-haspopup="listbox" aria-expanded="false">
+            <span id="yr-dd-label">2025</span>
+            <svg class="yr-dd-chev" width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5L6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="yr-dd-menu" id="yr-dd-menu" role="listbox"></div>
+        </div>
       </div>
     </div>
+    <div class="sb-scroll">
     <div class="sb-sec">Categories</div>
     <div class="sb-cat on" data-cat="All" onclick="selCat(this)">All</div>
     <div class="sb-group">Classic</div>
@@ -490,6 +498,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <div class="sb-group">Titanium</div>
     <div class="sb-cat" data-cat="Titanium" onclick="selCat(this)">Titanium</div>
     <div style="height:20px"></div>
+    </div>
   </nav>
 
   <!-- MAIN -->
