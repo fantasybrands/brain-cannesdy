@@ -9928,28 +9928,68 @@ function _tokenizeSearch(s){
   if(!n) return [];
   return n.split(/\s+/).map(_foldPlural);
 }
-// Build the searchable token list for an entry (cached by id across keystrokes).
+// Build the searchable tokens for an entry (cached by id across keystrokes).
+// Tokens are split into "primary" (curated metadata — campaign, brand, agency,
+// country, tier, tags, keywords) and "desc" (free-text prose). Primary hits are
+// what we trust; description hits are noisy and rank far lower.
 const _searchTokenCache = {};
 function _entryTokens(e){
-  const parts = [e.campaign, e.brand, e.agency, e.country, e.desc, e.tier];
-  if(e.tiers) parts.push(e.tiers.join(" "));
-  if(e.tags) parts.push(e.tags.join(" "));
-  if(e.keywords) parts.push(e.keywords.join(" "));
-  return _tokenizeSearch(parts.join(" "));
+  const primaryParts = [e.campaign, e.brand, e.agency, e.country, e.tier];
+  if(e.tiers) primaryParts.push(e.tiers.join(" "));
+  if(e.tags) primaryParts.push(e.tags.join(" "));
+  if(e.keywords) primaryParts.push(e.keywords.join(" "));
+  return {
+    primary: _tokenizeSearch(primaryParts.join(" ")),
+    desc: _tokenizeSearch(e.desc || "")
+  };
 }
-// A query token matches an entry token by prefix on a word boundary, so "art"
-// matches the word "artist" but never the "art" buried inside "spartacus", and
-// "oreo" no longer matches "choreography".
-function searchMatchesEntry(e, q){
-  const qTokens = _tokenizeSearch(q);
-  if(qTokens.length === 0) return true;
+function _cachedEntryTokens(e){
   let toks = e.id != null ? _searchTokenCache[e.id] : null;
   if(!toks){
     toks = _entryTokens(e);
     if(e.id != null) _searchTokenCache[e.id] = toks;
   }
+  return toks;
+}
+// Short queries (<=4 chars) must match a WHOLE word, so "car" hits "car"/"cars"
+// but not "careful", "carbon" or "Carrefour". Longer queries keep prefix
+// matching, so "automot" still finds "automotive".
+function _tokenMatchesQuery(tok, qt){
+  return qt.length <= 4 ? tok === qt : tok.startsWith(qt);
+}
+// Search synonyms: typing the key also matches its alternatives. Keys must be
+// the folded/normalized form. "auto" → "automotive" so the abbreviation finds
+// the curated automotive keyword instead of only the literal word "auto".
+const SEARCH_SYNONYMS = { auto: ["automotive"] };
+function _queryVariants(qt){
+  const syn = SEARCH_SYNONYMS[qt];
+  return syn ? [qt, ...syn] : [qt];
+}
+// True if any variant of the query token matches a token in the given list.
+function _listMatchesQuery(list, qt){
+  return _queryVariants(qt).some(v => list.some(t => _tokenMatchesQuery(t, v)));
+}
+// A token matches if it appears in either the primary or description tokens.
+function searchMatchesEntry(e, q){
+  const qTokens = _tokenizeSearch(q);
+  if(qTokens.length === 0) return true;
+  const toks = _cachedEntryTokens(e);
   // Every query word must match somewhere in the entry (multi-word = AND).
-  return qTokens.every(qt => toks.some(t => t.startsWith(qt)));
+  return qTokens.every(qt =>
+    _listMatchesQuery(toks.primary, qt) || _listMatchesQuery(toks.desc, qt)
+  );
+}
+// Relevance score: a curated-field hit is worth far more than a prose-only hit,
+// so genuine matches (keyword/tag/brand/campaign) float above entries that only
+// happen to mention the word in their description.
+function searchRelevance(e, qTokens){
+  const toks = _cachedEntryTokens(e);
+  let score = 0;
+  for(const qt of qTokens){
+    if(_listMatchesQuery(toks.primary, qt)) score += 10;
+    else if(_listMatchesQuery(toks.desc, qt)) score += 1;
+  }
+  return score;
 }
 
 function tbSearch(q){
@@ -10318,7 +10358,7 @@ function bestTier(e){
 }
 
 // ─────────────────────────────────────────────
-// DEFAULT SORT — most-awarded → category → brand → campaign → entry
+// DEFAULT SORT — award prestige → category → brand → campaign → entry
 // Category order follows the nav (DATA key order), not alphabetical, so the
 // grid groups categories the way the sidebar lists them.
 // ─────────────────────────────────────────────
@@ -10328,29 +10368,40 @@ function entryCatKey(e){
   if(!cats.length) return Number.MAX_SAFE_INTEGER;
   return Math.min(...cats.map(c => (CAT_ORDER[c] != null ? CAT_ORDER[c] : Number.MAX_SAFE_INTEGER)));
 }
-// Prestige order for sorting (distinct from tierOrder, which ranks Titanium
-// last). Lower = more prestigious: Titanium > Grand Prix > Gold > Silver > Bronze.
-function prestigeRank(t){ return t==="Titanium"?0:t==="Grand Prix"?1:t==="Gold"?2:t==="Silver"?3:t==="Bronze"?4:5; }
-function bestPrestige(e){
-  return Math.min(...e.tiers.map(prestigeRank));
+// Prestige tiers, most prestigious first. "Titanium Grand Prix" is the apex
+// Titanium award and outranks a plain Titanium.
+const PRESTIGE_TIERS = ["Titanium Grand Prix", "Titanium", "Grand Prix", "Gold", "Silver", "Bronze"];
+function tierCount(e, tier){
+  let n = 0;
+  for(const t of e.tiers) if(t === tier) n++;
+  return n;
+}
+// Lexicographic prestige comparison: compare the number of wins at each tier
+// from most to least prestigious. The first tier where the counts differ
+// decides, so a single higher-tier Lion outranks any quantity of lower ones —
+// e.g. 1 Gold ranks above 1 Silver + 1 Bronze, and 1 Grand Prix above 3 Golds.
+function prestigeAwardCmp(a, b){
+  for(const t of PRESTIGE_TIERS){
+    const diff = tierCount(b, t) - tierCount(a, t);
+    if(diff) return diff;
+  }
+  return 0;
 }
 function defaultSortCmp(a, b){
-  // 1. Most awarded — total number of wins across the merged tile, descending.
-  const awardDiff = b.tiers.length - a.tiers.length;
+  // 1. Award prestige — more of the highest tier first; ties fall to the next
+  //    tier down. A single higher-tier win beats any number of lower-tier wins.
+  const awardDiff = prestigeAwardCmp(a, b);
   if(awardDiff) return awardDiff;
-  // 2. Prestige — most prestigious win wins (Titanium > Grand Prix > Gold > Silver > Bronze).
-  const prestigeDiff = bestPrestige(a) - bestPrestige(b);
-  if(prestigeDiff) return prestigeDiff;
-  // 3. Category — only when no specific category is selected.
+  // 2. Category — only when no specific category is selected.
   if(curCat === "All"){
     const catDiff = entryCatKey(a) - entryCatKey(b);
     if(catDiff) return catDiff;
   }
-  // 4. Brand, alphabetical.
+  // 3. Brand, alphabetical.
   const brandDiff = (a.brand || "").localeCompare(b.brand || "", undefined, {sensitivity:'base'});
   if(brandDiff) return brandDiff;
-  // 5. Campaign — groups entries from the same campaign together.
-  // 6. Entry name — natural/numeric-aware order within a campaign
+  // 4. Campaign — groups entries from the same campaign together.
+  // 5. Entry name — natural/numeric-aware order within a campaign
   //    (e.g. "1. High Energy Intern" before "2. High Energy Boyfriend").
   const campDiff = (a.campaign || "").localeCompare(b.campaign || "", undefined, {numeric:true, sensitivity:'base'});
   if(campDiff) return campDiff;
@@ -10389,9 +10440,12 @@ function refresh(){
   } else {
     entries = [...entries].sort(defaultSortCmp);
   }
-  // Apply search filter
+  // Apply search filter + relevance ranking. Sort is stable, so the base
+  // ordering above (default or most-liked) breaks ties within a relevance band.
   if(searchQuery.length >= 1){
+    const qTokens = _tokenizeSearch(searchQuery);
     entries = entries.filter(e => searchMatchesEntry(e, searchQuery));
+    entries.sort((a, b) => searchRelevance(b, qTokens) - searchRelevance(a, qTokens));
   }
   if(curIdx >= entries.length) curIdx = 0;
   gridFocusIdx = curIdx;
