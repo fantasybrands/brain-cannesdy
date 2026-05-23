@@ -76,6 +76,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .cc-in{width:100%;padding:12px 16px;border:none;border-bottom:1px solid rgba(253,245,232,.2);border-radius:0;background:transparent;color:#fdf5e8;font-size:15px;text-align:center;letter-spacing:.5px;outline:none;transition:border-color .3s;font-family:var(--font)}
 .cc-in::placeholder{color:rgba(253,245,232,.7);font-style:italic}
 .cc-in:focus{border-bottom-color:rgba(253,245,232,.25)}
+/* split row: first + last name side by side, divider between them */
+.cc-row{display:flex}
+.cc-row .cc-in{flex:1;min-width:0}
+.cc-row .cc-in:first-child{border-right:1px solid rgba(253,245,232,.2)}
+@media(max-width:360px){.cc-row{flex-direction:column}.cc-row .cc-in:first-child{border-right:none}}
 /* Liquid glass button — lives inside .cc-unified card */
 .cc-btn{position:relative;display:flex;align-items:center;justify-content:center;width:100%;padding:0;border:none;background:transparent;cursor:pointer;font-family:var(--font);margin-top:0;border-radius:0;overflow:visible;-webkit-tap-highlight-color:transparent}
 .cc-btn:disabled{opacity:.6;cursor:default}
@@ -409,6 +414,10 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <div class="cc-form-area">
       <form style="width:100%;display:flex;flex-direction:column;gap:10px" onsubmit="unlock(event)">
         <div class="cc-unified">
+          <div class="cc-row">
+            <input type="text" class="cc-in" id="pwfn" placeholder="First name" autocomplete="given-name" autocapitalize="words">
+            <input type="text" class="cc-in" id="pwln" placeholder="Last name" autocomplete="family-name" autocapitalize="words">
+          </div>
           <input type="email" class="cc-in" id="pwi" placeholder="your@email.com" autocomplete="email">
           <div class="cc-err" id="pwe" style="padding:0 16px 6px;margin-top:-4px"></div>
           <button type="submit" class="cc-btn" id="pw-submit-btn">
@@ -9846,15 +9855,34 @@ function skipSubscribe(){
 
 async function unlock(e){
   e.preventDefault();
+  const firstInput = document.getElementById("pwfn");
+  const lastInput = document.getElementById("pwln");
   const emailInput = document.getElementById("pwi");
   const errEl = document.getElementById("pwe");
   const btn = document.getElementById("pw-submit-btn");
+  const firstName = firstInput.value.trim();
+  const lastName = lastInput.value.trim();
   const email = emailInput.value.trim();
+
+  // Name validation (both required)
+  if(!firstName){
+    errEl.textContent = "Please enter your first name.";
+    errEl.classList.add("on");
+    firstInput.focus();
+    return;
+  }
+  if(!lastName){
+    errEl.textContent = "Please enter your last name.";
+    errEl.classList.add("on");
+    lastInput.focus();
+    return;
+  }
 
   // Basic email validation
   if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
     errEl.textContent = "Please enter a valid email address.";
     errEl.classList.add("on");
+    emailInput.focus();
     return;
   }
 
@@ -9867,7 +9895,7 @@ async function unlock(e){
     const res = await fetch(SUBSCRIBE_ENDPOINT,{
       method:"POST",
       headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({email})
+      body:JSON.stringify({email, first_name:firstName, last_name:lastName})
     });
 
     if(res.ok){
