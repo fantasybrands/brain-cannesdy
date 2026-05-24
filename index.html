@@ -401,6 +401,74 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .tb-sort-btn{padding:6px 12px;border-radius:50px;border:1px solid rgba(255,255,255,.1);background:transparent;color:rgba(255,255,255,.35);cursor:pointer;font-size:11px;font-weight:600;letter-spacing:.3px;transition:all var(--tr);font-family:var(--font);white-space:nowrap}
 .tb-sort-btn:hover{color:#fff;border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.05)}
 .tb-sort-btn.on{background:rgba(126,252,219,.12);border-color:rgba(126,252,219,.4);color:#7efcdb}
+
+/* ════════════════════════════════════════════════════════════════
+   MOBILE  —  phones only (≤768px). Desktop/tablet above this width
+   are completely untouched. Scaffolding below is hidden by default
+   and only revealed inside the media query.
+   ════════════════════════════════════════════════════════════════ */
+#mob-menu{display:none;align-items:center;justify-content:center;width:38px;height:38px;flex:0 0 auto;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#fff;cursor:pointer;font-size:19px;padding:0}
+#tb-filters{display:contents}
+#sb-backdrop{display:none}
+#mdl-mob-play{display:none}
+#mdl-swipe-hint{display:none}
+
+@media (max-width:768px){
+  html,body{overflow:visible;height:auto}                 /* viewport scrolls the page → sticky topbar AND native tap-to-top both work; body stays out of it (overflow on body breaks sticky) */
+  html.modal-open,html.modal-open body{overflow:hidden}   /* lock background while a card is open */
+  #app{flex-direction:column;height:auto;min-height:100dvh}
+
+  /* ── sidebar → off-canvas drawer ── */
+  #sb{position:fixed;top:0;left:0;height:100vh;height:100dvh;max-height:100dvh;width:84%;max-width:300px;z-index:150;transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
+  #app.sb-open #sb{transform:translateX(0);box-shadow:0 0 50px rgba(0,0,0,.6)}
+  #sb-backdrop{display:block;position:fixed;inset:0;background:rgba(8,6,18,.55);z-index:140;opacity:0;pointer-events:none;transition:opacity .28s}
+  #app.sb-open #sb-backdrop{opacity:1;pointer-events:auto}
+
+  /* ── main + topbar ── */
+  #main{width:100%;height:auto;overflow:visible}
+  #mob-menu{display:flex}
+  #topbar{flex:0 0 auto;position:sticky;top:0;z-index:100;flex-wrap:wrap;align-items:center;gap:8px;padding:9px 12px;background:#12102a;border-bottom:1px solid rgba(255,255,255,.07)}
+  #topbar .tb-search-wrap{order:1;flex:1 1 auto;min-width:0;margin:0}
+  #topbar .tb-search{width:100% !important;box-sizing:border-box;font-size:16px}
+  #topbar .tb-search:focus{width:100% !important;box-shadow:none}
+  #topbar .tb-surprise{order:2;flex:0 0 auto}
+  #topbar .tb-surprise .tb-surprise-lbl,#topbar .tb-surprise .kk{display:none}
+  #topbar .tb-count{display:none}
+  #tb-filters{order:3;flex:1 1 100%;display:flex;gap:7px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
+  #tb-filters::-webkit-scrollbar{display:none}
+  #tb-filters .fb,#tb-filters .tb-sort-btn{flex:0 0 auto}
+
+  /* ── grid → one-column card feed (flows in the page so the document scrolls;
+       topbar stays pinned via sticky, and iOS status-bar-tap scrolls to top) ── */
+  #grid{padding:14px;flex:0 0 auto;overflow:visible;height:auto}
+  .grid-inner{grid-template-columns:1fr;gap:14px}
+  .gc-img{aspect-ratio:16/10}
+  .gc-title{white-space:normal}
+  .gc-meta{white-space:normal}
+  .gc-share{opacity:1}
+
+  /* ── detail modal → full-screen swipe view ── */
+  #modal{padding:0;background:rgba(8,6,18,.96);overflow:hidden}   /* clip the carousel/drag so it can't add horizontal page scroll */
+  #mdl{width:100%;max-width:none;height:100vh;height:100dvh;max-height:100dvh;border-radius:0;animation:none}
+  .mdl-img{aspect-ratio:16/10;border-radius:0}
+  .mdl-video-wrap{border-radius:0}
+  /* shrink tier badges so multi-win entries don't bury the case-study image */
+  .mdl-tb{top:10px;left:10px}
+  .mdl-tier-badge{font-size:9.5px;padding:3px 9px;letter-spacing:.3px;margin-right:4px;border-radius:12px}
+  .mdl-body{padding:20px 18px 48px}
+  .mdl-ttl{font-size:22px}
+  .mdl-desc{font-size:14px}
+  .mdl-nav{display:none !important}
+  .mdl-close{width:40px;height:40px;font-size:18px;top:12px;right:12px}
+  .mdl-space-hint{display:none !important}
+  #mdl-mob-play.has-video{display:flex;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:50%;border:none;background:rgba(255,255,255,.18);color:#fff;align-items:center;justify-content:center;font-size:24px;padding-left:4px;z-index:6;cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+
+  /* first-run swipe affordance */
+  #mdl-swipe-hint{display:flex;align-items:center;gap:9px;position:absolute;bottom:14px;left:50%;transform:translateX(-50%);padding:7px 16px;border-radius:50px;background:rgba(8,6,18,.62);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.88);font-size:12px;font-weight:500;letter-spacing:.4px;white-space:nowrap;pointer-events:none;opacity:0;z-index:7;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+  #mdl-swipe-hint span{font-size:15px;opacity:.7}
+  #mdl-swipe-hint.show{opacity:1;animation:swipeNudge 1.3s ease-in-out 2}
+  @keyframes swipeNudge{0%,100%{transform:translateX(-50%)}25%{transform:translateX(calc(-50% - 9px))}75%{transform:translateX(calc(-50% + 9px))}}
+}
 </style>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
@@ -472,6 +540,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 <!-- APP -->
 <div id="app">
+
+  <!-- mobile drawer backdrop -->
+  <div id="sb-backdrop" onclick="closeDrawer()"></div>
 
   <!-- SIDEBAR -->
   <nav id="sb">
@@ -548,6 +619,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
     <!-- TOPBAR -->
     <div id="topbar">
+      <button id="mob-menu" onclick="toggleDrawer()" aria-label="Open categories">&#9776;</button>
+      <div id="tb-filters">
       <button class="fb on" data-t="all" onclick="setTier(this)">All</button>
       <button class="fb" data-t="Grand Prix" onclick="setTier(this)">&#127942; Grand Prix</button>
       <button class="fb" data-t="Gold" onclick="setTier(this)">Gold</button>
@@ -555,13 +628,14 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <button class="fb" data-t="Bronze" onclick="setTier(this)">Bronze</button>
       <button class="fb" data-t="favorites" onclick="setTier(this)"><svg width="0.9em" height="1.05em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;display:inline-block"><path d="M5 3H19C19.5523 3 20 3.44772 20 4V21L12 17L4 21V4C4 3.44772 4.44772 3 5 3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg> My Favorites</button>
       <button class="tb-sort-btn" id="sort-liked-btn" onclick="toggleSortLiked()">&#128077; Most Liked</button>
+      </div>
       <span class="tb-count" id="cnt"></span>
       <div class="tb-search-wrap">
         <span class="tb-search-icon">&#128269;</span>
         <input class="tb-search" id="tb-q" type="text" placeholder="Search winners..." autocomplete="off" oninput="tbSearch(this.value)" onkeydown="tbSearchKey(event)">
         <button class="tb-clear" id="tb-clear" onclick="clearSearch()" title="Clear search">&#10005;</button>
       </div>
-      <button class="tb-surprise" onclick="surpriseMe()" title="View a random winner [R]">&#127922; Surprise Me <span class="kk" style="opacity:.55">R</span></button>
+      <button class="tb-surprise" onclick="surpriseMe()" title="View a random winner [R]">&#127922; <span class="tb-surprise-lbl">Surprise Me </span><span class="kk" style="opacity:.55">R</span></button>
     </div>
 
     <!-- GRID -->
@@ -576,7 +650,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   <button class="mdl-nav mdl-nav-l" id="mdl-prev" onclick="event.stopPropagation();mdlGo(-1)" title="Previous">&#8592;</button>
   <div id="mdl">
     <button class="mdl-close" onclick="closeMdl()">&#10005;</button>
-    <div class="mdl-img" id="mdl-img" onmousemove="magMove(event)" onmouseleave="magHide()" onclick="toggleZoom(event)"><div id="mdl-img-inner"></div><div class="mdl-tb" id="mdl-tb"></div><div class="mdl-magnifier" id="magnifier"></div><div class="mdl-space-hint" id="mdl-space-hint">Press <span class="kbd">Space</span> to play case study</div></div>
+    <div class="mdl-img" id="mdl-img" onmousemove="magMove(event)" onmouseleave="magHide()" onclick="toggleZoom(event)"><div id="mdl-img-inner"></div><div class="mdl-tb" id="mdl-tb"></div><div class="mdl-magnifier" id="magnifier"></div><div class="mdl-space-hint" id="mdl-space-hint">Press <span class="kbd">Space</span> to play case study</div><button id="mdl-mob-play" aria-label="Play case study" onclick="event.stopPropagation();var b=document.getElementById('mdl-video-btn');if(b)b.click();">&#9654;</button><div id="mdl-swipe-hint" aria-hidden="true"><span>&#8249;</span> swipe <span>&#8250;</span></div></div>
     <div class="mdl-body">
       <div class="mdl-ttl" id="mdl-ttl"></div>
       <div class="mdl-meta" id="mdl-meta"></div>
@@ -10093,6 +10167,9 @@ function tbSearchKey(ev){
   else if(ev.key === "Enter"){
     ev.preventDefault();
     track("search", { query: searchQuery, results: entries.length });
+    // Mobile: just dismiss the keyboard and leave the results to browse.
+    if(window.innerWidth <= 768){ document.getElementById("tb-q").blur(); return; }
+    // Desktop: jump straight into the top result.
     if(entries.length > 0){ gridFocusIdx = 0; curIdx = 0; paintGridFocus(); openModal(); }
   }
 }
@@ -10296,6 +10373,7 @@ function selCat(el){
   document.querySelector('.fb[data-t="all"]').classList.add("on");
   curIdx = 0;
   refresh();
+  closeDrawer();   // mobile: collapse the category drawer after a pick
 }
 
 // ─────────────────────────────────────────────
@@ -10706,6 +10784,9 @@ function openModal(){
     spaceHint.style.display = hasVideo ? "" : "none";
     spaceHint.classList.remove("hide");
   }
+  // Mobile tap-to-play button mirrors the same has-video state.
+  const _mobPlay = document.getElementById("mdl-mob-play");
+  if(_mobPlay) _mobPlay.classList.toggle("has-video", !!(e.youtubeId || e.videoUrl));
   magHide();
   // reset video player when switching entries
   const vwReset = document.getElementById('mdl-video-wrap');
@@ -10762,7 +10843,11 @@ function openModal(){
   // show/hide nav arrows
   document.getElementById("mdl-prev").style.display = curIdx > 0 ? "flex" : "none";
   document.getElementById("mdl-next").style.display = curIdx < entries.length-1 ? "flex" : "none";
-  document.getElementById("modal").classList.add("on");
+  const _modalEl = document.getElementById("modal");
+  const _wasOn = _modalEl.classList.contains("on");
+  _modalEl.classList.add("on");
+  document.documentElement.classList.add("modal-open");   // lock background scroll (mobile)
+  if(!_wasOn && typeof window.showSwipeHint === "function") window.showSwipeHint();
   track("view_entry", { campaign: e.campaign, year: e.year, slug: slugForId(e.id) });
 }
 
@@ -10799,6 +10884,9 @@ function closeMdl(ev){
      && !ev.target.classList.contains("mdl-close")
      && !ev.target.classList.contains("mdl-nav")) return;
   document.getElementById("modal").classList.remove("on");
+  document.documentElement.classList.remove("modal-open");
+  const _mdlEl = document.getElementById('mdl');
+  if(_mdlEl){ _mdlEl.style.transition='none'; _mdlEl.style.transform=''; }
   const vw = document.getElementById('mdl-video-wrap');
   if(vw){ vw.innerHTML=''; vw.style.display='none'; }
   history.replaceState(null,"",location.pathname+location.search);
@@ -10886,6 +10974,124 @@ initYearSelect();
 
 // Init Firebase for global likes
 initFirebase();
+</script>
+
+<!-- ════════════════════════════════════════════════════════════════
+     MOBILE behaviour — category drawer + swipe navigation in the
+     full-screen detail view. No-ops on desktop (the .sb-open class is
+     only ever styled inside the ≤768px media query, and the swipe
+     listeners simply call the same mdlGo() the arrow keys use).
+     ════════════════════════════════════════════════════════════════ -->
+<script>
+(function(){
+  var app = function(){ return document.getElementById('app'); };
+  window.openDrawer  = function(){ var a=app(); if(a) a.classList.add('sb-open'); };
+  window.closeDrawer = function(){ var a=app(); if(a) a.classList.remove('sb-open'); };
+  window.toggleDrawer= function(){ var a=app(); if(a) a.classList.toggle('sb-open'); };
+
+  // First-run swipe affordance — nudging pill, mobile only, first 3 opens.
+  window.showSwipeHint = function(){
+    if(window.innerWidth > 768) return;
+    var seen = +(localStorage.getItem('bc_swipe_hint') || 0);
+    if(seen >= 3) return;
+    var h = document.getElementById('mdl-swipe-hint');
+    if(!h) return;
+    localStorage.setItem('bc_swipe_hint', seen + 1);
+    h.classList.remove('show'); void h.offsetWidth;   // restart the nudge animation
+    h.classList.add('show');
+    clearTimeout(window._shT);
+    window._shT = setTimeout(function(){ h.classList.remove('show'); }, 2800);
+  };
+
+  // Full-screen detail gestures:
+  //   • horizontal drag — the current card follows your finger, then slides off
+  //     while the NEXT card slides in beside it (carousel feel). Reuses mdlGo()
+  //     so the order matches the desktop arrows. Works mid-video — mdlGo()/
+  //     openModal() tear the player down. (A swipe must START below the player;
+  //     a cross-origin video iframe eats touches that begin on top of it.)
+  //   • vertical swipe down from the top — dismiss back to the grid.
+  var mdl = document.getElementById('mdl');
+  if(!mdl) return;
+  var modal = document.getElementById('modal');
+  var x0=null, y0=null, t0=0, mode=null, W=360, H=640;   // mode: null|'h'|'v'|'scroll'
+
+  function move(px, py, anim){
+    mdl.style.transition = anim ? 'transform .25s ease' : 'none';
+    mdl.style.transform  = (px||py) ? ('translate(' + (px||0) + 'px,' + (py||0) + 'px)') : 'translate(0,0)';
+  }
+  function atEdge(dx){
+    if(typeof curIdx==='undefined' || typeof entries==='undefined') return false;
+    if(dx > 0 && curIdx <= 0) return true;
+    if(dx < 0 && curIdx >= entries.length - 1) return true;
+    return false;
+  }
+  // Slide the outgoing card off while the incoming card slides in beside it.
+  // The outgoing card is a static clone (ids stripped) so both are on screen
+  // together for the length of the transition.
+  function carousel(dx, dir){
+    var ghost = mdl.cloneNode(true);
+    ghost.querySelectorAll('[id]').forEach(function(n){ n.removeAttribute('id'); });
+    ghost.removeAttribute('id');
+    var gv = ghost.querySelector('.mdl-video-wrap'); if(gv) gv.remove();
+    var gi = ghost.querySelector('.mdl-img'); if(gi) gi.style.display='';
+    ghost.style.cssText += ';position:absolute;top:0;left:0;right:0;bottom:0;width:100%;height:100%;margin:0;z-index:1;pointer-events:none;transition:none;transform:translateX(' + dx + 'px)';
+    modal.appendChild(ghost);
+    mdl.style.zIndex = '2';
+    mdlGo(dir);                                    // load the next entry into the real card
+    move(dir === 1 ? W : -W, 0, false);            // park it just off the incoming edge
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      ghost.style.transition = 'transform .25s ease';
+      ghost.style.transform  = 'translateX(' + (dir === 1 ? -W : W) + 'px)';   // old card exits
+      move(0, 0, true);                                                        // new card arrives
+    }); });
+    setTimeout(function(){
+      if(ghost.parentNode) ghost.parentNode.removeChild(ghost);
+      mdl.style.zIndex = '';
+    }, 320);
+  }
+
+  mdl.addEventListener('touchstart', function(e){
+    if(e.touches.length !== 1){ x0=null; return; }
+    x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; t0 = Date.now(); mode = null;
+    W = window.innerWidth  || mdl.offsetWidth  || 360;
+    H = window.innerHeight || mdl.offsetHeight || 640;
+  }, {passive:true});
+
+  mdl.addEventListener('touchmove', function(e){
+    if(x0===null) return;
+    var dx = e.touches[0].clientX - x0;
+    var dy = e.touches[0].clientY - y0;
+    if(mode === null){
+      if(Math.abs(dx) < 8 && Math.abs(dy) < 8) return;        // wait until intent is clear
+      if(typeof zoomActive!=='undefined' && zoomActive){ mode='scroll'; return; }
+      if(Math.abs(dx) > Math.abs(dy))       mode = 'h';       // horizontal → drag the card
+      else if(dy > 0 && mdl.scrollTop <= 0) mode = 'v';       // down from the top → dismiss
+      else                                  mode = 'scroll';  // otherwise native scroll
+    }
+    if(mode === 'scroll') return;
+    if(e.cancelable) e.preventDefault();
+    if(mode === 'h'){ if(atEdge(dx)) dx *= 0.32; move(dx, 0, false); }
+    else            { move(0, Math.max(0, dy) * 0.9, false); }  // 'v' tracks downward only
+  }, {passive:false});
+
+  mdl.addEventListener('touchend', function(e){
+    if(x0===null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    var dy = e.changedTouches[0].clientY - y0;
+    var dt = Date.now() - t0;
+    var m = mode; x0 = null; mode = null;
+    if(m === null || m === 'scroll') return;
+    if(e.cancelable) e.preventDefault();                       // swallow the post-drag click
+    if(m === 'h'){
+      var dir = dx < 0 ? 1 : -1;
+      var go = (Math.abs(dx) > W * 0.22 || (Math.abs(dx) > 55 && dt < 320)) && !atEdge(dx);
+      if(go) carousel(dx, dir); else move(0, 0, true);         // spring back if not far enough
+    } else {                                                   // 'v' — return to grid?
+      if(dy > H * 0.16 || (dy > 70 && dt < 380)){ move(0, H, true); setTimeout(function(){ closeMdl(); }, 200); }
+      else move(0, 0, true);
+    }
+  }, {passive:false});
+})();
 </script>
 </body>
 </html>
