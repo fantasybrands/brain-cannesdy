@@ -391,8 +391,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 #mdl-swipe-hint{display:none}
 
 @media (max-width:768px){
-  html,body{overflow-x:hidden;overflow-y:auto;height:auto}
-  #app{flex-direction:column;height:auto;min-height:100vh}
+  html,body{overflow:hidden;height:100%}
+  #app{flex-direction:column;height:100vh;height:100dvh;min-height:0}
 
   /* ── sidebar → off-canvas drawer ── */
   #sb{position:fixed;top:0;left:0;height:100vh;height:100dvh;max-height:100dvh;width:84%;max-width:300px;z-index:150;transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
@@ -401,9 +401,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   #app.sb-open #sb-backdrop{opacity:1;pointer-events:auto}
 
   /* ── main + topbar ── */
-  #main{width:100%;height:auto;overflow:visible}
+  #main{width:100%;height:100vh;height:100dvh;overflow:hidden}
   #mob-menu{display:flex}
-  #topbar{position:sticky;top:0;z-index:100;flex-wrap:wrap;align-items:center;gap:8px;padding:9px 12px;background:#12102a;border-bottom:1px solid rgba(255,255,255,.07)}
+  #topbar{flex:0 0 auto;position:sticky;top:0;z-index:100;flex-wrap:wrap;align-items:center;gap:8px;padding:9px 12px;background:#12102a;border-bottom:1px solid rgba(255,255,255,.07)}
   #topbar .tb-search-wrap{order:1;flex:1 1 auto;min-width:0;margin:0}
   #topbar .tb-search{width:100% !important;box-sizing:border-box}
   #topbar .tb-search:focus{width:100% !important;box-shadow:none}
@@ -414,8 +414,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   #tb-filters::-webkit-scrollbar{display:none}
   #tb-filters .fb,#tb-filters .tb-sort-btn{flex:0 0 auto}
 
-  /* ── grid → one-column card feed ── */
-  #grid{padding:14px}
+  /* ── grid → one-column card feed (the only scroller; topbar stays pinned) ── */
+  #grid{padding:14px;flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
   .grid-inner{grid-template-columns:1fr;gap:14px}
   .gc-img{aspect-ratio:16/10}
   .gc-title{white-space:normal}
@@ -10929,68 +10929,93 @@ initFirebase();
     window._shT = setTimeout(function(){ h.classList.remove('show'); }, 2800);
   };
 
-  // Full-screen detail: the card follows your finger and slides out, then the
-  // next card slides in. Reuses mdlGo() so the sequence matches the desktop
-  // arrows. Works while a video plays too — mdlGo()/openModal() tear the player
-  // down on switch. (A swipe must START below the player: a cross-origin video
-  // iframe swallows touches that begin on top of it.)
+  // Full-screen detail gestures:
+  //   • horizontal drag — the current card follows your finger, then slides off
+  //     while the NEXT card slides in beside it (carousel feel). Reuses mdlGo()
+  //     so the order matches the desktop arrows. Works mid-video — mdlGo()/
+  //     openModal() tear the player down. (A swipe must START below the player;
+  //     a cross-origin video iframe eats touches that begin on top of it.)
+  //   • vertical swipe down from the top — dismiss back to the grid.
   var mdl = document.getElementById('mdl');
   if(!mdl) return;
-  var x0=null, y0=null, t0=0, dragging=false, decided=false, W=360;
+  var modal = document.getElementById('modal');
+  var x0=null, y0=null, t0=0, mode=null, W=360, H=640;   // mode: null|'h'|'v'|'scroll'
 
-  function setX(px, anim){
-    mdl.style.transition = anim ? 'transform .2s ease' : 'none';
-    mdl.style.transform  = px ? ('translateX(' + px + 'px)') : 'translateX(0)';
+  function move(px, py, anim){
+    mdl.style.transition = anim ? 'transform .25s ease' : 'none';
+    mdl.style.transform  = (px||py) ? ('translate(' + (px||0) + 'px,' + (py||0) + 'px)') : 'translate(0,0)';
   }
   function atEdge(dx){
     if(typeof curIdx==='undefined' || typeof entries==='undefined') return false;
-    if(dx > 0 && curIdx <= 0) return true;                   // dragging right at the first
-    if(dx < 0 && curIdx >= entries.length - 1) return true;  // dragging left at the last
+    if(dx > 0 && curIdx <= 0) return true;
+    if(dx < 0 && curIdx >= entries.length - 1) return true;
     return false;
+  }
+  // Slide the outgoing card off while the incoming card slides in beside it.
+  // The outgoing card is a static clone (ids stripped) so both are on screen
+  // together for the length of the transition.
+  function carousel(dx, dir){
+    var ghost = mdl.cloneNode(true);
+    ghost.querySelectorAll('[id]').forEach(function(n){ n.removeAttribute('id'); });
+    ghost.removeAttribute('id');
+    var gv = ghost.querySelector('.mdl-video-wrap'); if(gv) gv.remove();
+    var gi = ghost.querySelector('.mdl-img'); if(gi) gi.style.display='';
+    ghost.style.cssText += ';position:absolute;top:0;left:0;right:0;bottom:0;width:100%;height:100%;margin:0;z-index:1;pointer-events:none;transition:none;transform:translateX(' + dx + 'px)';
+    modal.appendChild(ghost);
+    mdl.style.zIndex = '2';
+    mdlGo(dir);                                    // load the next entry into the real card
+    move(dir === 1 ? W : -W, 0, false);            // park it just off the incoming edge
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      ghost.style.transition = 'transform .25s ease';
+      ghost.style.transform  = 'translateX(' + (dir === 1 ? -W : W) + 'px)';   // old card exits
+      move(0, 0, true);                                                        // new card arrives
+    }); });
+    setTimeout(function(){
+      if(ghost.parentNode) ghost.parentNode.removeChild(ghost);
+      mdl.style.zIndex = '';
+    }, 320);
   }
 
   mdl.addEventListener('touchstart', function(e){
     if(e.touches.length !== 1){ x0=null; return; }
-    x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; t0 = Date.now();
-    dragging=false; decided=false; W = window.innerWidth || mdl.offsetWidth || 360;
+    x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; t0 = Date.now(); mode = null;
+    W = window.innerWidth  || mdl.offsetWidth  || 360;
+    H = window.innerHeight || mdl.offsetHeight || 640;
   }, {passive:true});
 
   mdl.addEventListener('touchmove', function(e){
     if(x0===null) return;
     var dx = e.touches[0].clientX - x0;
     var dy = e.touches[0].clientY - y0;
-    if(!decided){
-      if(Math.abs(dx) < 8 && Math.abs(dy) < 8) return;       // wait until intent is clear
-      decided = true;
-      dragging = Math.abs(dx) > Math.abs(dy);                // horizontal wins → drag the card
+    if(mode === null){
+      if(Math.abs(dx) < 8 && Math.abs(dy) < 8) return;        // wait until intent is clear
+      if(typeof zoomActive!=='undefined' && zoomActive){ mode='scroll'; return; }
+      if(Math.abs(dx) > Math.abs(dy))       mode = 'h';       // horizontal → drag the card
+      else if(dy > 0 && mdl.scrollTop <= 0) mode = 'v';       // down from the top → dismiss
+      else                                  mode = 'scroll';  // otherwise native scroll
     }
-    if(!dragging) return;                                    // vertical → leave native scroll alone
-    if(typeof zoomActive!=='undefined' && zoomActive){ dragging=false; return; }
-    if(e.cancelable) e.preventDefault();                     // suppress scroll / pull-to-refresh
-    if(atEdge(dx)) dx *= 0.32;                               // rubber-band at the ends
-    setX(dx, false);
+    if(mode === 'scroll') return;
+    if(e.cancelable) e.preventDefault();
+    if(mode === 'h'){ if(atEdge(dx)) dx *= 0.32; move(dx, 0, false); }
+    else            { move(0, Math.max(0, dy) * 0.9, false); }  // 'v' tracks downward only
   }, {passive:false});
 
   mdl.addEventListener('touchend', function(e){
     if(x0===null) return;
     var dx = e.changedTouches[0].clientX - x0;
+    var dy = e.changedTouches[0].clientY - y0;
     var dt = Date.now() - t0;
-    var was = dragging;
-    x0=null; dragging=false; decided=false;
-    if(!was){ setX(0, false); return; }                      // a tap → let zoom/play handle it
-    if(e.cancelable) e.preventDefault();                     // swallow the post-drag click
-    var nextDir = dx < 0 ? 1 : -1;
-    var far   = Math.abs(dx) > W * 0.22;
-    var flick = Math.abs(dx) > 55 && dt < 320;
-    if(!((far || flick) && !atEdge(dx))){ setX(0, true); return; }   // not enough → spring back
-    setX(dx < 0 ? -W : W, true);                             // finish current card off-screen
-    setTimeout(function(){
-      mdlGo(nextDir);                                        // swap content (kills any playing video)
-      setX(dx < 0 ? W : -W, false);                          // drop new card on the opposite edge
-      requestAnimationFrame(function(){
-        requestAnimationFrame(function(){ setX(0, true); }); // …then slide it home
-      });
-    }, 200);
+    var m = mode; x0 = null; mode = null;
+    if(m === null || m === 'scroll') return;
+    if(e.cancelable) e.preventDefault();                       // swallow the post-drag click
+    if(m === 'h'){
+      var dir = dx < 0 ? 1 : -1;
+      var go = (Math.abs(dx) > W * 0.22 || (Math.abs(dx) > 55 && dt < 320)) && !atEdge(dx);
+      if(go) carousel(dx, dir); else move(0, 0, true);         // spring back if not far enough
+    } else {                                                   // 'v' — return to grid?
+      if(dy > H * 0.16 || (dy > 70 && dt < 380)){ move(0, H, true); setTimeout(function(){ closeMdl(); }, 200); }
+      else move(0, 0, true);
+    }
   }, {passive:false});
 })();
 </script>
