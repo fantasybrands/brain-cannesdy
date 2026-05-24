@@ -391,7 +391,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 #mdl-swipe-hint{display:none}
 
 @media (max-width:768px){
-  html,body{overflow-x:hidden;overflow-y:auto;height:auto;-webkit-overflow-scrolling:touch}
+  html,body{overflow:visible;height:auto}                 /* viewport scrolls the page → sticky topbar AND native tap-to-top both work; body stays out of it (overflow on body breaks sticky) */
   html.modal-open,html.modal-open body{overflow:hidden}   /* lock background while a card is open */
   #app{flex-direction:column;height:auto;min-height:100dvh}
 
@@ -425,7 +425,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   .gc-share{opacity:1}
 
   /* ── detail modal → full-screen swipe view ── */
-  #modal{padding:0;background:rgba(8,6,18,.96)}
+  #modal{padding:0;background:rgba(8,6,18,.96);overflow:hidden}   /* clip the carousel/drag so it can't add horizontal page scroll */
   #mdl{width:100%;max-width:none;height:100vh;height:100dvh;max-height:100dvh;border-radius:0;animation:none}
   .mdl-img{aspect-ratio:16/10;border-radius:0}
   .mdl-video-wrap{border-radius:0}
