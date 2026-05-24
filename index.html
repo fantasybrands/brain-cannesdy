@@ -172,6 +172,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .sb-cat{padding:8px 18px;font-size:12.5px;font-weight:500;color:var(--sidebar-text);cursor:pointer;transition:all var(--tr);border-left:2px solid transparent;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sb-cat:hover{color:var(--sidebar-active);background:rgba(255,255,255,0.03)}
 .sb-cat.on{color:var(--sidebar-active);font-weight:700;border-left-color:var(--holo-pink);background:rgba(255,157,226,0.06)}
+/* sidebar About trigger */
+.sb-about-wrap{padding:16px 14px 6px;margin-top:10px;border-top:1px solid rgba(255,255,255,0.06)}
+.sb-about{width:100%;display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);color:rgba(255,255,255,0.5);cursor:pointer;font-family:var(--font);font-size:12px;font-weight:600;letter-spacing:.2px;transition:all var(--tr)}
+.sb-about:hover{color:#fff;border-color:rgba(255,157,226,.32);background:rgba(255,157,226,.07)}
+.sb-about-icon{font-size:14px;opacity:.85;line-height:1}
 .sb-cat.cs{opacity:.3;cursor:default;pointer-events:none}
 .sb-div{height:1px;background:rgba(255,255,255,0.05);margin:6px 18px}
 .sb-cnt{padding:5px 18px;font-size:10px;color:rgba(255,255,255,0.2);margin-top:2px}
@@ -284,6 +289,24 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .gc-share:hover{background:rgba(255,255,255,.15);color:#fff}
 .mdl-close{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;border:none;background:rgba(0,0,0,.5);color:#fff;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background var(--tr);backdrop-filter:blur(6px);z-index:5}
 .mdl-close:hover{background:rgba(0,0,0,.8)}
+/* ABOUT modal */
+#about-modal{position:fixed;inset:0;z-index:240;background:rgba(8,6,18,.82);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:24px}
+#about-modal.on{display:flex}
+#about-box{background:linear-gradient(160deg,#16132e,#12102a);border-radius:20px;max-width:520px;width:100%;max-height:92vh;overflow-y:auto;position:relative;box-shadow:0 40px 100px rgba(0,0,0,.6),0 0 60px rgba(142,184,255,.04);border:1px solid rgba(255,255,255,.08);animation:pop .3s cubic-bezier(.34,1.56,.64,1)}
+.about-inner{padding:38px 38px 34px}
+.about-logo{height:64px;width:auto;display:block;margin-bottom:18px}
+.about-ttl{font-size:23px;font-weight:800;line-height:1.25;margin-bottom:14px;color:#fff}
+.about-body{font-size:14.5px;line-height:1.7;color:rgba(255,255,255,.62);margin-bottom:14px}
+.about-body:last-of-type{margin-bottom:24px}
+.about-body a{color:var(--holo-pink);text-decoration:none}
+.about-body a:hover{text-decoration:underline}
+.about-cta-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.32);font-weight:700;margin-bottom:11px}
+.about-socials{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px}
+.about-social{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:50px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:rgba(255,255,255,.78);text-decoration:none;font-size:13px;font-weight:600;transition:all var(--tr)}
+.about-social:hover{color:#fff;border-color:rgba(255,157,226,.4);background:rgba(255,157,226,.1);transform:translateY(-1px)}
+.about-social svg{width:17px;height:17px;flex-shrink:0}
+.about-site{display:inline-block;margin-top:18px;font-size:13px;font-weight:600;color:rgba(255,255,255,.55);text-decoration:none;transition:color var(--tr)}
+.about-site:hover{color:#fff}
 .mdl-nav{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,.1);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;background:rgba(255,255,255,.06);backdrop-filter:blur(8px);transition:all .2s;z-index:10}
 .mdl-nav:hover{background:rgba(255,255,255,.15);transform:translateY(-50%) scale(1.08);border-color:rgba(255,157,226,.25)}
 .mdl-nav-l{left:max(12px, calc(50% - 530px))}
@@ -510,6 +533,12 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <div class="sb-cat" data-cat="Creative Strategy" onclick="selCat(this)">Creative Strategy</div>
     <div class="sb-group">Titanium</div>
     <div class="sb-cat" data-cat="Titanium" onclick="selCat(this)">Titanium</div>
+    <div class="sb-about-wrap">
+      <button class="sb-about" onclick="openAbout()" aria-haspopup="dialog">
+        <span class="sb-about-icon" aria-hidden="true">&#9432;</span>
+        <span>About this archive</span>
+      </button>
+    </div>
     <div style="height:20px"></div>
     </div>
   </nav>
@@ -556,6 +585,32 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     </div>
   </div>
   <button class="mdl-nav mdl-nav-r" id="mdl-next" onclick="event.stopPropagation();mdlGo(1)" title="Next">&#8594;</button>
+</div>
+
+<!-- ABOUT modal -->
+<div id="about-modal" onclick="closeAbout(event)" role="dialog" aria-modal="true" aria-label="About Brain Cannesdy">
+  <div id="about-box">
+    <button class="mdl-close" onclick="closeAbout()" aria-label="Close">&#10005;</button>
+    <div class="about-inner">
+      <img class="about-logo" src="Fantasy-Brands_Logo.png" alt="Fantasy Brands">
+      <div class="about-ttl">Who made this?</div>
+      <p class="about-body">Brain Cannesdy is a labor of love from the team at <strong>Fantasy Brands</strong> &mdash; a searchable archive of Cannes Lions award-winning work, built so creatives, strategists, and the endlessly curious can study the best ideas in advertising all in one place.</p>
+      <p class="about-body">We built it because the world's most inspiring campaigns deserve to be easy to find, watch, and learn from &mdash; not scattered across a dozen sites and award-show archives. If it sparks an idea, we did our job.</p>
+      <p class="about-body">We're always building. Follow along for more.</p>
+      <div class="about-cta-label">Follow Fantasy Brands</div>
+      <div class="about-socials">
+        <a class="about-social" href="https://www.instagram.com/playfantasybrands" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="5.5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.8"/><circle cx="17.4" cy="6.6" r="1.2" fill="currentColor"/></svg>
+          Instagram
+        </a>
+        <a class="about-social" href="https://www.tiktok.com/@playfantasybrands" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M16.5 3c.3 2.1 1.6 3.6 3.8 3.8v2.6c-1.3.1-2.6-.3-3.8-1v5.9c0 3.4-2.6 5.7-5.7 5.7C7.6 20 5.3 17.7 5.3 14.6c0-3 2.4-5.4 5.6-5.2v2.7c-.4-.1-.9-.2-1.3-.1-1.4.2-2.4 1.3-2.3 2.8.1 1.4 1.3 2.5 2.7 2.4 1.5 0 2.5-1.1 2.5-2.7V3h2z"/></svg>
+          TikTok
+        </a>
+      </div>
+      <a class="about-site" href="https://playfantasybrands.com" target="_blank" rel="noopener">Visit playfantasybrands.com &rarr;</a>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -10732,6 +10787,13 @@ window.addEventListener("hashchange", () => {
   if(location.hash.length > 1) openEntryFromHash();
 });
 
+function openAbout(){ document.getElementById("about-modal").classList.add("on"); }
+function closeAbout(ev){
+  if(ev && ev.target!==document.getElementById("about-modal")
+     && !ev.target.classList.contains("mdl-close")) return;
+  document.getElementById("about-modal").classList.remove("on");
+}
+
 function closeMdl(ev){
   if(ev && ev.target!==document.getElementById("modal")
      && !ev.target.classList.contains("mdl-close")
@@ -10749,6 +10811,8 @@ function closeMdl(ev){
 document.addEventListener("keydown", ev => {
   const modalOpen = document.getElementById("modal").classList.contains("on");
   if(ev.key==="Escape"){
+    const aboutModal = document.getElementById("about-modal");
+    if(aboutModal && aboutModal.classList.contains("on")){ closeAbout(); return; }
     const ydd = document.getElementById("yr-dd");
     if(ydd && ydd.classList.contains("open")){ closeYearMenu(); return; }
     if(searchQuery.length > 0){ clearSearch(); return; }
