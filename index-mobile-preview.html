@@ -388,6 +388,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 #tb-filters{display:contents}
 #sb-backdrop{display:none}
 #mdl-mob-play{display:none}
+#mdl-swipe-hint{display:none}
 
 @media (max-width:768px){
   html,body{overflow-x:hidden;overflow-y:auto;height:auto}
@@ -433,6 +434,12 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   .mdl-close{width:40px;height:40px;font-size:18px;top:12px;right:12px}
   .mdl-space-hint{display:none !important}
   #mdl-mob-play.has-video{display:flex;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:50%;border:none;background:rgba(255,255,255,.18);color:#fff;align-items:center;justify-content:center;font-size:24px;padding-left:4px;z-index:6;cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+
+  /* first-run swipe affordance */
+  #mdl-swipe-hint{display:flex;align-items:center;gap:9px;position:absolute;bottom:14px;left:50%;transform:translateX(-50%);padding:7px 16px;border-radius:50px;background:rgba(8,6,18,.62);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.88);font-size:12px;font-weight:500;letter-spacing:.4px;white-space:nowrap;pointer-events:none;opacity:0;z-index:7;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+  #mdl-swipe-hint span{font-size:15px;opacity:.7}
+  #mdl-swipe-hint.show{opacity:1;animation:swipeNudge 1.3s ease-in-out 2}
+  @keyframes swipeNudge{0%,100%{transform:translateX(-50%)}25%{transform:translateX(calc(-50% - 9px))}75%{transform:translateX(calc(-50% + 9px))}}
 }
 </style>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -609,7 +616,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   <button class="mdl-nav mdl-nav-l" id="mdl-prev" onclick="event.stopPropagation();mdlGo(-1)" title="Previous">&#8592;</button>
   <div id="mdl">
     <button class="mdl-close" onclick="closeMdl()">&#10005;</button>
-    <div class="mdl-img" id="mdl-img" onmousemove="magMove(event)" onmouseleave="magHide()" onclick="toggleZoom(event)"><div id="mdl-img-inner"></div><div class="mdl-tb" id="mdl-tb"></div><div class="mdl-magnifier" id="magnifier"></div><div class="mdl-space-hint" id="mdl-space-hint">Press <span class="kbd">Space</span> to play case study</div><button id="mdl-mob-play" aria-label="Play case study" onclick="event.stopPropagation();var b=document.getElementById('mdl-video-btn');if(b)b.click();">&#9654;</button></div>
+    <div class="mdl-img" id="mdl-img" onmousemove="magMove(event)" onmouseleave="magHide()" onclick="toggleZoom(event)"><div id="mdl-img-inner"></div><div class="mdl-tb" id="mdl-tb"></div><div class="mdl-magnifier" id="magnifier"></div><div class="mdl-space-hint" id="mdl-space-hint">Press <span class="kbd">Space</span> to play case study</div><button id="mdl-mob-play" aria-label="Play case study" onclick="event.stopPropagation();var b=document.getElementById('mdl-video-btn');if(b)b.click();">&#9654;</button><div id="mdl-swipe-hint" aria-hidden="true"><span>&#8249;</span> swipe <span>&#8250;</span></div></div>
     <div class="mdl-body">
       <div class="mdl-ttl" id="mdl-ttl"></div>
       <div class="mdl-meta" id="mdl-meta"></div>
@@ -10773,7 +10780,10 @@ function openModal(){
   // show/hide nav arrows
   document.getElementById("mdl-prev").style.display = curIdx > 0 ? "flex" : "none";
   document.getElementById("mdl-next").style.display = curIdx < entries.length-1 ? "flex" : "none";
-  document.getElementById("modal").classList.add("on");
+  const _modalEl = document.getElementById("modal");
+  const _wasOn = _modalEl.classList.contains("on");
+  _modalEl.classList.add("on");
+  if(!_wasOn && typeof window.showSwipeHint === "function") window.showSwipeHint();
   track("view_entry", { campaign: e.campaign, year: e.year, slug: slugForId(e.id) });
 }
 
@@ -10803,6 +10813,8 @@ function closeMdl(ev){
      && !ev.target.classList.contains("mdl-close")
      && !ev.target.classList.contains("mdl-nav")) return;
   document.getElementById("modal").classList.remove("on");
+  const _mdlEl = document.getElementById('mdl');
+  if(_mdlEl){ _mdlEl.style.transition='none'; _mdlEl.style.transform=''; }
   const vw = document.getElementById('mdl-video-wrap');
   if(vw){ vw.innerHTML=''; vw.style.display='none'; }
   history.replaceState(null,"",location.pathname+location.search);
@@ -10903,30 +10915,83 @@ initFirebase();
   window.closeDrawer = function(){ var a=app(); if(a) a.classList.remove('sb-open'); };
   window.toggleDrawer= function(){ var a=app(); if(a) a.classList.toggle('sb-open'); };
 
-  // Swipe left → next entry, swipe right → previous. Reuses mdlGo(), so it
-  // honours the exact same filtered/sorted sequence as the desktop arrows.
+  // First-run swipe affordance — nudging pill, mobile only, first 3 opens.
+  window.showSwipeHint = function(){
+    if(window.innerWidth > 768) return;
+    var seen = +(localStorage.getItem('bc_swipe_hint') || 0);
+    if(seen >= 3) return;
+    var h = document.getElementById('mdl-swipe-hint');
+    if(!h) return;
+    localStorage.setItem('bc_swipe_hint', seen + 1);
+    h.classList.remove('show'); void h.offsetWidth;   // restart the nudge animation
+    h.classList.add('show');
+    clearTimeout(window._shT);
+    window._shT = setTimeout(function(){ h.classList.remove('show'); }, 2800);
+  };
+
+  // Full-screen detail: the card follows your finger and slides out, then the
+  // next card slides in. Reuses mdlGo() so the sequence matches the desktop
+  // arrows. Works while a video plays too — mdlGo()/openModal() tear the player
+  // down on switch. (A swipe must START below the player: a cross-origin video
+  // iframe swallows touches that begin on top of it.)
   var mdl = document.getElementById('mdl');
-  if(mdl){
-    var x0=null, y0=null, t0=0;
-    mdl.addEventListener('touchstart', function(e){
-      if(e.touches.length !== 1){ x0=null; return; }
-      x0=e.touches[0].clientX; y0=e.touches[0].clientY; t0=Date.now();
-    }, {passive:true});
-    mdl.addEventListener('touchend', function(e){
-      if(x0===null) return;
-      var dx=e.changedTouches[0].clientX - x0;
-      var dy=e.changedTouches[0].clientY - y0;
-      var dt=Date.now() - t0;
-      x0=null;
-      if(typeof zoomActive!=='undefined' && zoomActive) return;   // don't nav while zoomed
-      var vw=document.getElementById('mdl-video-wrap');
-      if(vw && vw.style.display==='block') return;                // don't nav while watching
-      if(Math.abs(dx) < 60) return;                               // too small
-      if(Math.abs(dx) < Math.abs(dy)*1.4) return;                 // mostly vertical → let it scroll
-      if(dt > 800) return;                                        // too slow to be a flick
-      if(dx < 0) mdlGo(1); else mdlGo(-1);
-    }, {passive:true});
+  if(!mdl) return;
+  var x0=null, y0=null, t0=0, dragging=false, decided=false, W=360;
+
+  function setX(px, anim){
+    mdl.style.transition = anim ? 'transform .2s ease' : 'none';
+    mdl.style.transform  = px ? ('translateX(' + px + 'px)') : 'translateX(0)';
   }
+  function atEdge(dx){
+    if(typeof curIdx==='undefined' || typeof entries==='undefined') return false;
+    if(dx > 0 && curIdx <= 0) return true;                   // dragging right at the first
+    if(dx < 0 && curIdx >= entries.length - 1) return true;  // dragging left at the last
+    return false;
+  }
+
+  mdl.addEventListener('touchstart', function(e){
+    if(e.touches.length !== 1){ x0=null; return; }
+    x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; t0 = Date.now();
+    dragging=false; decided=false; W = window.innerWidth || mdl.offsetWidth || 360;
+  }, {passive:true});
+
+  mdl.addEventListener('touchmove', function(e){
+    if(x0===null) return;
+    var dx = e.touches[0].clientX - x0;
+    var dy = e.touches[0].clientY - y0;
+    if(!decided){
+      if(Math.abs(dx) < 8 && Math.abs(dy) < 8) return;       // wait until intent is clear
+      decided = true;
+      dragging = Math.abs(dx) > Math.abs(dy);                // horizontal wins → drag the card
+    }
+    if(!dragging) return;                                    // vertical → leave native scroll alone
+    if(typeof zoomActive!=='undefined' && zoomActive){ dragging=false; return; }
+    if(e.cancelable) e.preventDefault();                     // suppress scroll / pull-to-refresh
+    if(atEdge(dx)) dx *= 0.32;                               // rubber-band at the ends
+    setX(dx, false);
+  }, {passive:false});
+
+  mdl.addEventListener('touchend', function(e){
+    if(x0===null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    var dt = Date.now() - t0;
+    var was = dragging;
+    x0=null; dragging=false; decided=false;
+    if(!was){ setX(0, false); return; }                      // a tap → let zoom/play handle it
+    if(e.cancelable) e.preventDefault();                     // swallow the post-drag click
+    var nextDir = dx < 0 ? 1 : -1;
+    var far   = Math.abs(dx) > W * 0.22;
+    var flick = Math.abs(dx) > 55 && dt < 320;
+    if(!((far || flick) && !atEdge(dx))){ setX(0, true); return; }   // not enough → spring back
+    setX(dx < 0 ? -W : W, true);                             // finish current card off-screen
+    setTimeout(function(){
+      mdlGo(nextDir);                                        // swap content (kills any playing video)
+      setX(dx < 0 ? W : -W, false);                          // drop new card on the opposite edge
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){ setX(0, true); }); // …then slide it home
+      });
+    }, 200);
+  }, {passive:false});
 })();
 </script>
 </body>
