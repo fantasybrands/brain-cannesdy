@@ -395,8 +395,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .mdl-fav-btn.on{background:rgba(255,157,226,.15);color:#ff9de2;border-color:rgba(255,157,226,.5)}
 .mdl-like-act:hover{background:rgba(126,252,219,.1);color:#7efcdb;border-color:rgba(126,252,219,.25)}
 .mdl-like-act.on{background:rgba(126,252,219,.12);color:#7efcdb;border-color:rgba(126,252,219,.45)}
-/* favorites filter button */
-.fb[data-t="favorites"].on{background:rgba(255,157,226,.18);border-color:rgba(255,157,226,.5);color:#ff9de2}
+/* favorites toggle button (independent on/off, combines with tier filter) */
+.fav-toggle-btn.on{background:rgba(255,157,226,.18);border-color:rgba(255,157,226,.5);color:#ff9de2}
 /* sort button */
 .tb-sort-btn{padding:6px 12px;border-radius:50px;border:1px solid rgba(255,255,255,.1);background:transparent;color:rgba(255,255,255,.35);cursor:pointer;font-size:11px;font-weight:600;letter-spacing:.3px;transition:all var(--tr);font-family:var(--font);white-space:nowrap}
 .tb-sort-btn:hover{color:#fff;border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.05)}
@@ -548,7 +548,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   <nav id="sb">
     <div class="sb-head">
       <div class="sb-logo">
-        <img class="bc-logo-sm" src="Brain-Cannesdy-Logo-Horizontal-White-Lowercase.png" alt="Brain Cannesdy">
+        <img class="bc-logo-sm" src="Brain-Cannesdy-Logo-Horizontal-White-Lowercase.png" alt="Brain Cannesdy" style="cursor:pointer" title="Back to top" onclick="goHome()">
       </div>
       <div class="sb-yr">
         <div class="yr-dd" id="yr-dd">
@@ -626,7 +626,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <button class="fb" data-t="Gold" onclick="setTier(this)">Gold</button>
       <button class="fb" data-t="Silver" onclick="setTier(this)">Silver</button>
       <button class="fb" data-t="Bronze" onclick="setTier(this)">Bronze</button>
-      <button class="fb" data-t="favorites" onclick="setTier(this)"><svg width="0.9em" height="1.05em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;display:inline-block"><path d="M5 3H19C19.5523 3 20 3.44772 20 4V21L12 17L4 21V4C4 3.44772 4.44772 3 5 3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg> My Favorites</button>
+      <button class="tb-sort-btn fav-toggle-btn" id="fav-only-btn" onclick="toggleFavOnly()"><svg width="0.9em" height="1.05em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;display:inline-block"><path d="M5 3H19C19.5523 3 20 3.44772 20 4V21L12 17L4 21V4C4 3.44772 4.44772 3 5 3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg> My Favorites</button>
       <button class="tb-sort-btn" id="sort-liked-btn" onclick="toggleSortLiked()">&#128077; Most Liked</button>
       </div>
       <span class="tb-count" id="cnt"></span>
@@ -9866,8 +9866,8 @@ function toggleFav(id){
     mdlFav.classList.toggle('on', nowFav);
     mdlFav.innerHTML = nowFav ? BKMK_ON + ' Saved' : BKMK + ' Save';
   }
-  // If we're in favorites view, rebuild so removed items disappear
-  if(curTier === 'favorites') refresh();
+  // If the favorites filter is on, rebuild so removed items disappear
+  if(favOnly) refresh();
 }
 
 // ─────────────────────────────────────────────
@@ -9917,6 +9917,20 @@ function toggleSortLiked(){
   curSort = curSort === 'most-liked' ? 'default' : 'most-liked';
   const btn = document.getElementById('sort-liked-btn');
   if(btn) btn.classList.toggle('on', curSort === 'most-liked');
+  refresh();
+}
+
+// ─────────────────────────────────────────────
+// FILTER — "My Favorites" independent toggle
+// Works like "Most Liked": can be turned on/off while a tier (Gold/Silver/
+// Bronze/etc.) is also selected, so you can see e.g. favorited Bronze winners.
+// ─────────────────────────────────────────────
+let favOnly = false;
+function toggleFavOnly(){
+  favOnly = !favOnly;
+  const btn = document.getElementById('fav-only-btn');
+  if(btn) btn.classList.toggle('on', favOnly);
+  curIdx = 0;
   refresh();
 }
 
@@ -10188,6 +10202,34 @@ function surpriseMe(){
   curIdx = gridFocusIdx;
   paintGridFocus();
   openModal();
+}
+
+// Logo click — reset to the default landing view and scroll the grid to top.
+function goHome(){
+  // Category back to "All"
+  curCat = "All";
+  document.querySelectorAll(".sb-cat").forEach(c => {
+    c.classList.toggle("on", !c.classList.contains("cs") && (c.dataset.cat || c.textContent.trim()) === "All");
+  });
+  // Tier back to "All"
+  curTier = "all";
+  document.querySelectorAll(".fb").forEach(b=>b.classList.remove("on"));
+  const allBtn = document.querySelector('.fb[data-t="all"]');
+  if(allBtn) allBtn.classList.add("on");
+  // Clear the favorites + most-liked toggles
+  favOnly = false;
+  const favBtn = document.getElementById('fav-only-btn');
+  if(favBtn) favBtn.classList.remove('on');
+  curSort = 'default';
+  const sortBtn = document.getElementById('sort-liked-btn');
+  if(sortBtn) sortBtn.classList.remove('on');
+  // Clear search (this calls refresh)
+  clearSearch();
+  // Scroll grid + window back to the top
+  const g = document.getElementById('grid');
+  if(g) g.scrollTop = 0;
+  window.scrollTo(0, 0);
+  closeDrawer();
 }
 
 // (search results now live in the grid — no click-outside listener needed)
@@ -10582,13 +10624,16 @@ function refresh(){
     raw = raw.filter(e => Number(e.year) === Number(curYear));
   }
   const deduped = dedup(raw);
+  // Tier filter (mutually exclusive: All / Grand Prix / Gold / Silver / Bronze)
   if(curTier === "all"){
     entries = deduped;
-  } else if(curTier === "favorites"){
-    const favs = getFavs();
-    entries = deduped.filter(e => favs.has(e.id));
   } else {
     entries = deduped.filter(e => e.tiers.includes(curTier));
+  }
+  // Favorites filter — independent toggle, stacks on top of the tier filter.
+  if(favOnly){
+    const favs = getFavs();
+    entries = entries.filter(e => favs.has(e.id));
   }
   // Sort
   if(curSort === "most-liked"){
