@@ -41,7 +41,7 @@
     gtag("config", window.GA4_ID);
   }
 </script>
-<link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@700&family=Nunito:wght@800;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DynaPuff:wght@700&family=Nunito:wght@800;900&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -69,7 +69,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .cc-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:10;padding:32px 24px 80px}
 .cc-headline{font-family:'DynaPuff',sans-serif;font-size:clamp(72px,13vw,200px);font-weight:700;color:#fdf5e8;letter-spacing:-.01em;line-height:1;text-align:center;user-select:none;margin-bottom:4px;-webkit-text-stroke:2px rgba(12,4,2,.5);paint-order:stroke fill;text-shadow:0 2px 4px rgba(0,0,0,.95),0 6px 20px rgba(0,0,0,.75),0 18px 55px rgba(0,0,0,.45)}
 .cc-headline-img{display:block;width:clamp(280px,55vw,720px);height:auto;margin:0 auto 4px;user-select:none;-webkit-user-drag:none;pointer-events:none}
-.cc-tagline{font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;letter-spacing:1.8px;text-transform:uppercase;color:rgba(253,245,232,.92);text-align:center;text-shadow:0 1px 6px rgba(0,0,0,.8)}
+.cc-tagline{font-family:'Anton',sans-serif;font-weight:400;font-size:16px;letter-spacing:2px;text-transform:uppercase;color:rgba(253,245,232,.92);text-align:center;text-shadow:0 1px 6px rgba(0,0,0,.8)}
 .cc-form-area{display:flex;flex-direction:column;align-items:center;gap:10px;width:min(300px,80vw);margin-top:18px}
 /* unified card: wraps input + button as one element */
 .cc-unified{width:100%;border-radius:16px;border:1px solid rgba(253,245,232,.2);background:rgba(8,6,18,.22);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);overflow:hidden;transition:border-color .3s,box-shadow .3s;box-shadow:0 3px 24px rgba(0,0,0,.35)}
@@ -85,7 +85,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 /* Liquid glass button — lives inside .cc-unified card */
 .cc-btn{position:relative;display:flex;align-items:center;justify-content:center;width:100%;padding:0;border:none;background:transparent;cursor:pointer;font-family:var(--font);margin-top:0;border-radius:0;overflow:visible;-webkit-tap-highlight-color:transparent}
 .cc-btn:disabled{opacity:.6;cursor:default}
-.cc-btn-glass{position:relative;display:flex;align-items:center;justify-content:center;width:100%;padding:13px 20px;border-radius:0;font-size:13px;font-weight:700;letter-spacing:1.5px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.4);background:rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.15);transition:background .2s;overflow:hidden}
+.cc-btn-glass{position:relative;display:flex;align-items:center;justify-content:center;width:100%;padding:13px 20px;border-radius:0;font-family:'Anton',sans-serif;font-size:16px;font-weight:400;letter-spacing:2px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.4);background:rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.15);transition:background .2s;overflow:hidden}
 .cc-btn:not(:disabled):hover .cc-btn-glass{background:rgba(92,224,216,.18);box-shadow:inset 0 0 24px rgba(92,224,216,.12)}
 /* layer 1 – blur + distortion */
 .cc-btn-glass-blur{position:absolute;inset:0;border-radius:inherit;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);filter:url(#glass-distortion);isolation:isolate;z-index:0}
@@ -502,7 +502,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   <!-- centered content overlay -->
   <div class="cc-overlay">
     <img class="cc-headline-img" src="logos/BC_Front_Page.png" alt="Brain Cannesdy">
-    <p class="cc-tagline">A visual database of the best ideas in advertising</p>
+    <p class="cc-tagline">a delicious database of advertising inspiration.</p>
     <div class="cc-form-area">
       <form style="width:100%;display:flex;flex-direction:column;gap:10px" onsubmit="unlock(event)">
         <div class="cc-unified">
