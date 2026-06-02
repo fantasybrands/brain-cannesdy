@@ -470,102 +470,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   #mdl-swipe-hint.show{opacity:1;animation:swipeNudge 1.3s ease-in-out 2}
   @keyframes swipeNudge{0%,100%{transform:translateX(-50%)}25%{transform:translateX(calc(-50% - 9px))}75%{transform:translateX(calc(-50% + 9px))}}
 }
-
-/* ════════════════════════════════════════════════════════════════════
-   INSIGHTS VIEW — leaderboard with stacked bars
-   ════════════════════════════════════════════════════════════════════ */
-#insights-view{display:none;flex-direction:column;flex:1;min-height:0;overflow-y:auto;padding:32px 40px 64px}
-#main.mode-insights #grid{display:none}
-#main.mode-insights #topbar{display:none}
-#main.mode-insights #insights-view{display:flex}
-
-.iv-head{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,.08)}
-.iv-head h1{font-family:var(--font);font-weight:800;font-size:clamp(26px,3.5vw,36px);letter-spacing:-.5px;line-height:1.1;color:#fff}
-.iv-head .iv-tag{font-size:13px;color:rgba(255,255,255,.55);margin-top:8px;letter-spacing:.2px;line-height:1.5;max-width:680px}
-
-/* entity pills (Brand / Agency / Country) */
-.iv-pills{display:inline-flex;gap:0;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:50px;padding:4px;margin:22px 0 18px}
-.iv-pill{appearance:none;border:none;background:transparent;color:rgba(255,255,255,.55);font-family:var(--font);font-size:13px;font-weight:600;letter-spacing:.4px;padding:8px 22px;border-radius:50px;cursor:pointer;transition:all var(--tr)}
-.iv-pill:hover{color:#fff}
-.iv-pill.on{background:linear-gradient(135deg,rgba(255,157,226,.85),rgba(255,157,226,.6));color:#fff;box-shadow:0 2px 12px rgba(255,157,226,.25)}
-
-.iv-board{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:24px 24px 22px;max-width:940px}
-.iv-board .iv-sub{font-size:12px;color:rgba(255,255,255,.55);margin-bottom:14px;letter-spacing:.2px}
-
-/* sort indicator — small annotation; click to flip direction */
-.iv-sort-ind{font-size:11px;color:rgba(255,255,255,.55);margin-bottom:14px;letter-spacing:.3px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;user-select:none;transition:color var(--tr)}
-.iv-sort-ind:hover{color:#fff}
-.iv-sort-ind strong{color:#fff;font-weight:700}
-.iv-sort-ind .iv-arrow{font-size:9px;opacity:.8}
-.iv-sort-ind .iv-hint{color:rgba(255,255,255,.3);font-weight:400;margin-left:10px}
-
-.iv-tbl{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
-.iv-tbl col.col-rank{width:38px}
-.iv-tbl col.col-name{width:200px}
-.iv-tbl col.col-bar{width:auto}
-.iv-tbl col.col-total{width:68px}
-.iv-tbl thead th{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:rgba(255,255,255,.55);padding:8px 4px;border-bottom:1px solid rgba(255,255,255,.08);text-align:right;user-select:none;transition:color var(--tr);white-space:nowrap}
-.iv-tbl thead th.name-col{text-align:left;padding-left:8px}
-.iv-tbl thead th.rank-col{text-align:center;cursor:default;padding-left:0;padding-right:4px}
-.iv-tbl thead th.bar-col{text-align:left;padding-left:6px;cursor:default}
-.iv-tbl thead th.sorted{color:var(--holo-pink)}
-.iv-tbl thead th .iv-arrow{font-size:8px;opacity:.7;margin-left:2px}
-.iv-tbl tbody td{padding:9px 4px;border-bottom:1px solid rgba(255,255,255,.04);text-align:right;color:rgba(255,255,255,.85);font-variant-numeric:tabular-nums}
-.iv-tbl tbody td.name-col{text-align:left;padding-left:8px;color:#fff;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.iv-tbl tbody td.rank-col{text-align:center;padding-left:0;padding-right:4px;color:rgba(255,255,255,.3);font-weight:600;font-size:11px}
-.iv-tbl tbody tr{transition:background var(--tr);cursor:pointer}
-.iv-tbl tbody tr:hover{background:rgba(255,157,226,.06)}
-.iv-tbl tbody tr:hover td.name-col{color:var(--holo-pink)}
-.iv-tbl .cell-total{font-weight:700;color:#fff}
-
-/* stacked horizontal bar */
-.iv-bar-cell{padding:8px 12px 8px 6px;position:relative}
-.iv-bar-area{position:relative;width:100%;height:24px}
-.iv-bar-track{position:absolute;inset:0;display:flex;border-radius:50px;overflow:hidden;background:rgba(255,255,255,.04);box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
-.iv-bar-fill{display:flex;height:100%;border-radius:50px;overflow:hidden;transition:width .4s cubic-bezier(.4,0,.2,1);min-width:0}
-.iv-bar-seg{position:relative;height:100%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;letter-spacing:.2px;font-variant-numeric:tabular-nums;text-shadow:0 1px 2px rgba(0,0,0,.35);overflow:hidden;white-space:nowrap;min-width:0;cursor:pointer;transition:flex-basis .3s ease,filter .15s ease,box-shadow .15s ease}
-.iv-bar-seg:hover{filter:brightness(1.18) saturate(1.1);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.5)}
-.iv-bar-seg-active{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.55)}
-.iv-bar-seg-gp{background:linear-gradient(90deg,#ff7eb9,#ff3d96);box-shadow:inset 0 0 10px rgba(255,255,255,.18),0 0 12px rgba(255,61,150,.45)}
-.iv-bar-seg-g {background:linear-gradient(90deg,#e8c454,#d4a820);color:#2a1f00;text-shadow:none}
-.iv-bar-seg-s {background:linear-gradient(90deg,#a4b4cc,#8a9cb5)}
-.iv-bar-seg-b {background:linear-gradient(90deg,#d08e52,#c07a3e)}
-
-/* spillover labels — narrow segments list their count to the right of the bar */
-.iv-bar-right{position:absolute;top:0;height:24px;display:flex;align-items:center;gap:6px;padding-left:10px;font-size:10.5px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.2px;white-space:nowrap;pointer-events:none;line-height:1}
-.iv-bar-right [data-tier="gp"]{color:#ff7eb9}
-.iv-bar-right [data-tier="g"] {color:#e8c454}
-.iv-bar-right [data-tier="s"] {color:#a4b4cc}
-.iv-bar-right [data-tier="b"] {color:#d08e52}
-.iv-bar-right .sep{color:rgba(255,255,255,.15);font-weight:400}
-
-.iv-legend{display:flex;gap:14px;align-items:center;justify-content:flex-end;font-size:10px;color:rgba(255,255,255,.55);letter-spacing:.6px;text-transform:uppercase;font-weight:600;margin-top:14px;flex-wrap:wrap}
-.iv-legend .iv-item{display:inline-flex;align-items:center;gap:6px}
-.iv-legend .iv-sw{width:14px;height:8px;border-radius:50px;display:inline-block}
-.iv-legend .sw-gp{background:linear-gradient(90deg,#ff7eb9,#ff3d96)}
-.iv-legend .sw-g {background:linear-gradient(90deg,#e8c454,#d4a820)}
-.iv-legend .sw-s {background:linear-gradient(90deg,#a4b4cc,#8a9cb5)}
-.iv-legend .sw-b {background:linear-gradient(90deg,#d08e52,#c07a3e)}
-.iv-legend .iv-scale{margin-right:auto;color:rgba(255,255,255,.3);text-transform:none;letter-spacing:.2px;font-weight:500;font-size:11px}
-
-.iv-meta{font-size:11px;color:rgba(255,255,255,.3);margin-top:10px;text-align:right;padding-right:4px}
-
-/* sidebar Views section + Insights entry style */
-.sb-view{padding:8px 18px;font-size:12.5px;font-weight:500;color:var(--sidebar-text);cursor:pointer;transition:all var(--tr);border-left:2px solid transparent;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sb-view:hover{color:var(--sidebar-active);background:rgba(255,255,255,0.03)}
-.sb-view.on{color:var(--sidebar-active);font-weight:700;border-left-color:var(--holo-pink);background:rgba(255,157,226,0.06)}
-
-/* entity filter chip — appears in topbar when grid is filtered by a brand/agency/country picked from the Insights leaderboard */
-.ef-chip{display:none;align-items:center;gap:6px;padding:5px 6px 5px 12px;border-radius:50px;border:1px solid rgba(255,157,226,.4);background:rgba(255,157,226,.12);color:#fff;font-size:11px;font-weight:600;letter-spacing:.3px;font-family:var(--font);white-space:nowrap;max-width:280px;overflow:hidden;text-overflow:ellipsis}
-.ef-chip.on{display:inline-flex}
-.ef-chip-label{color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.7px;font-size:10px;flex-shrink:0}
-.ef-chip-value{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ef-chip-x{appearance:none;border:none;background:rgba(255,255,255,.15);color:rgba(255,255,255,.7);width:18px;height:18px;border-radius:50%;cursor:pointer;font-size:11px;display:inline-flex;align-items:center;justify-content:center;line-height:1;padding:0;margin-left:4px;flex-shrink:0}
-.ef-chip-x:hover{background:rgba(255,157,226,.4);color:#fff}
-
-@media(max-width:760px){
-  #insights-view{padding:20px 18px 40px}
-}
 </style>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
@@ -658,10 +562,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       </div>
     </div>
     <div class="sb-scroll">
-    <div class="sb-sec">View</div>
-    <div class="sb-view on" data-view="grid" onclick="selView(this)">Browse</div>
-    <div class="sb-view" data-view="insights" onclick="selView(this)">Insights</div>
-    <div class="sb-sec" style="margin-top:6px">Categories</div>
+    <div class="sb-sec">Categories</div>
     <div class="sb-cat on" data-cat="All" onclick="selCat(this)">All</div>
     <div class="sb-group">Classic</div>
     <div class="sb-cat" data-cat="Audio &amp; Radio" onclick="selCat(this)">Audio &amp; Radio</div>
@@ -730,7 +631,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <button class="tb-sort-btn" id="sort-liked-btn" onclick="toggleSortLiked()">&#128077; Most Liked</button>
       </div>
       <span class="tb-count" id="cnt"></span>
-      <div class="ef-chip" id="entity-filter-chip"></div>
       <div class="tb-search-wrap">
         <span class="tb-search-icon">&#128269;</span>
         <input class="tb-search" id="tb-q" type="text" placeholder="Search winners..." autocomplete="off" oninput="tbSearch(this.value)" onkeydown="tbSearchKey(event)">
@@ -742,37 +642,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <!-- GRID -->
     <div id="grid">
       <div class="grid-inner" id="grid-inner"></div>
-    </div>
-
-    <!-- INSIGHTS VIEW -->
-    <div id="insights-view">
-      <div class="iv-head">
-        <h1 id="iv-title">Insights</h1>
-        <div class="iv-tag" id="iv-tag">Top winning brands, agencies, and countries.</div>
-      </div>
-      <div class="iv-pills" id="iv-pills" role="tablist">
-        <button class="iv-pill on" data-entity="brand" role="tab">Brand</button>
-        <button class="iv-pill" data-entity="agency" role="tab">Agency</button>
-        <button class="iv-pill" data-entity="country" role="tab">Country</button>
-      </div>
-      <section class="iv-board">
-        <h2 id="iv-board-title" style="font-family:var(--font);font-weight:800;font-size:22px;letter-spacing:-.3px;line-height:1.2;color:#fff;margin-bottom:4px">Top Brands</h2>
-        <div class="iv-sub" id="iv-board-sub">Loading…</div>
-        <div class="iv-sort-ind" id="iv-sort-ind" title="Click to flip sort direction">
-          <span>Sorted by <strong id="iv-sort-key">Total</strong></span>
-          <span class="iv-arrow" id="iv-sort-arrow">▼</span>
-          <span class="iv-hint">Click any bar segment to sort by that tier</span>
-        </div>
-        <table class="iv-tbl" id="iv-tbl"></table>
-        <div class="iv-legend">
-          <span class="iv-scale">Bar length = total Lions · segments show medal mix</span>
-          <span class="iv-item"><span class="iv-sw sw-gp"></span>Grand Prix</span>
-          <span class="iv-item"><span class="iv-sw sw-g"></span>Gold</span>
-          <span class="iv-item"><span class="iv-sw sw-s"></span>Silver</span>
-          <span class="iv-item"><span class="iv-sw sw-b"></span>Bronze</span>
-        </div>
-        <div class="iv-meta" id="iv-meta"></div>
-      </section>
     </div>
   </div>
 </div>
@@ -1077,7 +946,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/0b397234b3d74a5aa798ad871042c23c"},
     {id:21,year:2025,tier:"Bronze",campaign:"Sounds Right",
-     brand:"Museum for the United Nations - UN Live",
+     brand:"Museum for the United Nations - UN Live, Spotify",
      agency:"AKQA",country:"Denmark",grad:"g21",
      desc:"A Spotify initiative, developed by AKQA for Museum for the United Nations \u2013 UN Live, that registers NATURE as an official credited artist on the platform \u2014 so that existing songs featuring natural soundscapes, from artists including V of BTS, David Bowie, Brian Eno, AURORA, and Ellie Goulding, list NATURE as a collaborator with its own verified artist profile. Streaming royalties attributed to NATURE's credit are directed toward nature conservation funding.",
      tags:["C07 - Corporate Purpose & Social Responsibility", "Denmark"],
@@ -1296,7 +1165,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/storyboard/b0649b3b520e450ca4b8d80fb3fb66ca/storyboard_000008.jpg"},
     {id:3019,year:2025,tier:"Silver",campaign:"The Shooting",
-     brand:"La Uni\u00f3n Newspaper",
+     brand:"La Uni\u00f3n Newspaper / Articulo 19",
      agency:"Grey",country:"Mexico",grad:"g3019",
      desc:"A short film produced by Grey M\u00e9xico for La Uni\u00f3n newspaper and Article 19 in which a journalist holding a camera and a gunman holding a pistol face each other across the same frame \u2014 built around the double meaning that journalists \"shoot\" to expose truth while others shoot to silence them. Shot entirely on real locations in Mexico with actors who had personal ties to violence and journalism, the film responds to a context in which more than 200 journalists have been murdered or disappeared in Mexico since 2000, including La Uni\u00f3n founder Mois\u00e9s S\u00e1nchez.",
      tags:["B05 - Media/Entertainment", "Mexico"],
@@ -1589,7 +1458,7 @@ const DATA = {
      imgUrl:"digital-presentation-images/film-second-nurture-18-months.webp"},
     {id:3048,year:2025,tier:"Bronze",campaign:"Read Better",
      brand:"Waterstones",
-     agency:"FP7 McCann",country:"United Arab Emirates",grad:"g3048",
+     agency:"FP7 McCANN",country:"United Arab Emirates",grad:"g3048",
      desc:"A film and digital campaign for Waterstones, created with McCann Bristol and UM Central, built around the idea that reading books makes you better at interpreting the world around you. The work delivers a social-behaviour message \u2014 that regular reading sharpens comprehension and critical thinking \u2014 through demonstration rather than instruction.",
      tags:["F04 - Social Behaviour", "United Arab Emirates"],
      keywords:["books", "film", "cinema", "entertainment", "digital", "social-behaviour", "united-arab-emirates", "united-kingdom", "reading", "retail"],
@@ -1629,7 +1498,7 @@ const DATA = {
      imgUrl:"digital-presentation-images/film-channel-4-paris-paralympic-2024-considering-what.webp"},
     {id:3052,year:2025,tier:"Bronze",campaign:"Skin",
      brand:"Ra\u00e7a Magazine",
-     agency:"LePub",country:"Brazil",grad:"g3052",
+     agency:"Lepub",country:"Brazil",grad:"g3052",
      desc:"A print and film ad for RA\u00c7A Magazine, Brazil's Black press publication, built around the handwritten testimony of Carlos Palmeira \u2014 a Brazilian man with vitiligo whose skin shifted from completely Black to completely White, a condition affecting 0.009% of Brazilians. His account, written in his own hand and overlaid across his portrait, describes how the same people who once profiled, ignored, or feared him began treating him with warmth as his pigmentation changed \u2014 a firsthand account of racism operating through appearance alone.",
      tags:["F09 - Cultural Engagement", "Brazil"],
      keywords:["print", "film", "cinema", "entertainment", "magazine", "anti-racism", "brazil", "handwritten", "institutional", "racial-equity", "portrait"],
@@ -1743,7 +1612,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/19b79ceaf445400d88e358d61316e067"},
     {id:5011,year:2025,tier:"Gold",campaign:"Scratch & Sniff",
      brand:"Axe/Lynx",
-     agency:"Lola MullenLowe",country:"Spain",grad:"g5011",
+     agency:"LOLA MullenLowe",country:"Spain",grad:"g5011",
      desc:"Scratch-and-sniff OOH panels placed in ambient locations to launch Axe/Lynx's new Lower Body Spray \u2014 a fine fragrance designed specifically for the groin area. The displays invited passersby to scratch the panel and smell the product, turning a taboo self-checking habit into a direct fragrance sampling mechanic.",
      tags:["C01 - Displays", "Spain"],
      keywords:["deodorant", "personal-care", "beauty", "ooh", "ambient", "experiential", "scent", "sampling", "spain", "displays"],
@@ -1815,7 +1684,7 @@ const DATA = {
     // SILVER,
     {id:5018,year:2025,tier:"Silver",campaign:"Windsurf",
      brand:"Cornetto",
-     agency:"Lola MullenLowe",country:"Spain",grad:"g5018",
+     agency:"LOLA MullenLowe",country:"Spain",grad:"g5018",
      desc:"A series of outdoor print ads for Cornetto in Spain, each built around the shape of an unwrapped Cornetto cone used as the central graphic element \u2014 the wafer tip and chocolate base forming the hull of a boat, the body of a windsurfer, the arc of a wave, and the silhouette of a diver. Each execution in the \"Unwrap It\" campaign uses only the product's own geometry to construct a summer scene, with no additional illustration.",
      tags:["B01 - Consumer Goods", "Spain"],
      keywords:["ice-cream", "ooh", "print", "outdoor", "illustration", "spain", "summer", "product-as-image", "graphic-design"],
@@ -1825,7 +1694,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/2f9ebcc7b9ec4ad9a4dcf79bd56fa88b"},
     {id:5019,year:2025,tier:"Silver",campaign:"Surfer",
      brand:"Cornetto",
-     agency:"Lola MullenLowe",country:"Spain",grad:"g5019",
+     agency:"LOLA MullenLowe",country:"Spain",grad:"g5019",
      desc:"A graphic print series for Cornetto ice cream in which the wrapper of a half-unwrapped cone doubles as a visual element of a summer scene \u2014 a sail, a wave, a surfer's board, a diver's arc. Each execution uses only the product and its packaging to complete the image, with no additional illustration.",
      tags:["B01 - Consumer Goods", "Spain"],
      keywords:["ice-cream", "print", "ooh", "packaging", "outdoor", "graphic-design", "spain", "consumer-goods", "cpg", "fmcg"],
@@ -1835,7 +1704,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/9ceaf650a007496f90b6d5670786b4df"},
     {id:5020,year:2025,tier:"Silver",campaign:"Waves",
      brand:"Cornetto",
-     agency:"Lola MullenLowe",country:"Spain",grad:"g5020",
+     agency:"LOLA MullenLowe",country:"Spain",grad:"g5020",
      desc:"A series of outdoor and print posters built entirely from Cornetto ice cream wrappers, cut and assembled into collages depicting summer scenes \u2014 waves, surfers, boats, divers, and windsurfers \u2014 using only the packaging's own printed surface as raw material. Each scene is constructed from magazine-style clippings of the wrapper's existing imagery, so the product itself becomes the medium.",
      tags:["B01 - Consumer Goods", "Spain"],
      keywords:["ice-cream", "print", "ooh", "packaging", "collage", "summer", "spain", "consumer-goods", "cpg", "fmcg"],
@@ -1845,7 +1714,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/35c567148f6e40e1a267849bde62ba92"},
     {id:5021,year:2025,tier:"Silver",campaign:"Boat",
      brand:"Cornetto",
-     agency:"Lola MullenLowe",country:"Spain",grad:"g5021",
+     agency:"LOLA MullenLowe",country:"Spain",grad:"g5021",
      desc:"A print series for Cornetto ice cream in which the wrapper of each cone is peeled back to reveal a summer scene \u2014 a boat, waves, a surfer, a diver, a windsurfer \u2014 illustrated within the negative space of the unwrapped packaging. Each execution uses the act of unwrapping as the visual mechanic, so the cone's foil becomes both the frame and the subject.",
      tags:["B01 - Consumer Goods", "Spain"],
      keywords:["ice-cream", "print", "outdoor", "packaging", "illustration", "spain", "consumer-goods", "cpg", "fmcg", "ooh"],
@@ -2243,7 +2112,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/102f0d648c284c6e98ed2de341d6a49d"},
     {id:5061,year:2025,tier:"Bronze",campaign:"Carrefoursa - Ghost Town",
-     brand:"CarrefourSA",
+     brand:"Carrefoursa",
      agency:"TBWA\\Istanbul",country:"Turkey",grad:"g5061",
      desc:"To expose the threat of abandoned 'ghost nets,' CarrefourSA collected them from the sea and draped them across Ocaklar, turning the Turkish fishing village into a haunting vision of the ghost town it could become. The installation made the invisible crisis impossible to ignore, while a training program and digital platform helped educate thousands of fishermen on protecting sustainable seafood and coastal livelihoods.",
      tags:["C03 - Special Build", "Turkey"],
@@ -2520,7 +2389,7 @@ const DATA = {
     // SILVER,
     {id:5611,year:2025,tier:"Silver",campaign:"Roses",
      brand:"Oreo",
-     agency:"LePub Bogota",country:"Colombia",grad:"g5611",
+     agency:"Lepub Bogota",country:"Colombia",grad:"g5611",
      desc:"A print visual from a five-part OREO campaign \u2014 Eggs, Roses, Bananas, Duck, and Toilet Paper \u2014 in which each image depicts an everyday object or food that has visibly been twisted apart in the same way as an OREO cookie. The series uses the gesture as a universal sign of a considered choice, running under the line \"A Decision Was Made Here.\"",
      tags:["Consumer Goods", "Colombia"],
      keywords:["snack", "food", "packaged-goods", "cpg", "fmcg", "print", "ooh", "photography", "colombia", "visual-series", "consumer-goods", "humor"],
@@ -2530,7 +2399,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/7e2d8fe4c7af49f0b2003ab42f27074e"},
     {id:5612,year:2025,tier:"Silver",campaign:"Toilet Paper",
      brand:"Oreo",
-     agency:"LePub Bogota",country:"Colombia",grad:"g5612",
+     agency:"Lepub Bogota",country:"Colombia",grad:"g5612",
      desc:"A print campaign that places Oreo cookies inside mundane, everyday objects \u2014 toilet paper rolls, egg cartons, rose bouquets, banana bunches, and rubber ducks \u2014 as if the cookie naturally belongs there. Each execution uses a clean, precise art direction to let the visual joke land without copy, relying on the familiarity of the Oreo shape to create instant recognition in an unexpected context.",
      tags:["Consumer Goods", "Colombia"],
      keywords:["oreo", "snack", "food", "packaged-goods", "cpg", "fmcg", "print", "colombia", "netherlands", "humor", "art-direction", "consumer-goods"],
@@ -2559,7 +2428,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/26f992b0fc0e4479b962853921264524"},
     {id:5615,year:2025,tier:"Silver",campaign:"Public Transport",
-     brand:"KitKat",
+     brand:"Kitkat",
      agency:"VML",country:"Czech Republic",grad:"g5615",
      desc:"An outdoor campaign across Czech Republic crowd, public transport, and street placements that depicted commuters and passersby in everyday phone-scrolling situations \u2014 but with KitKat bars swapped in place of their smartphones. The images required no explanation: the brand's longstanding \"take a break\" idea made literal by replacing the object people most compulsively reach for.",
      tags:["Consumer Goods", "Czech Republic"],
@@ -2569,7 +2438,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/5faffc268ac047f7a20b5bf0e2fb5e1a"},
     {id:5616,year:2025,tier:"Silver",campaign:"Street",
-     brand:"KitKat",
+     brand:"Kitkat",
      agency:"VML",country:"Czech Republic",grad:"g5616",
      desc:"Outdoor installations across Czech Republic streets and public transport placements that replaced the expected KitKat branding with images of crowds of people \u2014 all looking down at their phones. The work revived the \"Have a break, have a KitKat\" line without stating it, letting the behavior of the crowd make the case for putting the phone down.",
      tags:["Consumer Goods", "Czech Republic"],
@@ -2579,7 +2448,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/1d6b4cb3e726479c8a6b03da24a5d79e"},
     {id:5617,year:2025,tier:"Silver",campaign:"Crowd",
-     brand:"KitKat",
+     brand:"Kitkat",
      agency:"VML",country:"Czech Republic",grad:"g5617",
      desc:"A series of out-of-home placements across Czech Republic public transport and streets that use existing crowds of commuters and pedestrians as the visual content of the ad \u2014 positioning densely packed people as the reason to take a break. Each execution frames the surrounding crowd through the KitKat creative, making the real-world environment the message.",
      tags:["Consumer Goods", "Czech Republic"],
@@ -2620,7 +2489,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/7bfaee649e4b417698823553cddf194e"},
     {id:5621,year:2025,tier:"Silver",campaign:"Bananas",
      brand:"Oreo",
-     agency:"LePub Bogota",country:"Colombia",grad:"g5621",
+     agency:"Lepub Bogota",country:"Colombia",grad:"g5621",
      desc:"A print execution in the OREO 'A Decision Was Made Here' campaign showing a banana with a distinctive bite taken out of it \u2014 the shape of the missing piece unmistakably echoing an OREO cookie. Created by LePub Amsterdam and LePub Bogot\u00e1, the series uses everyday objects marked by a familiar crescent bite to imply that someone paused mid-snack to twist, lick, or dunk an OREO instead.",
      tags:["Consumer Goods", "Colombia"],
      keywords:["oreo", "snack", "food", "packaged-goods", "cpg", "fmcg", "print", "consumer-goods", "colombia", "netherlands", "print-and-publishing"],
@@ -2630,7 +2499,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/2e8876adc7f74c79b691fdfab21733d3"},
     {id:5622,year:2025,tier:"Silver",campaign:"Eggs",
      brand:"Oreo",
-     agency:"LePub Bogota",country:"Colombia",grad:"g5622",
+     agency:"Lepub Bogota",country:"Colombia",grad:"g5622",
      desc:"A print ad for Oreo in which the cookie's familiar black-and-white pattern is revealed inside the cross-section of a cracked egg \u2014 the cream filling standing in for the yolk. Part of a campaign series (Eggs, Roses, Bananas, Duck) that hides the Oreo design within everyday objects that share its two-tone structure.",
      tags:["Consumer Goods", "Colombia"],
      keywords:["oreo", "snack", "food", "packaged-goods", "cpg", "fmcg", "print", "colombia", "visual-identity", "illustration", "consumer-goods"],
@@ -2650,7 +2519,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/3bc3455889f14af89ad13e749464c1f2"},
     {id:5624,year:2025,tier:"Silver",campaign:"Duck",
      brand:"Oreo",
-     agency:"LePub Bogota",country:"Colombia",grad:"g5624",
+     agency:"Lepub Bogota",country:"Colombia",grad:"g5624",
      desc:"A print ad for OREO that communicates the cookie's twist-lick-dunk ritual using a single image of a duck \u2014 the bird's characteristic head-dipping behavior mirroring the motion of dunking an OREO in milk. Part of a series by LePub Amsterdam and LePub Bogot\u00e1 in which everyday objects and animals stand in for the ritual without a word of copy.",
      tags:["Consumer Goods", "Colombia"],
      keywords:["snack", "food", "packaged-goods", "cpg", "fmcg", "print", "photography", "colombia", "visual-metaphor", "consumer-goods", "single-image"],
@@ -2886,7 +2755,7 @@ const DATA = {
 
     // GRAND PRIX,
     {id:1601,year:2025,tier:"Grand Prix",campaign:"Caption with Intention",
-     brand:"Academy of Motion Picture Arts & Sciences",
+     brand:"Academy of Motion Picture Arts & Sciences / Chicago Hearing Society",
      agency:"FCB Chicago",country:"United States",grad:"g1601",
      desc:"A design system for film and television captions that pairs word-by-word sync with expressive typography \u2014 type weight, color, and motion communicate volume, tone, and which character is speaking. Built over six years in partnership with the Deaf and Hard of Hearing community, it was adopted by the Academy as the standard for Oscar submissions and earned a technology Oscar.",
      tags:["B01 - Inclusive Design", "United States"],
@@ -3207,7 +3076,7 @@ const DATA = {
 
     // GRAND PRIX,
     {id:1801,year:2025,tier:"Grand Prix",campaign:"Caption with Intention",
-     brand:"Academy of Motion Picture Arts & Sciences",
+     brand:"Academy of Motion Picture Arts & Sciences - Rakish - Chicago Hearing Society",
      agency:"FCB Chicago",country:"United States",grad:"g1801",
      desc:"A caption design system for film and television that moves beyond static white text \u2014 word-by-word sync pairs with expressive typography, where type weight, color, and motion signal volume, tone, and speaker identity. Developed by FCB Chicago in close partnership with the Chicago Hearing Society, Rakish, and the Academy of Motion Picture Arts and Sciences, which adopted it as a new standard for cinematic accessibility.",
      tags:["UX & Journey Design", "United States"],
@@ -3229,7 +3098,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/82542e7381744bb783bb6c60f2929b2c"},
     {id:1803,year:2025,tier:"Gold",campaign:"Caption with Intention",
-     brand:"Academy of Motion Picture Arts & Sciences",
+     brand:"Academy of Motion Picture Arts & Sciences - Rakish - Chicago Hearing Society",
      agency:"FCB Chicago",country:"United States",grad:"g1803",
      desc:"A caption design system for film and television that moves beyond static white text \u2014 word-by-word sync pairs with expressive typography, where type weight, color, and motion signal volume, tone, and speaker identity. Developed by FCB Chicago in close partnership with the Chicago Hearing Society, Rakish, and the Academy of Motion Picture Arts and Sciences, which adopted it as a new standard for cinematic accessibility.",
      tags:["Innovative Use of Technology", "United States"],
@@ -3251,7 +3120,7 @@ const DATA = {
 
     // SILVER,
     {id:1805,year:2025,tier:"Silver",campaign:"The Shaded Route",
-     brand:"HungerStation",
+     brand:"Hungerstation",
      agency:"VML",country:"Saudi Arabia",grad:"g1805",
      desc:"A routing feature built into the HungerStation delivery app that calculates the shadiest path between pickup and drop-off points across Saudi Arabia \u2014 plotting roads and turns that maximize shade cover during each journey. The feature uses real-time sun position data alongside mapped building and infrastructure footprints to dynamically update routes as conditions change throughout the day.",
      tags:["Real-Time Usage & Targeting", "Saudi Arabia"],
@@ -3364,7 +3233,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/4483476cdcdf4250b70cf3ba56e70e55"},
     {id:1816,year:2025,tier:"Bronze",campaign:"Read Better",
      brand:"Waterstones",
-     agency:"FP7 McCann",country:"United Arab Emirates",grad:"g1816",
+     agency:"FP7 McCANN",country:"United Arab Emirates",grad:"g1816",
      desc:"A film and digital campaign for Waterstones, created with McCann Bristol and UM Central, built around the idea that reading books makes you better at interpreting the world around you. The work delivers a social-behaviour message \u2014 that regular reading sharpens comprehension and critical thinking \u2014 through demonstration rather than instruction.",
      tags:["Data Storytelling", "United Arab Emirates"],
      keywords:["books", "film", "cinema", "entertainment", "digital", "social-behaviour", "united-arab-emirates", "united-kingdom", "reading", "retail"],
@@ -3421,7 +3290,7 @@ const DATA = {
      imgUrl:"digital-presentation-images/film-channel-4-paris-paralympic-2024-considering-what.webp"},
     {id:3204,year:2025,tier:"Gold",campaign:"Guao Guao",
      brand:"Desperados",
-     agency:"LePub",country:"Italy",grad:"g3204",
+     agency:"Lepub",country:"Italy",grad:"g3204",
      desc:"An original reggaeton track and brand film made in partnership with Colombian Grammy-winning producer Ovy on the Drums and Venezuelan rapper Micro TDH, created for Desperados \u2014 a tequila-infused beer positioned around Latin party culture \u2014 to respond to declining out-and-about social behavior among Gen Z in Europe. The brand film was cast entirely with non-Latin talent from Europe, China, India, and Africa to show that the energy of reggaeton crosses cultural identities, with casting as the central creative argument.",
      tags:["Casting", "Italy"],
      keywords:["beer", "alcohol", "music", "entertainment", "film", "cinema", "casting", "reggaeton", "europe", "branded-content", "italy", "music-video", "latin-culture"],
@@ -3493,7 +3362,7 @@ const DATA = {
     // SILVER,
     {id:3211,year:2025,tier:"Silver",campaign:"Guao Guao",
      brand:"Desperados",
-     agency:"LePub",country:"Italy",grad:"g3211",
+     agency:"Lepub",country:"Italy",grad:"g3211",
      desc:"An original reggaeton track and brand film made in partnership with Colombian Grammy-winning producer Ovy on the Drums and Venezuelan rapper Micro TDH, created for Desperados \u2014 a tequila-infused beer positioned around Latin party culture \u2014 to respond to declining out-and-about social behavior among Gen Z in Europe. The brand film was cast entirely with non-Latin talent from Europe, China, India, and Africa to show that the energy of reggaeton crosses cultural identities, with casting as the central creative argument.",
      tags:["Use of Original Music", "Italy"],
      keywords:["beer", "alcohol", "music", "entertainment", "film", "cinema", "casting", "reggaeton", "europe", "branded-content", "italy", "music-video", "latin-culture"],
@@ -3654,7 +3523,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"digital-presentation-images/film-craft-second-nurture-18-months.webp"},
     {id:3227,year:2025,tier:"Bronze",campaign:"The Shooting",
-     brand:"La Uni\u00f3n Newspaper",
+     brand:"La Uni\u00f3n Newspaper / Articulo 19",
      agency:"Grey",country:"Mexico",grad:"g3227",
      desc:"A short film produced by Grey M\u00e9xico for La Uni\u00f3n newspaper and Article 19 in which a journalist holding a camera and a gunman holding a pistol face each other across the same frame \u2014 built around the double meaning that journalists \"shoot\" to expose truth while others shoot to silence them. Shot entirely on real locations in Mexico with actors who had personal ties to violence and journalism, the film responds to a context in which more than 200 journalists have been murdered or disappeared in Mexico since 2000, including La Uni\u00f3n founder Mois\u00e9s S\u00e1nchez.",
      tags:["Direction", "Mexico"],
@@ -4241,7 +4110,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/06ac79ad1b9840bdb3df3269a42d0933"},
     {id:405,year:2025,tier:"Silver",campaign:"Estibadores",
-     brand:"MiBanco",
+     brand:"Mibanco",
      agency:"Circus Grey",country:"Peru",grad:"g405",
      desc:"An out-of-home format built around the cargo dollies used by estibadores \u2014 the informal load carriers who work the Gamarra textile market in Lima \u2014 converting each trolley into a branded mobile advertising panel. The work responds to a Peruvian regulation that capped the weight estibadores are legally allowed to carry, cutting their earnings, by giving them a new income stream from the ad space on their equipment.",
      tags:["Targeting & Engagement", "Peru"],
@@ -4283,7 +4152,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/84fdb68c2d894cd581682c863718054b"},
     {id:409,year:2025,tier:"Bronze",campaign:"Caption with Intention",
-     brand:"Academy of Motion Picture Arts & Sciences",
+     brand:"Academy of Motion Picture Arts & Sciences - Rakish - Chicago Hearing Society",
      agency:"FCB Chicago",country:"United States",grad:"g409",
      desc:"A caption design system for film and television that moves beyond static white text \u2014 word-by-word sync pairs with expressive typography, where type weight, color, and motion signal volume, tone, and speaker identity. Developed by FCB Chicago in close partnership with the Chicago Hearing Society, Rakish, and the Academy of Motion Picture Arts and Sciences, which adopted it as a new standard for cinematic accessibility.",
      tags:["Innovative use of Content", "United States"],
@@ -4314,7 +4183,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/8223f25b769b40e3b665c4ec19e2e12c"},
     {id:412,year:2025,tier:"Bronze",campaign:"Starring Bars",
      brand:"Heineken",
-     agency:"LePub",country:"Italy",grad:"g412",
+     agency:"Lepub",country:"Italy",grad:"g412",
      desc:"A global production policy Heineken adopted to film all of its commercials inside real partner bars that need financial support \u2014 turning the bars into paid sets and giving them rental income, a production makeover, and international visibility. When not serving customers, the venues serve as locations, with Heineken's ad spend flowing directly to struggling hospitality businesses.",
      tags:["Cross-Channel Storytelling", "Italy"],
      keywords:["beer", "alcohol", "cross-channel", "branded-content", "hospitality", "b2b", "business", "global", "production", "lepub"],
@@ -4324,7 +4193,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/6544f095e71a47a39d27334e2404e951"},
     {id:413,year:2025,tier:"Bronze",campaign:"Recipe for Change",
      brand:"Arla",
-     agency:"FP7 McCann",country:"United Arab Emirates",grad:"g413",
+     agency:"FP7 McCANN",country:"United Arab Emirates",grad:"g413",
      desc:"A licensing program that turned Lebanese women's family recipes into restaurant intellectual property. Lebanese and fusion restaurants across the UAE served the dishes through March 2025 with half of each dish's profit flowing back to the cook, framing home cooking as an export and a source of income for displaced families.",
      tags:["Targeting & Engagement", "United Arab Emirates"],
      keywords:["food", "sdg", "partnership", "restaurant", "social-good", "middle-east", "lebanon", "licensing"],
@@ -4492,7 +4361,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/d4f1b0f66c5e4ae7ad17037a6aa198f7"},
     {id:1016,year:2025,tier:"Bronze",campaign:"Humanimal Tourism",
-     brand:"ProColombia",
+     brand:"Procolombia",
      agency:"DDB Colombia",country:"Colombia",grad:"g1016",
      desc:"A tourism model built on matching the migratory patterns, habitats, and behavioral data of Colombia's endemic animal species to travel itineraries \u2014 so visitors follow the same routes as humpback whales, spectacled bears, or poison dart frogs through the country's ecosystems. DDB Colombia developed the system for ProColombia as a data-driven alternative to conventional destination marketing, using biodiversity as the navigation layer for human travel.",
      tags:["Data-Enhanced Creativity", "Colombia"],
@@ -4502,7 +4371,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/baf91a99fe954d17a2d2b48558a76a34"},
     {id:1017,year:2025,tier:"Bronze",campaign:"The Social Feed",
-     brand:"HungerStation",
+     brand:"Hungerstation",
      agency:"VML",country:"United Arab Emirates",grad:"g1017",
      desc:"A direct-message feature on Saudi food-delivery app HungerStation that lets users forward any food photo from Instagram, TikTok, or Snapchat into the app. AI identifies the dish, finds the nearest restaurant on the platform that serves it, and opens an order \u2014 converting a 135-times-a-day social-media food crave into a tap.",
      tags:["Data-Driven Targeting", "United Arab Emirates"],
@@ -4652,7 +4521,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/08a2258d5d1348b1bc8f6014ff0c6655"},
     {id:2014,year:2025,tier:"Silver",campaign:"Followers Store",
      brand:"New Balance",
-     agency:"LePub",country:"Brazil",grad:"g2014",
+     agency:"Lepub",country:"Brazil",grad:"g2014",
      desc:"A geo-fenced sales window for an exclusive S\u00e3o Paulo FC jersey, unlockable on the New Balance app only for fans physically near the team bus as it traveled to Morumbi Stadium ahead of a Brazilian Championship match. Outside that travel window, the jersey was unbuyable; inside it, fans had minutes to pre-order before the bus passed.",
      tags:["Data-Driven Targeting", "Brazil"],
      keywords:["ecommerce", "retail", "online-shopping", "geolocation", "football", "soccer", "sport", "brazil", "app", "partnership"],
@@ -4662,7 +4531,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/3d0a357fb9de4393918aaa93dcff4033"},
     {id:2015,year:2025,tier:"Silver",campaign:"Gulf of Mexico (bar)",
      brand:"Tecate",
-     agency:"LePub",country:"Mexico",grad:"g2015",
+     agency:"Lepub",country:"Mexico",grad:"g2015",
      desc:"A floating bar built on a boat in the Gulf of Mexico, accessible only by sea and named 'Golfo de M\u00e9xico' \u2014 a response to a U.S. proposal to rename the gulf the 'Gulf of America.' To pair, Tecate launched a special-edition Tecate Light brewed with salt harvested from the disputed waters.",
      tags:["Local Brand", "Mexico"],
      keywords:["ooh", "brand-stunt", "political-commentary", "beer", "alcohol", "packaging", "mexico", "branded-venue", "special-edition"],
@@ -4874,7 +4743,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/8223f25b769b40e3b665c4ec19e2e12c"},
     {id:2036,year:2025,tier:"Bronze",campaign:"Pub Succession",
      brand:"Heineken",
-     agency:"LePub",country:"Italy",grad:"g2036",
+     agency:"Lepub",country:"Italy",grad:"g2036",
      desc:"A global recruitment campaign to find a new owner for McLoughlin's Bar, a 155-year-old family pub on Ireland's Achill Island whose fourth-generation publican is retiring with no successor \u2014 but only candidates named McLoughlin can apply. Launched on St Patrick's Day and pushed everywhere from Times Square to The New York Times.",
      tags:["Personalised Campaigns", "Italy"],
      keywords:["pr", "integrated", "ooh", "beer", "alcohol", "ireland", "recruitment", "cultural-engagement", "partnership"],
@@ -5054,7 +4923,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/2fe29fade1f74fc5a8b09a7cd9bc4b80"},
     {id:2054,year:2025,tier:"Bronze",campaign:"Pub Succession",
      brand:"Heineken",
-     agency:"LePub",country:"Italy",grad:"g2054",
+     agency:"Lepub",country:"Italy",grad:"g2054",
      desc:"A global recruitment campaign to find a new owner for McLoughlin's Bar, a 155-year-old family pub on Ireland's Achill Island whose fourth-generation publican is retiring with no successor \u2014 but only candidates named McLoughlin can apply. Launched on St Patrick's Day and pushed everywhere from Times Square to The New York Times.",
      tags:["Cultural Engagement", "Italy"],
      keywords:["pr", "integrated", "ooh", "beer", "alcohol", "ireland", "recruitment", "cultural-engagement", "partnership"],
@@ -6086,7 +5955,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/faf0755b0d4e4594ad93cb75d6288e3d"},
     {id:5230,year:2025,tier:"Bronze",campaign:"Gulf of Mexico (bar)",
      brand:"Tecate",
-     agency:"LePub",country:"Mexico",grad:"g5230",
+     agency:"Lepub",country:"Mexico",grad:"g5230",
      desc:"A floating bar built on a boat in the Gulf of Mexico, accessible only by sea and named 'Golfo de M\u00e9xico' \u2014 a response to a U.S. proposal to rename the gulf the 'Gulf of America.' To pair, Tecate launched a special-edition Tecate Light brewed with salt harvested from the disputed waters.",
      tags:["Use of Events & Stunts", "Mexico"],
      keywords:["ooh", "brand-stunt", "political-commentary", "beer", "alcohol", "packaging", "mexico", "branded-venue", "special-edition"],
@@ -6216,7 +6085,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/5e2b835a636345e0a9110a3076d31dca"},
     {id:5243,year:2025,tier:"Bronze",campaign:"Sponsored Balls",
      brand:"Testicular Cancer Society",
-     agency:"FP7 McCann",country:"United Arab Emirates",grad:"g5243",
+     agency:"FP7 McCANN",country:"United Arab Emirates",grad:"g5243",
      desc:"A logo placement on the testicular area of CD Legan\u00e9s' match shorts \u2014 the one spot on a football kit that sponsors never occupy \u2014 carrying the Testicular Cancer Society's branding during a sold-out La Liga fixture against Barcelona, broadcast across 180+ countries. The brief, developed by FP7 McCann Dubai, used the anatomical logic of the placement to prompt men to self-examine, at a moment when millions of eyes were already fixed on that part of the kit.",
      tags:["Use of Events & Stunts", "United Arab Emirates"],
      keywords:["testicular-cancer-awareness", "sports-sponsorship", "football", "soccer", "sport", "public-health", "kit-placement", "events-and-stunts", "spain", "united-arab-emirates"],
@@ -6252,7 +6121,7 @@ const DATA = {
 
     // GOLD,
     {id:5802,year:2025,tier:"Gold",campaign:"Navy Subreddit Hunt",
-     brand:"U.S. Navy",
+     brand:"U.s. Navy",
      agency:"VML",country:"United States",grad:"g5802",
      desc:"A recruitment campaign built across Reddit in which the U.S. Navy hid enlistment calls-to-action inside niche subreddits relevant to Navy career fields \u2014 diving communities, engineering forums, aviation threads \u2014 so that users already deep in those interests encountered recruiting messages in the spaces where they were most engaged. Created by VML Dallas, the effort treated Reddit's community architecture as a targeting layer rather than a media buy.",
      tags:["Audience Targeting/Engagement Strategies", "United States"],
@@ -6345,7 +6214,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/f4109c89080c4d6b8170e479b78d5160"},
     {id:5811,year:2025,tier:"Silver",campaign:"Gulf of Mexico (bar)",
      brand:"Tecate",
-     agency:"LePub",country:"Mexico",grad:"g5811",
+     agency:"Lepub",country:"Mexico",grad:"g5811",
      desc:"A floating bar built on a boat in the Gulf of Mexico, accessible only by sea and named 'Golfo de M\u00e9xico' \u2014 a response to a U.S. proposal to rename the gulf the 'Gulf of America.' To pair, Tecate launched a special-edition Tecate Light brewed with salt harvested from the disputed waters.",
      tags:["Market Disruption", "Mexico"],
      keywords:["ooh", "brand-stunt", "political-commentary", "beer", "alcohol", "packaging", "mexico", "branded-venue", "special-edition"],
@@ -6464,7 +6333,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"digital-presentation-images/social-and-creator-the-foundation-for-the-deaf-the-ordinary-life-hearing-test.webp"},
     {id:5823,year:2025,tier:"Silver",campaign:"Learn Korean or Else",
-     brand:"Duolingo",
+     brand:"Duolingo | Netflix",
      agency:"Duolingo",country:"United States",grad:"g5823",
      desc:"A brand partnership between Duolingo and Netflix timed to the December 26, 2024 premiere of Squid Game Season 2, in which Duo the Owl is costumed as one of the show's Pink Guards and threatens users to complete their Korean lessons. The campaign added over 40 Squid Game-specific phrases to Duolingo's Korean course, folding the show's high-stakes premise directly into the app's existing streak-pressure mechanic.",
      tags:["Sponsorship & Brand Partnership", "United States"],
@@ -6607,7 +6476,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/bd69a0303076425391bbc54c35136f07"},
     {id:5837,year:2025,tier:"Bronze",campaign:"Tantrum Girl",
      brand:"Toblerone",
-     agency:"LePub",country:"Italy",grad:"g5837",
+     agency:"Lepub",country:"Italy",grad:"g5837",
      desc:"A live stunt staged at London Stansted Airport's arrivals gate in which a young girl throws a full tantrum when her mother returns from a trip without a Toblerone. The scene was filmed and shared by unsuspecting bystanders, seeding the footage organically across social media as if it were a real family meltdown.",
      tags:["Brand Storytelling", "Italy"],
      keywords:["chocolate", "social-media", "stunt", "airport", "brand-storytelling", "user-generated-content", "united-kingdom", "italy"],
@@ -6636,7 +6505,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/6a5dda0a534843feb5db80efbb5a5b2c"},
     {id:5840,year:2025,tier:"Bronze",campaign:"Letting Our Gen-Z Staff Write the Marketing Script",
-     brand:"Currys",
+     brand:"Currys / Pc World",
      agency:"Fabric Social",country:"United Kingdom",grad:"g5840",
      desc:"Currys reconnected with Gen Z by literally letting its younger staff write the marketing script. Starring real employee George and his offbeat deadpan delivery, the video traded polished retail advertising for authentic, trend-aware humor that promoted products while feeling native to social.",
      tags:["Organic Reach & Influence", "United Kingdom"],
@@ -6707,7 +6576,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/9c71f6e2352b428784f91e8247db714e"},
     {id:5847,year:2025,tier:"Bronze",campaign:"The Flipper",
      brand:"Heineken",
-     agency:"LePub",country:"Netherlands",grad:"g5847",
+     agency:"Lepub",country:"Netherlands",grad:"g5847",
      desc:"A phone case prototype built by LePub Milan and LePub Amsterdam that detects the word \"cheers\" via onboard voice-recognition AI and physically flips the phone face-down, cutting off notifications and work applications at the moment a drink is raised. Anyone without the physical device is invited to flip their phone face-down the old-fashioned way \u2014 by hand.",
      tags:["Creator Collaboration", "Netherlands"],
      keywords:["beer", "alcohol", "product-design", "ai", "technology", "social-media", "creator-collaboration", "netherlands", "irl-connection", "mobile"],
@@ -6783,7 +6652,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/e56e744cd3594eceb82733246e9035b2"},
     {id:2204,year:2025,tier:"Gold",campaign:"Caption with Intention",
-     brand:"Academy of Motion Picture Arts & Sciences",
+     brand:"Academy of Motion Picture Arts & Sciences - Rakish - Chicago Hearing Society",
      agency:"FCB Chicago",country:"United States",grad:"g2204",
      desc:"A caption design system for film and television that moves beyond static white text \u2014 word-by-word sync pairs with expressive typography, where type weight, color, and motion signal volume, tone, and speaker identity. Developed by FCB Chicago in close partnership with the Chicago Hearing Society, Rakish, and the Academy of Motion Picture Arts and Sciences, which adopted it as a new standard for cinematic accessibility.",
      tags:["Diversity & Inclusion in Entertainment", "United States"],
@@ -6815,7 +6684,7 @@ const DATA = {
 
     // SILVER,
     {id:2207,year:2025,tier:"Silver",campaign:"Lap of Legends",
-     brand:"Michelob Ultra",
+     brand:"AB Inbev - Michelob Ultra",
      agency:"FCB New York",country:"United States",grad:"g2207",
      desc:"A real-versus-virtual Formula 1 race in which Williams driver Logan Sargeant drove his own car on a live track against AI avatars of Nigel Mansell and Mario Andretti \u2014 virtual drivers reconstructed from 45 years of historical race data, visible to Sargeant through an AR-equipped racing helmet. Broadcast on AMC, Roku, and BBC America.",
      tags:["Innovation in Branded Content", "United States"],
@@ -6845,7 +6714,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/76013060c8dd4eaab1a92bf04d89af79"},
     {id:2210,year:2025,tier:"Silver",campaign:"Caption with Intention",
-     brand:"Academy of Motion Picture Arts & Sciences",
+     brand:"Academy of Motion Picture Arts & Sciences - Rakish - Chicago Hearing Society",
      agency:"FCB Chicago",country:"United States",grad:"g2210",
      desc:"A caption design system for film and television that moves beyond static white text \u2014 word-by-word sync pairs with expressive typography, where type weight, color, and motion signal volume, tone, and speaker identity. Developed by FCB Chicago in close partnership with the Chicago Hearing Society, Rakish, and the Academy of Motion Picture Arts and Sciences, which adopted it as a new standard for cinematic accessibility.",
      tags:["Cultural Engagement", "United States"],
@@ -6875,7 +6744,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/60aa1888e5b6444381b060dc1801de84"},
     {id:2213,year:2025,tier:"Silver",campaign:"The Shooting",
-     brand:"La Uni\u00f3n Newspaper",
+     brand:"La Uni\u00f3n Newspaper / Articulo 19",
      agency:"Grey",country:"Mexico",grad:"g2213",
      desc:"A short film produced by Grey M\u00e9xico for La Uni\u00f3n newspaper and Article 19 in which a journalist holding a camera and a gunman holding a pistol face each other across the same frame \u2014 built around the double meaning that journalists \"shoot\" to expose truth while others shoot to silence them. Shot entirely on real locations in Mexico with actors who had personal ties to violence and journalism, the film responds to a context in which more than 200 journalists have been murdered or disappeared in Mexico since 2000, including La Uni\u00f3n founder Mois\u00e9s S\u00e1nchez.",
      tags:["Fiction Film: Up to 5 minutes", "Mexico"],
@@ -6968,7 +6837,7 @@ const DATA = {
      imgUrl:"digital-presentation-images/entertainment-axa-group-therapy.webp"},
     {id:2222,year:2025,tier:"Bronze",campaign:"Starring Bars",
      brand:"Heineken",
-     agency:"LePub",country:"Italy",grad:"g2222",
+     agency:"Lepub",country:"Italy",grad:"g2222",
      desc:"A global production policy Heineken adopted to film all of its commercials inside real partner bars that need financial support \u2014 turning the bars into paid sets and giving them rental income, a production makeover, and international visibility. When not serving customers, the venues serve as locations, with Heineken's ad spend flowing directly to struggling hospitality businesses.",
      tags:["Brand Partnerships, Sponsorships & Collaborations", "Italy"],
      keywords:["beer", "alcohol", "cross-channel", "branded-content", "hospitality", "b2b", "business", "global", "production", "lepub"],
@@ -7501,7 +7370,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/59c61cb1e6984e748ed9ff58ce4d2280"},
     {id:2823,year:2025,tier:"Bronze",campaign:"Excuses Bars",
      brand:"Heineken",
-     agency:"LePub",country:"Italy",grad:"g2823",
+     agency:"Lepub",country:"Italy",grad:"g2823",
      desc:"A network of bars positioned near football stadiums in Italy where Heineken invited fans to watch away matches they had used excuses to skip \u2014 the bars gave those fans a plausible alibi location while still watching the game live. LePub Milan built the concept around the well-documented habit of football fans inventing reasons to miss matches they'd rather watch from a bar than attend in person.",
      tags:["Fan Engagement/Distribution Strategy", "Italy"],
      keywords:["beer", "alcohol", "fan-engagement", "bar-activation", "sports-marketing", "football", "soccer", "sport", "italy", "branded-venue", "lepub"],
@@ -7545,7 +7414,7 @@ const DATA = {
 
     // GRAND PRIX,
     {id:201,year:2025,tier:"Grand Prix",campaign:"Caption with Intention",
-     brand:"Academy of Motion Picture Arts & Sciences",
+     brand:"Academy of Motion Picture Arts & Sciences / Chicago Hearing Society",
      agency:"FCB Chicago",country:"United States",grad:"g201",
      desc:"A design system for film and television captions that pairs word-by-word sync with expressive typography \u2014 type weight, color, and motion communicate volume, tone, and which character is speaking. Built over six years in partnership with the Deaf and Hard of Hearing community, it was adopted by the Academy as the standard for Oscar submissions and earned a technology Oscar.",
      tags:["A05 - Media/Entertainment", "United States"],
@@ -7669,7 +7538,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/650a86946acf45c9946d15c4d5f10c86"},
     {id:213,year:2025,tier:"Silver",campaign:"Caption with Intention",
-     brand:"Academy of Motion Picture Arts & Sciences",
+     brand:"Academy of Motion Picture Arts & Sciences / Chicago Hearing Society",
      agency:"FCB Chicago",country:"United States",grad:"g213",
      desc:"A design system for film and television captions that pairs word-by-word sync with expressive typography \u2014 type weight, color, and motion communicate volume, tone, and which character is speaking. Built over six years in partnership with the Deaf and Hard of Hearing community, it was adopted by the Academy as the standard for Oscar submissions and earned a technology Oscar.",
      tags:["E09 - Cultural Engagement", "United States"],
@@ -7810,7 +7679,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/8a8d409a0e954a6b8f0df7b07bba8cc9"},
     {id:227,year:2025,tier:"Silver",campaign:"Pub Succession",
      brand:"Heineken",
-     agency:"LePub Milan",country:"Italy",grad:"g227",
+     agency:"LePub Milan / Publicis Dublin",country:"Italy",grad:"g227",
      desc:"A global recruitment campaign to find a new owner for McLoughlin's Bar, a 155-year-old family pub on Ireland's Achill Island whose fourth-generation publican is retiring with no successor \u2014 but only candidates named McLoughlin can apply. Launched on St Patrick's Day and pushed everywhere from Times Square to The New York Times.",
      tags:["D03 - Brand-Owned Experiences", "Italy"],
      keywords:["pr", "integrated", "ooh", "beer", "alcohol", "ireland", "recruitment", "cultural-engagement", "partnership"],
@@ -7890,7 +7759,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/dc69ba18c3b64ddfa564f09dc300d7e0"},
     {id:235,year:2025,tier:"Silver",campaign:"Time to Live",
      brand:"Australian Cancer Research Foundation",
-     agency:"The Ministry for Communication & the Arts",country:"Australia",grad:"g235",
+     agency:"The Ministry for Communication & The Arts",country:"Australia",grad:"g235",
      desc:"An immersive exhibition at Sydney's Carriageworks where visitors sat one-on-one with Emily \u2014 a terminally ill woman \u2014 for the three minutes a projected countdown clock gave them, before having to leave. The setup forced strangers into the experience of running out of time with someone who is dying, and routed donations to the Australian Cancer Research Foundation.",
      tags:["E06 - Breakthrough on a Budget", "Australia"],
      keywords:["not-for-profit", "charity", "ngo", "social-good", "exhibition", "immersive", "cancer", "healthcare", "medical", "fundraising", "australia", "live-experience"],
@@ -7922,7 +7791,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/db51bea9a01d40108f74e1fa9bd7ad3f"},
     {id:238,year:2025,tier:"Bronze",campaign:"Bad Luck Reverser",
      brand:"Refisal",
-     agency:"VML New York",country:"Colombia",grad:"g238",
+     agency:"VML New York / NAME Bogota",country:"Colombia",grad:"g238",
      desc:"A line of team-branded salt packets \u2014 one for each of Colombia's 20 top-flight football clubs, plus a national-team edition \u2014 built around the local superstition of tossing salt over your shoulder to reverse bad luck. Distributed through bodegas and stadiums, the pack put a pantry staple inside the matchday ritual.",
      tags:["E04 - Social Behaviour", "Colombia"],
      keywords:["packaging", "sport", "football", "soccer", "packaged-goods", "cpg", "fmcg", "retail", "colombia", "partnership", "social-behaviour"],
@@ -7951,7 +7820,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/abab04c347304d2a9a3b75bd9d3a0a79"},
     {id:241,year:2025,tier:"Bronze",campaign:"Caption with Intention",
-     brand:"Academy of Motion Picture Arts & Sciences",
+     brand:"Academy of Motion Picture Arts & Sciences / Chicago Hearing Society",
      agency:"FCB Chicago",country:"United States",grad:"g241",
      desc:"A design system for film and television captions that pairs word-by-word sync with expressive typography \u2014 type weight, color, and motion communicate volume, tone, and which character is speaking. Built over six years in partnership with the Deaf and Hard of Hearing community, it was adopted by the Academy as the standard for Oscar submissions and earned a technology Oscar.",
      tags:["E07 - Corporate Purpose", "United States"],
@@ -8031,7 +7900,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"digital-presentation-images/brand-experience-and-activation-twix-harmoniser.webp"},
     {id:249,year:2025,tier:"Bronze",campaign:"Lap of Legends",
-     brand:"Michelob Ultra",
+     brand:"AB InBev - Michelob Ultra",
      agency:"FCB New York",country:"United States",grad:"g249",
      desc:"A real-versus-virtual Formula 1 race in which Williams driver Logan Sargeant drove his own car on a live track against AI avatars of Nigel Mansell and Mario Andretti \u2014 virtual drivers reconstructed from 45 years of historical race data, visible to Sargeant through an AR-equipped racing helmet. Broadcast on AMC, Roku, and BBC America.",
      tags:["B09 - Tech-Led Brand Experience", "United States"],
@@ -8041,7 +7910,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/f6e7f0cb16774f6cb600e22c0c3bdfde"},
     {id:250,year:2025,tier:"Bronze",campaign:"Lynx with Catnip",
-     brand:"Axe/Lynx",
+     brand:"AXE/Lynx",
      agency:"Lola MullenLowe Madrid",country:"Spain",grad:"g250",
      desc:"A limited-edition Lynx body spray infused with nepetalactone \u2014 the compound that makes cats roll on catnip \u2014 designed to win over a date's cat. Built around the insight that a majority of cat owners say a cat's reaction can break a dating prospect.",
      tags:["D05 - Launch/Relaunch", "Spain"],
@@ -8061,7 +7930,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/ad05d5ee96d64b4bbff51d2ad0b8ea59"},
     {id:252,year:2025,tier:"Bronze",campaign:"Other Hand",
-     brand:"Cheetos",
+     brand:"Cheetos | PepsiCo",
      agency:"Goodby Silverstein & Partners",country:"United States",grad:"g252",
      desc:"A custom Cheetos font drawn entirely with the designer's non-dominant hand, built around the data point that 99% of people eat Cheetos with their dominant hand. Goodby Silverstein founder Rich Silverstein and his team drew the letterforms left-handed; the typeface shipped as a free download on National Handwriting Day.",
      tags:["A01 - Consumer Goods", "United States"],
@@ -8071,7 +7940,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/c26e38ccd1ea4f2eae3e55a7d0c74a7c"},
     {id:253,year:2025,tier:"Bronze",campaign:"Other Hand",
-     brand:"Cheetos",
+     brand:"Cheetos | PepsiCo",
      agency:"Goodby Silverstein & Partners",country:"United States",grad:"g253",
      desc:"A custom Cheetos font drawn entirely with the designer's non-dominant hand, built around the data point that 99% of people eat Cheetos with their dominant hand. Goodby Silverstein founder Rich Silverstein and his team drew the letterforms left-handed; the typeface shipped as a free download on National Handwriting Day.",
      tags:["D06 - 360 Integrated", "United States"],
@@ -8201,7 +8070,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/a8b9edfd44de47b893b950770030cf54"},
     {id:266,year:2025,tier:"Bronze",campaign:"The Social Feed",
-     brand:"HungerStation",
+     brand:"Hungerstation",
      agency:"VML Dubai",country:"United Arab Emirates",grad:"g266",
      desc:"A direct-message feature on Saudi food-delivery app HungerStation that lets users forward any food photo from Instagram, TikTok, or Snapchat into the app. AI identifies the dish, finds the nearest restaurant on the platform that serves it, and opens an order \u2014 converting a 135-times-a-day social-media food crave into a tap.",
      tags:["B01 - Social Engagement", "United Arab Emirates"],
@@ -8282,7 +8151,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"digital-presentation-images/creative-business-transformation-ifood-recipe-for-growth.webp"},
     {id:606,year:2025,tier:"Bronze",campaign:"It's a Cheetos Thing",
-     brand:"Cheetos",
+     brand:"Cheetos | Pepsico",
      agency:"Goodby Silverstein & Partners",country:"United States",grad:"g606",
      desc:"A long-term brand platform built around the orange dust \u2014 \"Cheetle\" \u2014 that coats fingers after eating Cheetos, repositioning the mess as the reason fans eat with their non-dominant hand and leave orange prints on everything they touch. The platform spans Super Bowl TV spots featuring MC Hammer and Simu Liu, OOH highlighting left-handed Cheetos eaters, a hands-free experience at SXSW, and a courtside celebrity stunt, all anchored to the shared behavior as a badge of fandom.",
      tags:["Long-Term Brand Platform", "United States"],
@@ -8293,7 +8162,7 @@ const DATA = {
      imgUrl:"digital-presentation-images/creative-business-transformation-cheetos-pepsico-its-a-cheetos-thing.webp"},
     {id:607,year:2025,tier:"Bronze",campaign:"Backing the Bars",
      brand:"Heineken",
-     agency:"LePub",country:"Italy",grad:"g607",
+     agency:"Lepub",country:"Italy",grad:"g607",
      desc:"A long-term brand platform Heineken built to financially support bars during Covid-19 lockdowns, when on-premise venues were forced to close across multiple markets. Run across offices including LePub Milan, LePub S\u00e3o Paulo, LePub Amsterdam, Publicis Dublin, and Publicis Argentina, the program tied Heineken's brand activity directly to the survival of the bar industry it depends on.",
      tags:["Long-Term Brand Platform", "Italy"],
      keywords:["beer", "alcohol", "long-term-platform", "brand-platform", "covid-19", "bars-and-hospitality", "italy", "multi-market", "b2b", "business"],
@@ -8381,7 +8250,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/8782875c907847289e66a9d52a2b2ec8"},
     {id:808,year:2025,tier:"Silver",campaign:"The Social Feed",
-     brand:"HungerStation",
+     brand:"Hungerstation",
      agency:"VML",country:"United Arab Emirates",grad:"g808",
      desc:"A direct-message feature on Saudi food-delivery app HungerStation that lets users forward any food photo from Instagram, TikTok, or Snapchat into the app. AI identifies the dish, finds the nearest restaurant on the platform that serves it, and opens an order \u2014 converting a 135-times-a-day social-media food crave into a tap.",
      tags:["Social Behaviour", "United Arab Emirates"],
@@ -8484,7 +8353,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/33bdcd0b6d9f488bb4f5fc588536ffbd"},
     {id:818,year:2025,tier:"Bronze",campaign:"Bar Dating \u2013 Powered by Hei!",
      brand:"Heineken",
-     agency:"LePub",country:"Brazil",grad:"g818",
+     agency:"Lepub",country:"Brazil",grad:"g818",
      desc:"A feature built into Heineken's Hei! app that works like a dating app for bars \u2014 matching first-time visitors to venues they haven't tried before, based on their preferences. The mechanic was designed around the insight that regulars spend 35% less per visit than first-time customers, giving bars a direct tool to attract new foot traffic.",
      tags:["Social Behaviour", "Brazil"],
      keywords:["beer", "alcohol", "mobile-app", "bar-discovery", "social-behaviour", "brazil", "dating-mechanic", "out-of-home"],
@@ -8518,7 +8387,7 @@ const DATA = {
 
     // GRAND PRIX,
     {id:4401,year:2025,tier:"Grand Prix",campaign:"Sounds Right",
-     brand:"Museum for the United Nations - UN Live",
+     brand:"Museum for the United Nations - UN Live, Spotify",
      agency:"AKQA",country:"Denmark",grad:"g4401",
      desc:"A Spotify initiative, developed by AKQA for Museum for the United Nations \u2013 UN Live, that registers NATURE as an official credited artist on the platform \u2014 so that existing songs featuring natural soundscapes, from artists including V of BTS, David Bowie, Brian Eno, AURORA, and Ellie Goulding, list NATURE as a collaborator with its own verified artist profile. Streaming royalties attributed to NATURE's credit are directed toward nature conservation funding.",
      tags:["Environmental Innovation", "Denmark"],
@@ -8530,7 +8399,7 @@ const DATA = {
 
     // GOLD,
     {id:4402,year:2025,tier:"Gold",campaign:"Caption with Intention",
-     brand:"Academy of Motion Picture Arts & Sciences",
+     brand:"Academy of Motion Picture Arts & Sciences - Rakish - Chicago Hearing Society",
      agency:"FCB Chicago",country:"United States",grad:"g4402",
      desc:"A caption design system for film and television that moves beyond static white text \u2014 word-by-word sync pairs with expressive typography, where type weight, color, and motion signal volume, tone, and speaker identity. Developed by FCB Chicago in close partnership with the Chicago Hearing Society, Rakish, and the Academy of Motion Picture Arts and Sciences, which adopted it as a new standard for cinematic accessibility.",
      tags:["Societal Innovation", "United States"],
@@ -8656,7 +8525,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/d6d662c2af9b477e9d70359dc900be0f"},
     {id:4606,year:2025,tier:"Bronze",campaign:"The Everlasting Logo",
      brand:"Bottega Veneta",
-     agency:"LePub",country:"Italy",grad:"g4606",
+     agency:"Lepub",country:"Italy",grad:"g4606",
      desc:"An installation at Shanghai's historic Rowing Club built from 20,000 copies of a poetry collection written specifically for the event by Chinese poet Yu Xiuhua \u2014 the stacked volumes arranged to form Bottega Veneta's logo. The books were both the structure and the distribution object, making the brand mark out of literature rather than signage.",
      tags:["Experience", "Italy"],
      keywords:["luxury-fashion", "installation", "experiential", "china", "publishing", "ooh", "branded-event"],
@@ -8819,7 +8688,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/01a0aba05ed745cf8b40b9f6719fff6a"},
     {id:6004,year:2025,tier:"Gold",campaign:"Recipe for Change",
      brand:"Arla",
-     agency:"FP7 McCann",country:"United Arab Emirates",grad:"g6004",
+     agency:"FP7 McCANN",country:"United Arab Emirates",grad:"g6004",
      desc:"A licensing program that turned Lebanese women's family recipes into restaurant intellectual property. Lebanese and fusion restaurants across the UAE served the dishes through March 2025 with half of each dish's profit flowing back to the cook, framing home cooking as an export and a source of income for displaced families.",
      tags:["Poverty", "United Arab Emirates"],
      keywords:["food", "sdg", "partnership", "restaurant", "social-good", "middle-east", "lebanon", "licensing"],
@@ -8828,7 +8697,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/d51c95f53aaf474ba9faba5a10094bd0"},
     {id:6005,year:2025,tier:"Gold",campaign:"Sounds Right",
-     brand:"Museum for the United Nations - UN Live",
+     brand:"Museum for the United Nations - UN Live, Spotify",
      agency:"AKQA",country:"Denmark",grad:"g6005",
      desc:"A Spotify initiative, developed by AKQA for Museum for the United Nations \u2013 UN Live, that registers NATURE as an official credited artist on the platform \u2014 so that existing songs featuring natural soundscapes, from artists including V of BTS, David Bowie, Brian Eno, AURORA, and Ellie Goulding, list NATURE as a collaborator with its own verified artist profile. Streaming royalties attributed to NATURE's credit are directed toward nature conservation funding.",
      tags:["Climate Action", "Denmark"],
@@ -9191,7 +9060,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/cddc5ccda6a24baeaf4e5cb205c9bb46"},
     {id:3824,year:2025,tier:"Bronze",campaign:"The Shaded Route",
-     brand:"HungerStation",
+     brand:"Hungerstation",
      agency:"VML",country:"Saudi Arabia",grad:"g3824",
      desc:"A routing feature built into the HungerStation delivery app that calculates the shadiest path between pickup and drop-off points across Saudi Arabia \u2014 plotting roads and turns that maximize shade cover during each journey. The feature uses real-time sun position data alongside mapped building and infrastructure footprints to dynamically update routes as conditions change throughout the day.",
      tags:["Mobile - Health & Wellness Tech", "Saudi Arabia"],
@@ -9507,7 +9376,7 @@ const DATA = {
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/79595be993234fda94d72414b4e673e2"},
     {id:1210,year:2025,tier:"Silver",campaign:"Refurb",
      brand:"Philips",
-     agency:"LePub",country:"Netherlands",grad:"g1210",
+     agency:"Lepub",country:"Netherlands",grad:"g1210",
      desc:"A refurbished product line launched by Philips \u2014 the Refurb Edition \u2014 repackaged and sold alongside new products, with campaign imagery shot by Italian image-only magazine Toiletpaper to position reconditioned electronics as a deliberate consumer choice rather than a compromise. The creative, developed by LePub Amsterdam, ran as an integrated campaign across the Netherlands challenging the assumption that new always means better.",
      tags:["Consumer Goods", "Netherlands"],
      keywords:["consumer-electronics", "integrated", "sustainability", "refurbished", "packaging", "netherlands", "print", "experiential"],
@@ -9615,7 +9484,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"digital-presentation-images/creative-strategy-asuniwa-sato-2531.webp"},
     {id:1403,year:2025,tier:"Gold",campaign:"Humanimal Tourism",
-     brand:"ProColombia",
+     brand:"Procolombia",
      agency:"DDB Colombia",country:"Colombia",grad:"g1403",
      desc:"A tourism model built on matching the migratory patterns, habitats, and behavioral data of Colombia's endemic animal species to travel itineraries \u2014 so visitors follow the same routes as humpback whales, spectacled bears, or poison dart frogs through the country's ecosystems. DDB Colombia developed the system for ProColombia as a data-driven alternative to conventional destination marketing, using biodiversity as the navigation layer for human travel.",
      tags:["Data & Analytics", "Colombia"],
@@ -9707,7 +9576,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"digital-presentation-images/creative-strategy-dramamine-the-last-barf-bag.webp"},
     {id:1412,year:2025,tier:"Silver",campaign:"It's a Cheetos Thing",
-     brand:"Cheetos",
+     brand:"Cheetos | Pepsico",
      agency:"Goodby Silverstein & Partners",country:"United States",grad:"g1412",
      desc:"A long-term brand platform built around the orange dust \u2014 \"Cheetle\" \u2014 that coats fingers after eating Cheetos, repositioning the mess as the reason fans eat with their non-dominant hand and leave orange prints on everything they touch. The platform spans Super Bowl TV spots featuring MC Hammer and Simu Liu, OOH highlighting left-handed Cheetos eaters, a hands-free experience at SXSW, and a courtside celebrity stunt, all anchored to the shared behavior as a badge of fandom.",
      tags:["Long-Term Brand Platform", "United States"],
@@ -9780,7 +9649,7 @@ const DATA = {
      imgUrl:"digital-presentation-images/creative-strategy-unilever-transition-body-lotion.webp"},
     {id:1419,year:2025,tier:"Bronze",campaign:"Pub Museums",
      brand:"Heineken",
-     agency:"LePub",country:"Italy",grad:"g1419",
+     agency:"Lepub",country:"Italy",grad:"g1419",
      desc:"A legal reclassification scheme that registered historic Irish pubs as virtual museums under the Irish Heritage Council's protected-status framework \u2014 a designation that unlocks tax support and financial benefits for sites open to the public. By creating navigable online museum experiences for qualifying pubs, Heineken and Publicis Dublin allowed struggling venues to access the same institutional protections given to heritage buildings.",
      tags:["Corporate Purpose & Social Responsibility", "Italy"],
      keywords:["beer", "alcohol", "ireland", "digital", "heritage", "single-market-campaign", "public-relations", "branded-utility", "lepub"],
@@ -9819,7 +9688,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"digital-presentation-images/creative-strategy-1001-optometry-the-hidden-eye-test.webp"},
     {id:1423,year:2025,tier:"Bronze",campaign:"Sounds Right",
-     brand:"Museum for the United Nations - UN Live",
+     brand:"Museum for the United Nations - UN Live, Spotify",
      agency:"AKQA",country:"Denmark",grad:"g1423",
      desc:"A Spotify initiative, developed by AKQA for Museum for the United Nations \u2013 UN Live, that registers NATURE as an official credited artist on the platform \u2014 so that existing songs featuring natural soundscapes, from artists including V of BTS, David Bowie, Brian Eno, AURORA, and Ellie Goulding, list NATURE as a collaborator with its own verified artist profile. Streaming royalties attributed to NATURE's credit are directed toward nature conservation funding.",
      tags:["Media/Entertainment", "Denmark"],
@@ -9916,7 +9785,7 @@ const DATA = {
      caseUrl:"",
      imgUrl:"https://ascentialcdn.filespin.io/api/v1/conversion/faf0755b0d4e4594ad93cb75d6288e3d"},
     {id:6204,year:2025,tier:"Titanium",campaign:"Caption with Intention",
-     brand:"Academy of Motion Picture Arts & Sciences",
+     brand:"Academy of Motion Picture Arts & Sciences - Rakish - Chicago Hearing Society",
      agency:"FCB Chicago",country:"United States",grad:"g6204",
      desc:"A caption design system for film and television that moves beyond static white text \u2014 word-by-word sync pairs with expressive typography, where type weight, color, and motion signal volume, tone, and speaker identity. Developed by FCB Chicago in close partnership with the Chicago Hearing Society, Rakish, and the Academy of Motion Picture Arts and Sciences, which adopted it as a new standard for cinematic accessibility.",
      tags:["Titanium", "United States"],
@@ -10546,8 +10415,7 @@ function selCat(el){
   document.querySelectorAll(".fb").forEach(b=>b.classList.remove("on"));
   document.querySelector('.fb[data-t="all"]').classList.add("on");
   curIdx = 0;
-  if(typeof mode !== 'undefined' && mode === 'insights') renderInsights();
-  else refresh();
+  refresh();
   closeDrawer();   // mobile: collapse the category drawer after a pick
 }
 
@@ -10610,8 +10478,7 @@ document.addEventListener("click", ev => {
 function selYear(v){
   curYear = (v === "all") ? "all" : Number(v);
   curIdx = 0;
-  if(typeof mode !== 'undefined' && mode === 'insights') renderInsights();
-  else refresh();
+  refresh();
 }
 
 // ─────────────────────────────────────────────
@@ -10756,10 +10623,6 @@ function refresh(){
   // Year filter (applied before dedup so cards merge within the chosen year).
   if(curYear !== "all" && curYear != null){
     raw = raw.filter(e => Number(e.year) === Number(curYear));
-  }
-  // Entity filter (brand/agency/country picked from the Insights leaderboard)
-  if(typeof curEntityFilter !== 'undefined' && curEntityFilter){
-    raw = raw.filter(e => e[curEntityFilter.field] === curEntityFilter.value);
   }
   const deduped = dedup(raw);
   // Tier filter (mutually exclusive: All / Grand Prix / Gold / Silver / Bronze)
@@ -11157,243 +11020,6 @@ initYearSelect();
 
 // Init Firebase for global likes
 initFirebase();
-
-// ─────────────────────────────────────────────
-// INSIGHTS VIEW — leaderboards over DATA
-// ─────────────────────────────────────────────
-let mode = "grid";  // "grid" or "insights"
-let curEntityFilter = null;  // null or {field: 'brand'|'agency'|'country', value: '...'}
-
-function setEntityFilter(field, value){
-  curEntityFilter = {field, value};
-  mode = 'grid';
-  document.querySelectorAll('.sb-view').forEach(c => c.classList.remove('on'));
-  document.querySelector('.sb-view[data-view="grid"]').classList.add('on');
-  document.getElementById('main').classList.remove('mode-insights');
-  curIdx = 0;
-  updateEntityFilterChip();
-  refresh();
-}
-
-function clearEntityFilter(){
-  curEntityFilter = null;
-  curIdx = 0;
-  updateEntityFilterChip();
-  refresh();
-}
-
-function updateEntityFilterChip(){
-  const chip = document.getElementById('entity-filter-chip');
-  if(!chip) return;
-  if(curEntityFilter){
-    const labels = {brand:'Brand', agency:'Agency', country:'Country'};
-    chip.innerHTML =
-      `<span class="ef-chip-label">${labels[curEntityFilter.field]}:</span>` +
-      `<span class="ef-chip-value" title="${curEntityFilter.value.replace(/"/g,'&quot;')}">${curEntityFilter.value}</span>` +
-      `<button class="ef-chip-x" onclick="clearEntityFilter()" aria-label="Clear filter">&times;</button>`;
-    chip.classList.add('on');
-  } else {
-    chip.classList.remove('on');
-  }
-}
-const insightsState = {
-  entity: "brand",
-  sort:   { brand: "total", agency: "total", country: "total" },
-  dir:    { brand: "desc",  agency: "desc",  country: "desc"  },
-};
-const IV_TOP_N = 20;
-const IV_NARROW_PCT = 2.5;
-const IV_FILL_CAP   = 100;
-const IV_TIER_KEYS = ['gp','g','s','b'];
-const IV_TIER_LABEL = {gp:'Grand Prix', g:'Gold', s:'Silver', b:'Bronze'};
-const IV_TIER_CLASS = {gp:'iv-bar-seg-gp', g:'iv-bar-seg-g', s:'iv-bar-seg-s', b:'iv-bar-seg-b'};
-const IV_ENTITY_LABEL = {brand:'Brand', agency:'Agency', country:'Country'};
-const IV_ENTITY_PLURAL_TITLE = {brand:'Brands', agency:'Agencies', country:'Countries'};
-const IV_ENTITY_PLURAL = {brand:'brands', agency:'agencies', country:'countries'};
-
-function ivTierBucket(t){
-  if(t === 'Grand Prix' || t === 'Titanium Grand Prix') return 'gp';
-  if(t === 'Gold' || t === 'Titanium') return 'g';
-  if(t === 'Silver') return 's';
-  if(t === 'Bronze') return 'b';
-  return null;
-}
-
-// Sidebar view switcher (Browse / Insights). Independent active state from .sb-cat.
-function selView(el){
-  document.querySelectorAll('.sb-view').forEach(c => c.classList.remove('on'));
-  el.classList.add('on');
-  mode = el.dataset.view;
-  const main = document.getElementById('main');
-  if(mode === 'insights'){
-    main.classList.add('mode-insights');
-    renderInsights();
-  } else {
-    main.classList.remove('mode-insights');
-    refresh();
-  }
-  closeDrawer();
-}
-
-// Pull all raw award rows from the live DATA, scoped by curCat and curYear.
-function ivCollectRecords(){
-  let records = [];
-  if(curCat === 'All'){
-    for(const [cat, items] of Object.entries(DATA)){
-      for(const e of items){
-        if(!e) continue;
-        records.push(e);
-      }
-    }
-  } else {
-    records = DATA[curCat] || [];
-  }
-  if(curYear !== 'all' && curYear != null){
-    records = records.filter(r => Number(r.year) === Number(curYear));
-  }
-  return records;
-}
-
-function ivComputeLeaderboard(field){
-  const acc = new Map();
-  for(const r of ivCollectRecords()){
-    const name = r[field];
-    if(!name) continue;
-    const bucket = ivTierBucket(r.tier);
-    if(!bucket) continue;
-    let row = acc.get(name);
-    if(!row){ row = {name, gp:0, g:0, s:0, b:0, total:0}; acc.set(name, row); }
-    row[bucket]++;
-    row.total++;
-  }
-  return [...acc.values()];
-}
-
-function ivBarHtml(r, maxTotal){
-  const fillPct = (r.total / maxTotal) * IV_FILL_CAP;
-  if(r.total === 0) return '<div class="iv-bar-area"><div class="iv-bar-track"></div></div>';
-  const segData = [];
-  for(const k of IV_TIER_KEYS){
-    const v = r[k];
-    if(v === 0) continue;
-    const segPctOfRow = (v / r.total) * 100;
-    const widthPctOfCol = segPctOfRow * fillPct / 100;
-    segData.push({tier:k, val:v, segPctOfRow, widthPctOfCol});
-  }
-  const segs = segData.map(s => {
-    const inside = s.widthPctOfCol >= IV_NARROW_PCT ? s.val : '';
-    const title  = `${s.val} ${IV_TIER_LABEL[s.tier]}`;
-    return `<div class="iv-bar-seg ${IV_TIER_CLASS[s.tier]}" style="flex-basis:${s.segPctOfRow}%" data-tier="${s.tier}" data-val="${s.val}" title="${title}">${inside}</div>`;
-  }).join('');
-  const narrow = segData.filter(s => s.widthPctOfCol < IV_NARROW_PCT);
-  let right = '';
-  if(narrow.length > 0){
-    const items = narrow.map(s => `<span data-tier="${s.tier}">${s.val} ${IV_TIER_LABEL[s.tier]}</span>`);
-    right = `<div class="iv-bar-right" style="left:${fillPct}%">${items.join('<span class="sep">·</span>')}</div>`;
-  }
-  return `<div class="iv-bar-area"><div class="iv-bar-track"><div class="iv-bar-fill" style="width:${fillPct}%">${segs}</div></div>${right}</div>`;
-}
-
-function ivEscape(s){
-  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-
-function ivApplySort(key, opts){
-  opts = opts || {};
-  const entity = insightsState.entity;
-  if(opts.toggleOnly){
-    insightsState.dir[entity] = insightsState.dir[entity] === 'desc' ? 'asc' : 'desc';
-  } else if(insightsState.sort[entity] === key){
-    insightsState.dir[entity] = insightsState.dir[entity] === 'desc' ? 'asc' : 'desc';
-  } else {
-    insightsState.sort[entity] = key;
-    insightsState.dir[entity] = 'desc';
-  }
-  renderInsights();
-}
-
-function renderInsights(){
-  const entity  = insightsState.entity;
-  const all     = ivComputeLeaderboard(entity);
-  const sortKey = insightsState.sort[entity];
-  const dir     = insightsState.dir[entity] === 'asc' ? 1 : -1;
-  all.sort((a,b)=>{
-    const d = (a[sortKey] - b[sortKey]) * dir;
-    if(d !== 0) return d;
-    if(a.total !== b.total) return b.total - a.total;
-    return a.name.localeCompare(b.name);
-  });
-  const top = all.slice(0, IV_TOP_N);
-  const maxTotal = top.reduce((m,r)=>Math.max(m, r.total), 0) || 1;
-
-  // table
-  let html = '<colgroup><col class="col-rank"><col class="col-name"><col class="col-bar"><col class="col-total"></colgroup>';
-  const totalSortedCls = sortKey === 'total' ? ' sorted' : '';
-  const totalArrow = sortKey === 'total' ? (dir === -1 ? '▼' : '▲') : '';
-  html += `<thead><tr>
-    <th class="rank-col">#</th>
-    <th class="name-col">${IV_ENTITY_LABEL[entity]}</th>
-    <th class="bar-col">Medal mix</th>
-    <th class="${totalSortedCls}" data-key="total" style="cursor:pointer">Total<span class="iv-arrow">${totalArrow}</span></th>
-  </tr></thead><tbody>`;
-  for(let i = 0; i < top.length; i++){
-    const r = top[i];
-    html += `<tr>`;
-    html += `<td class="rank-col">${i+1}</td>`;
-    html += `<td class="name-col" title="${ivEscape(r.name)}">${ivEscape(r.name)}</td>`;
-    html += `<td class="iv-bar-cell">${ivBarHtml(r, maxTotal)}</td>`;
-    html += `<td class="cell-total">${r.total}</td>`;
-    html += `</tr>`;
-  }
-  html += '</tbody>';
-  const tbl = document.getElementById('iv-tbl');
-  tbl.innerHTML = html;
-
-  // total header click → sort by total
-  const totalTh = tbl.querySelector('thead th[data-key="total"]');
-  if(totalTh) totalTh.addEventListener('click', () => ivApplySort('total'));
-
-  // segment click → sort by that tier; highlight active tier segments
-  tbl.querySelectorAll('.iv-bar-seg').forEach(seg => {
-    const tier = seg.dataset.tier;
-    if(tier === sortKey) seg.classList.add('iv-bar-seg-active');
-    seg.addEventListener('click', e => {
-      e.stopPropagation();
-      ivApplySort(tier);
-    });
-  });
-
-  // row click → switch to grid mode filtered to that brand/agency/country
-  // (segment clicks stop propagation so they only sort; clicking the rank/name/total drills through)
-  tbl.querySelectorAll('tbody tr').forEach((tr, i) => {
-    const name = top[i] && top[i].name;
-    if(!name) return;
-    tr.addEventListener('click', () => setEntityFilter(entity, name));
-  });
-
-  // title + sub + sort indicator + meta
-  document.getElementById('iv-board-title').textContent = `Top ${IV_ENTITY_PLURAL_TITLE[entity]}`;
-  const scopeText = (curYear === 'all' || curYear == null ? 'all years' : curYear) + ' · ' + (curCat === 'All' ? 'all categories' : curCat);
-  document.getElementById('iv-board-sub').textContent = scopeText;
-  const sortLabel = sortKey === 'total' ? 'Total' : IV_TIER_LABEL[sortKey] || sortKey;
-  document.getElementById('iv-sort-key').textContent = sortLabel;
-  document.getElementById('iv-sort-arrow').textContent = dir === -1 ? '▼' : '▲';
-  document.getElementById('iv-meta').textContent = `${all.length.toLocaleString()} unique ${IV_ENTITY_PLURAL[entity]} · showing top ${Math.min(top.length, IV_TOP_N)}`;
-}
-
-// entity pill toggle
-document.querySelectorAll('#iv-pills .iv-pill').forEach(p => {
-  p.addEventListener('click', () => {
-    if(p.classList.contains('on')) return;
-    document.querySelectorAll('#iv-pills .iv-pill').forEach(x => x.classList.remove('on'));
-    p.classList.add('on');
-    insightsState.entity = p.dataset.entity;
-    renderInsights();
-  });
-});
-
-// click the sort indicator → flip direction
-document.getElementById('iv-sort-ind').addEventListener('click', () => ivApplySort(null, {toggleOnly:true}));
 </script>
 
 <!-- ════════════════════════════════════════════════════════════════
