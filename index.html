@@ -546,6 +546,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .iv-bar-right [data-tier="s"] {color:#a4b4cc}
 .iv-bar-right [data-tier="b"] {color:#d08e52}
 .iv-bar-right .sep{color:rgba(255,255,255,.15);font-weight:400}
+.iv-bar-right .iv-rabbr{display:none}  /* full tier words on desktop; abbreviations swap in on mobile */
 
 .iv-legend{display:flex;gap:14px;align-items:center;justify-content:flex-end;font-size:10px;color:rgba(255,255,255,.55);letter-spacing:.6px;text-transform:uppercase;font-weight:600;margin-top:14px;flex-wrap:wrap}
 .iv-legend .iv-item{display:inline-flex;align-items:center;gap:6px}
@@ -569,6 +570,26 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 @media(max-width:760px){
   #insights-view{padding:20px 18px 40px}
   .sb-cannes-wrap{padding:14px 12px 2px}
+}
+
+/* Phones: the fixed-width table starves the bar column, which made the header
+   text collide and pushed the medal labels onto the Total number. Trim column
+   widths/padding, shorten the tier labels, and the lower mobile fill cap (JS)
+   keeps the floating labels inside the bar column. */
+@media(max-width:600px){
+  .iv-board{padding:18px 14px 16px}
+  .iv-tbl{font-size:12px}
+  .iv-tbl col.col-rank{width:22px}
+  .iv-tbl col.col-name{width:92px}
+  .iv-tbl col.col-total{width:38px}
+  .iv-tbl thead th{letter-spacing:.3px;padding:8px 2px}
+  .iv-tbl thead th.bar-col{padding-left:6px}
+  .iv-tbl tbody td{padding:9px 2px}
+  .iv-tbl tbody td.name-col{padding-left:6px}
+  .iv-bar-cell{padding:8px 6px}
+  .iv-bar-right{padding-left:6px;gap:4px;font-size:10px}
+  .iv-bar-right .iv-rword{display:none}
+  .iv-bar-right .iv-rabbr{display:inline}
 }
 </style>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -11188,8 +11209,13 @@ var insightsState = {
 var IV_TOP_N = 20;
 var IV_NARROW_PCT = 2.5;
 var IV_FILL_CAP   = 100;
+// On phones the bar column is far narrower, so cap the fill lower to reserve a
+// right-hand gutter for the overflow medal labels (keeps them off the Total col).
+var IV_MOBILE_FILL_CAP = 58;
 var IV_TIER_KEYS  = ['gp','g','s','b'];
 var IV_TIER_LABEL = {gp:'Grand Prix', g:'Gold', s:'Silver', b:'Bronze'};
+var IV_TIER_ABBR  = {gp:'GP', g:'G', s:'S', b:'B'};
+function ivMobileBars(){ return window.innerWidth <= 600; }
 var IV_TIER_CLASS = {gp:'iv-bar-seg-gp', g:'iv-bar-seg-g', s:'iv-bar-seg-s', b:'iv-bar-seg-b'};
 var IV_ENTITY_LABEL = {brand:'Brand', agency:'Agency', country:'Country'};
 var IV_ENTITY_PLURAL_TITLE = {brand:'Brands', agency:'Agencies', country:'Countries'};
@@ -11252,7 +11278,7 @@ function ivComputeLeaderboard(field){
 }
 
 function ivBarHtml(r, maxTotal){
-  var fillPct = (r.total / maxTotal) * IV_FILL_CAP;
+  var fillPct = (r.total / maxTotal) * (ivMobileBars() ? IV_MOBILE_FILL_CAP : IV_FILL_CAP);
   if(r.total === 0) return '<div class="iv-bar-area"><div class="iv-bar-track"></div></div>';
   var segData = [];
   for(var i = 0; i < IV_TIER_KEYS.length; i++){
@@ -11271,7 +11297,7 @@ function ivBarHtml(r, maxTotal){
   var narrow = segData.filter(function(s){ return s.widthPctOfCol < IV_NARROW_PCT; });
   var right = '';
   if(narrow.length > 0){
-    var items = narrow.map(function(s){ return '<span data-tier="' + s.tier + '">' + s.val + ' ' + IV_TIER_LABEL[s.tier] + '</span>'; });
+    var items = narrow.map(function(s){ return '<span data-tier="' + s.tier + '">' + s.val + '<span class="iv-rword"> ' + IV_TIER_LABEL[s.tier] + '</span><span class="iv-rabbr"> ' + IV_TIER_ABBR[s.tier] + '</span></span>'; });
     right = '<div class="iv-bar-right" style="left:' + fillPct + '%">' + items.join('<span class="sep">·</span>') + '</div>';
   }
   return '<div class="iv-bar-area"><div class="iv-bar-track"><div class="iv-bar-fill" style="width:' + fillPct + '%">' + segs + '</div></div>' + right + '</div>';
@@ -11363,6 +11389,20 @@ function renderInsights(){
   document.getElementById('iv-sort-arrow').textContent = dir === -1 ? '▼' : '▲';
   document.getElementById('iv-meta').textContent = all.length.toLocaleString() + ' unique ' + IV_ENTITY_PLURAL[entity] + ' · showing top ' + Math.min(top.length, IV_TOP_N);
 }
+
+// Bar fill + medal labels are computed for the current breakpoint, so re-render
+// when the viewport crosses the mobile threshold while the insights view is open.
+var ivWasMobile = ivMobileBars();
+var ivResizeTimer = null;
+window.addEventListener('resize', function(){
+  clearTimeout(ivResizeTimer);
+  ivResizeTimer = setTimeout(function(){
+    var nowMobile = ivMobileBars();
+    if(nowMobile === ivWasMobile) return;
+    ivWasMobile = nowMobile;
+    if(document.getElementById('main').classList.contains('mode-insights')) renderInsights();
+  }, 150);
+});
 
 // Entity filter (set when a leaderboard row is clicked, cleared by the topbar chip × button)
 function setEntityFilter(field, value){
