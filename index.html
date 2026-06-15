@@ -470,6 +470,106 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   #mdl-swipe-hint.show{opacity:1;animation:swipeNudge 1.3s ease-in-out 2}
   @keyframes swipeNudge{0%,100%{transform:translateX(-50%)}25%{transform:translateX(calc(-50% - 9px))}75%{transform:translateX(calc(-50% + 9px))}}
 }
+
+/* ════════════════════════════════════════════════════════════════════
+   CANNESALYTICS — leaderboard view (Insights)
+   ════════════════════════════════════════════════════════════════════ */
+
+/* sidebar Cannesalytics button — single top-level entry, visually distinct from categories */
+.sb-cannes-wrap{padding:16px 14px 2px;margin-top:10px;border-top:1px solid rgba(255,255,255,0.06)}
+.sb-cannes{width:100%;display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;border:1px solid rgba(255,157,226,.32);background:rgba(255,157,226,.06);color:rgba(255,255,255,.82);cursor:pointer;font-family:var(--font);font-size:12px;font-weight:600;letter-spacing:.2px;transition:all var(--tr)}
+.sb-cannes-icon{font-size:13px;color:var(--holo-pink);opacity:.9;line-height:1}
+.sb-cannes:hover{background:rgba(255,157,226,.15);color:#fff;border-color:rgba(255,157,226,.5)}
+.sb-cannes.on{background:linear-gradient(135deg,rgba(255,157,226,.85),rgba(255,157,226,.55));color:#fff;border-color:transparent;box-shadow:0 2px 12px rgba(255,157,226,.25)}
+.sb-cannes.on .sb-cannes-icon{color:#fff;opacity:1}
+
+/* insights view container — sibling to #grid in #main */
+#insights-view{display:none;flex-direction:column;flex:1;min-height:0;overflow-y:auto;padding:32px 40px 64px}
+#main.mode-insights #grid{display:none}
+#main.mode-insights #topbar{display:none}
+#main.mode-insights #insights-view{display:flex}
+
+.iv-head{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,.08)}
+.iv-head h1{font-family:var(--font);font-weight:800;font-size:clamp(26px,3.5vw,36px);letter-spacing:-.5px;line-height:1.1;color:#fff}
+.iv-head .iv-tag{font-size:13px;color:rgba(255,255,255,.55);margin-top:8px;letter-spacing:.2px;line-height:1.5;max-width:680px}
+
+/* entity pills (Brand / Agency / Country) */
+.iv-pills{display:inline-flex;gap:0;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:50px;padding:4px;margin:22px 0 18px}
+.iv-pill{appearance:none;border:none;background:transparent;color:rgba(255,255,255,.55);font-family:var(--font);font-size:13px;font-weight:600;letter-spacing:.4px;padding:8px 22px;border-radius:50px;cursor:pointer;transition:all var(--tr)}
+.iv-pill:hover{color:#fff}
+.iv-pill.on{background:linear-gradient(135deg,rgba(255,157,226,.85),rgba(255,157,226,.6));color:#fff;box-shadow:0 2px 12px rgba(255,157,226,.25)}
+
+.iv-board{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:24px 24px 22px;max-width:940px}
+.iv-board .iv-sub{font-size:12px;color:rgba(255,255,255,.55);margin-bottom:14px;letter-spacing:.2px}
+
+.iv-sort-ind{font-size:11px;color:rgba(255,255,255,.55);margin-bottom:14px;letter-spacing:.3px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;user-select:none;transition:color var(--tr)}
+.iv-sort-ind:hover{color:#fff}
+.iv-sort-ind strong{color:#fff;font-weight:700}
+.iv-sort-ind .iv-arrow{font-size:9px;opacity:.8}
+.iv-sort-ind .iv-hint{color:rgba(255,255,255,.3);font-weight:400;margin-left:10px}
+
+.iv-tbl{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+.iv-tbl col.col-rank{width:38px}
+.iv-tbl col.col-name{width:200px}
+.iv-tbl col.col-bar{width:auto}
+.iv-tbl col.col-total{width:68px}
+.iv-tbl thead th{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:rgba(255,255,255,.55);padding:8px 4px;border-bottom:1px solid rgba(255,255,255,.08);text-align:right;user-select:none;transition:color var(--tr);white-space:nowrap}
+.iv-tbl thead th.name-col{text-align:left;padding-left:8px}
+.iv-tbl thead th.rank-col{text-align:center;cursor:default;padding-left:0;padding-right:4px}
+.iv-tbl thead th.bar-col{text-align:left;padding-left:6px;cursor:default}
+.iv-tbl thead th.sorted{color:var(--holo-pink)}
+.iv-tbl thead th .iv-arrow{font-size:8px;opacity:.7;margin-left:2px}
+.iv-tbl tbody td{padding:9px 4px;border-bottom:1px solid rgba(255,255,255,.04);text-align:right;color:rgba(255,255,255,.85);font-variant-numeric:tabular-nums}
+.iv-tbl tbody td.name-col{text-align:left;padding-left:8px;color:#fff;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iv-tbl tbody td.rank-col{text-align:center;padding-left:0;padding-right:4px;color:rgba(255,255,255,.3);font-weight:600;font-size:11px}
+.iv-tbl tbody tr{transition:background var(--tr);cursor:pointer}
+.iv-tbl tbody tr:hover{background:rgba(255,157,226,.06)}
+.iv-tbl tbody tr:hover td.name-col{color:var(--holo-pink)}
+.iv-tbl .cell-total{font-weight:700;color:#fff}
+
+/* stacked horizontal bar */
+.iv-bar-cell{padding:8px 12px 8px 6px;position:relative}
+.iv-bar-area{position:relative;width:100%;height:24px}
+.iv-bar-track{position:absolute;inset:0;display:flex;border-radius:50px;overflow:hidden;background:rgba(255,255,255,.04);box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
+.iv-bar-fill{display:flex;height:100%;border-radius:50px;overflow:hidden;transition:width .4s cubic-bezier(.4,0,.2,1);min-width:0}
+.iv-bar-seg{position:relative;height:100%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;letter-spacing:.2px;font-variant-numeric:tabular-nums;text-shadow:0 1px 2px rgba(0,0,0,.35);overflow:hidden;white-space:nowrap;min-width:0;cursor:pointer;transition:flex-basis .3s ease,filter .15s ease,box-shadow .15s ease}
+.iv-bar-seg:hover{filter:brightness(1.18) saturate(1.1);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.5)}
+.iv-bar-seg-active{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.55)}
+.iv-bar-seg-gp{background:linear-gradient(90deg,#ff7eb9,#ff3d96);box-shadow:inset 0 0 10px rgba(255,255,255,.18),0 0 12px rgba(255,61,150,.45)}
+.iv-bar-seg-g {background:linear-gradient(90deg,#e8c454,#d4a820);color:#2a1f00;text-shadow:none}
+.iv-bar-seg-s {background:linear-gradient(90deg,#a4b4cc,#8a9cb5)}
+.iv-bar-seg-b {background:linear-gradient(90deg,#d08e52,#c07a3e)}
+
+.iv-bar-right{position:absolute;top:0;height:24px;display:flex;align-items:center;gap:6px;padding-left:10px;font-size:10.5px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.2px;white-space:nowrap;pointer-events:none;line-height:1}
+.iv-bar-right [data-tier="gp"]{color:#ff7eb9}
+.iv-bar-right [data-tier="g"] {color:#e8c454}
+.iv-bar-right [data-tier="s"] {color:#a4b4cc}
+.iv-bar-right [data-tier="b"] {color:#d08e52}
+.iv-bar-right .sep{color:rgba(255,255,255,.15);font-weight:400}
+
+.iv-legend{display:flex;gap:14px;align-items:center;justify-content:flex-end;font-size:10px;color:rgba(255,255,255,.55);letter-spacing:.6px;text-transform:uppercase;font-weight:600;margin-top:14px;flex-wrap:wrap}
+.iv-legend .iv-item{display:inline-flex;align-items:center;gap:6px}
+.iv-legend .iv-sw{width:14px;height:8px;border-radius:50px;display:inline-block}
+.iv-legend .sw-gp{background:linear-gradient(90deg,#ff7eb9,#ff3d96)}
+.iv-legend .sw-g {background:linear-gradient(90deg,#e8c454,#d4a820)}
+.iv-legend .sw-s {background:linear-gradient(90deg,#a4b4cc,#8a9cb5)}
+.iv-legend .sw-b {background:linear-gradient(90deg,#d08e52,#c07a3e)}
+.iv-legend .iv-scale{margin-right:auto;color:rgba(255,255,255,.3);text-transform:none;letter-spacing:.2px;font-weight:500;font-size:11px}
+
+.iv-meta{font-size:11px;color:rgba(255,255,255,.3);margin-top:10px;text-align:right;padding-right:4px}
+
+/* entity filter chip — appears in topbar after a drill-through from Cannesalytics */
+.ef-chip{display:none;align-items:center;gap:6px;padding:5px 6px 5px 12px;border-radius:50px;border:1px solid rgba(255,157,226,.4);background:rgba(255,157,226,.12);color:#fff;font-size:11px;font-weight:600;letter-spacing:.3px;font-family:var(--font);white-space:nowrap;max-width:280px;overflow:hidden;text-overflow:ellipsis}
+.ef-chip.on{display:inline-flex}
+.ef-chip-label{color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.7px;font-size:10px;flex-shrink:0}
+.ef-chip-value{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ef-chip-x{appearance:none;border:none;background:rgba(255,255,255,.15);color:rgba(255,255,255,.7);width:18px;height:18px;border-radius:50%;cursor:pointer;font-size:11px;display:inline-flex;align-items:center;justify-content:center;line-height:1;padding:0;margin-left:4px;flex-shrink:0}
+.ef-chip-x:hover{background:rgba(255,157,226,.4);color:#fff}
+
+@media(max-width:760px){
+  #insights-view{padding:20px 18px 40px}
+  .sb-cannes-wrap{padding:14px 12px 2px}
+}
 </style>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
@@ -605,6 +705,12 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <div class="sb-cat" data-cat="Creative Strategy" onclick="selCat(this)">Creative Strategy</div>
     <div class="sb-group">Titanium</div>
     <div class="sb-cat" data-cat="Titanium" onclick="selCat(this)">Titanium</div>
+    <div class="sb-cannes-wrap">
+      <button class="sb-cannes" id="sb-cannes" onclick="selCannesalytics(this)">
+        <span class="sb-cannes-icon" aria-hidden="true">&#10022;</span>
+        <span>Cannesalytics</span>
+      </button>
+    </div>
     <div class="sb-about-wrap">
       <button class="sb-about" onclick="openAbout()" aria-haspopup="dialog">
         <span class="sb-about-icon" aria-hidden="true">&#9432;</span>
@@ -631,6 +737,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <button class="tb-sort-btn" id="sort-liked-btn" onclick="toggleSortLiked()">&#128077; Most Liked</button>
       </div>
       <span class="tb-count" id="cnt"></span>
+      <div class="ef-chip" id="entity-filter-chip"></div>
       <div class="tb-search-wrap">
         <span class="tb-search-icon">&#128269;</span>
         <input class="tb-search" id="tb-q" type="text" placeholder="Search winners..." autocomplete="off" oninput="tbSearch(this.value)" onkeydown="tbSearchKey(event)">
@@ -642,6 +749,37 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <!-- GRID -->
     <div id="grid">
       <div class="grid-inner" id="grid-inner"></div>
+    </div>
+
+    <!-- CANNESALYTICS (insights view) -->
+    <div id="insights-view">
+      <div class="iv-head">
+        <h1>Cannesalytics</h1>
+        <div class="iv-tag">Top winning brands, agencies, and countries — click any bar segment to sort, click a row to drill into that work.</div>
+      </div>
+      <div class="iv-pills" id="iv-pills" role="tablist">
+        <button class="iv-pill on" data-entity="brand" role="tab">Brand</button>
+        <button class="iv-pill" data-entity="agency" role="tab">Agency</button>
+        <button class="iv-pill" data-entity="country" role="tab">Country</button>
+      </div>
+      <section class="iv-board">
+        <h2 id="iv-board-title" style="font-family:var(--font);font-weight:800;font-size:22px;letter-spacing:-.3px;line-height:1.2;color:#fff;margin-bottom:4px">Top Brands</h2>
+        <div class="iv-sub" id="iv-board-sub">Loading…</div>
+        <div class="iv-sort-ind" id="iv-sort-ind" title="Click to flip sort direction">
+          <span>Sorted by <strong id="iv-sort-key">Total</strong></span>
+          <span class="iv-arrow" id="iv-sort-arrow">▼</span>
+          <span class="iv-hint">Click any bar segment to sort by that tier</span>
+        </div>
+        <table class="iv-tbl" id="iv-tbl"></table>
+        <div class="iv-legend">
+          <span class="iv-scale">Bar length = total Lions · segments show medal mix</span>
+          <span class="iv-item"><span class="iv-sw sw-gp"></span>Grand Prix</span>
+          <span class="iv-item"><span class="iv-sw sw-g"></span>Gold</span>
+          <span class="iv-item"><span class="iv-sw sw-s"></span>Silver</span>
+          <span class="iv-item"><span class="iv-sw sw-b"></span>Bronze</span>
+        </div>
+        <div class="iv-meta" id="iv-meta"></div>
+      </section>
     </div>
   </div>
 </div>
@@ -9944,6 +10082,11 @@ function toggleFavOnly(){
 const SUBSCRIBE_ENDPOINT = "https://beehiiv-proxy.curl-brandon.workers.dev";
 let curTier = "all";
 let curCat  = "All";
+// Cannesalytics (insights) state — declared early so refresh() can safely guard
+// against them in TDZ. Using var (not let) so the bindings are hoisted to the top
+// of the script and never throw on `typeof` checks.
+var mode = "grid";                 // "grid" | "insights"
+var curEntityFilter = null;        // null | {field:'brand'|'agency'|'country', value:string}
 // Year filter. Defaults to the most recent year present in DATA; "all" shows
 // every year. Computed at load so it's set before the first refresh().
 let curYear = (function(){
@@ -10415,6 +10558,12 @@ function selCat(el){
   document.querySelectorAll(".fb").forEach(b=>b.classList.remove("on"));
   document.querySelector('.fb[data-t="all"]').classList.add("on");
   curIdx = 0;
+  // Picking a category exits Cannesalytics — categories drive the grid view.
+  if(mode === "insights"){ mode = "grid"; }
+  var sbc = document.getElementById("sb-cannes");
+  if(sbc) sbc.classList.remove("on");
+  var mn = document.getElementById("main");
+  if(mn) mn.classList.remove("mode-insights");
   refresh();
   closeDrawer();   // mobile: collapse the category drawer after a pick
 }
@@ -10478,7 +10627,8 @@ document.addEventListener("click", ev => {
 function selYear(v){
   curYear = (v === "all") ? "all" : Number(v);
   curIdx = 0;
-  refresh();
+  if(mode === "insights") renderInsights();
+  else refresh();
 }
 
 // ─────────────────────────────────────────────
@@ -10623,6 +10773,10 @@ function refresh(){
   // Year filter (applied before dedup so cards merge within the chosen year).
   if(curYear !== "all" && curYear != null){
     raw = raw.filter(e => Number(e.year) === Number(curYear));
+  }
+  // Entity filter (brand/agency/country picked from Cannesalytics drill-through)
+  if(curEntityFilter){
+    raw = raw.filter(e => e[curEntityFilter.field] === curEntityFilter.value);
   }
   const deduped = dedup(raw);
   // Tier filter (mutually exclusive: All / Grand Prix / Gold / Silver / Bronze)
@@ -11020,6 +11174,261 @@ initYearSelect();
 
 // Init Firebase for global likes
 initFirebase();
+
+// ─────────────────────────────────────────────
+// CANNESALYTICS — leaderboards over DATA
+// State vars `mode` and `curEntityFilter` are declared near the top of the script
+// (as `var`) so they're hoisted and safe to reference from refresh() at init time.
+// ─────────────────────────────────────────────
+var insightsState = {
+  entity: "brand",
+  sort:   { brand: "total", agency: "total", country: "total" },
+  dir:    { brand: "desc",  agency: "desc",  country: "desc"  },
+};
+var IV_TOP_N = 20;
+var IV_NARROW_PCT = 2.5;
+var IV_FILL_CAP   = 100;
+var IV_TIER_KEYS  = ['gp','g','s','b'];
+var IV_TIER_LABEL = {gp:'Grand Prix', g:'Gold', s:'Silver', b:'Bronze'};
+var IV_TIER_CLASS = {gp:'iv-bar-seg-gp', g:'iv-bar-seg-g', s:'iv-bar-seg-s', b:'iv-bar-seg-b'};
+var IV_ENTITY_LABEL = {brand:'Brand', agency:'Agency', country:'Country'};
+var IV_ENTITY_PLURAL_TITLE = {brand:'Brands', agency:'Agencies', country:'Countries'};
+var IV_ENTITY_PLURAL = {brand:'brands', agency:'agencies', country:'countries'};
+
+function ivTierBucket(t){
+  if(t === 'Grand Prix' || t === 'Titanium Grand Prix') return 'gp';
+  if(t === 'Gold' || t === 'Titanium') return 'g';
+  if(t === 'Silver') return 's';
+  if(t === 'Bronze') return 'b';
+  return null;
+}
+
+// Sidebar Cannesalytics tab — toggles insights view on. Clicking a category
+// returns to grid via selCat(); clicking Cannesalytics again is a no-op (already on).
+function selCannesalytics(el){
+  if(el.classList.contains('on')){ closeDrawer(); return; }
+  el.classList.add('on');
+  // Categories don't apply to leaderboards (we show all-category totals), so
+  // clear category active state visually to make it clear nothing's filtered.
+  document.querySelectorAll('.sb-cat').forEach(c => c.classList.remove('on'));
+  curCat = 'All';
+  mode = 'insights';
+  document.getElementById('main').classList.add('mode-insights');
+  renderInsights();
+  closeDrawer();
+}
+
+// Pull all raw award rows from DATA, scoped by curYear only. Cannesalytics
+// aggregates across all categories — it's a "who wins the most" view.
+function ivCollectRecords(){
+  var records = [];
+  for(var cat in DATA){
+    var items = DATA[cat]; if(!items) continue;
+    for(var i = 0; i < items.length; i++){
+      if(items[i]) records.push(items[i]);
+    }
+  }
+  if(curYear !== 'all' && curYear != null){
+    records = records.filter(function(r){ return Number(r.year) === Number(curYear); });
+  }
+  return records;
+}
+
+function ivComputeLeaderboard(field){
+  var acc = new Map();
+  var records = ivCollectRecords();
+  for(var i = 0; i < records.length; i++){
+    var r = records[i];
+    var name = r[field];
+    if(!name) continue;
+    var bucket = ivTierBucket(r.tier);
+    if(!bucket) continue;
+    var row = acc.get(name);
+    if(!row){ row = {name:name, gp:0, g:0, s:0, b:0, total:0}; acc.set(name, row); }
+    row[bucket]++;
+    row.total++;
+  }
+  return Array.from(acc.values());
+}
+
+function ivBarHtml(r, maxTotal){
+  var fillPct = (r.total / maxTotal) * IV_FILL_CAP;
+  if(r.total === 0) return '<div class="iv-bar-area"><div class="iv-bar-track"></div></div>';
+  var segData = [];
+  for(var i = 0; i < IV_TIER_KEYS.length; i++){
+    var k = IV_TIER_KEYS[i];
+    var v = r[k];
+    if(v === 0) continue;
+    var segPctOfRow = (v / r.total) * 100;
+    var widthPctOfCol = segPctOfRow * fillPct / 100;
+    segData.push({tier:k, val:v, segPctOfRow:segPctOfRow, widthPctOfCol:widthPctOfCol});
+  }
+  var segs = segData.map(function(s){
+    var inside = s.widthPctOfCol >= IV_NARROW_PCT ? s.val : '';
+    var title  = s.val + ' ' + IV_TIER_LABEL[s.tier];
+    return '<div class="iv-bar-seg ' + IV_TIER_CLASS[s.tier] + '" style="flex-basis:' + s.segPctOfRow + '%" data-tier="' + s.tier + '" data-val="' + s.val + '" title="' + title + '">' + inside + '</div>';
+  }).join('');
+  var narrow = segData.filter(function(s){ return s.widthPctOfCol < IV_NARROW_PCT; });
+  var right = '';
+  if(narrow.length > 0){
+    var items = narrow.map(function(s){ return '<span data-tier="' + s.tier + '">' + s.val + ' ' + IV_TIER_LABEL[s.tier] + '</span>'; });
+    right = '<div class="iv-bar-right" style="left:' + fillPct + '%">' + items.join('<span class="sep">·</span>') + '</div>';
+  }
+  return '<div class="iv-bar-area"><div class="iv-bar-track"><div class="iv-bar-fill" style="width:' + fillPct + '%">' + segs + '</div></div>' + right + '</div>';
+}
+
+function ivEscape(s){
+  return String(s).replace(/[&<>"']/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]; });
+}
+
+function ivApplySort(key, opts){
+  opts = opts || {};
+  var entity = insightsState.entity;
+  if(opts.toggleOnly){
+    insightsState.dir[entity] = insightsState.dir[entity] === 'desc' ? 'asc' : 'desc';
+  } else if(insightsState.sort[entity] === key){
+    insightsState.dir[entity] = insightsState.dir[entity] === 'desc' ? 'asc' : 'desc';
+  } else {
+    insightsState.sort[entity] = key;
+    insightsState.dir[entity] = 'desc';
+  }
+  renderInsights();
+}
+
+function renderInsights(){
+  var entity  = insightsState.entity;
+  var all     = ivComputeLeaderboard(entity);
+  var sortKey = insightsState.sort[entity];
+  var dir     = insightsState.dir[entity] === 'asc' ? 1 : -1;
+  all.sort(function(a,b){
+    var d = (a[sortKey] - b[sortKey]) * dir;
+    if(d !== 0) return d;
+    if(a.total !== b.total) return b.total - a.total;
+    return a.name.localeCompare(b.name);
+  });
+  var top = all.slice(0, IV_TOP_N);
+  var maxTotal = 1;
+  for(var i = 0; i < top.length; i++) if(top[i].total > maxTotal) maxTotal = top[i].total;
+
+  var html = '<colgroup><col class="col-rank"><col class="col-name"><col class="col-bar"><col class="col-total"></colgroup>';
+  var totalSortedCls = sortKey === 'total' ? ' sorted' : '';
+  var totalArrow = sortKey === 'total' ? (dir === -1 ? '▼' : '▲') : '';
+  html += '<thead><tr>'
+    + '<th class="rank-col">#</th>'
+    + '<th class="name-col">' + IV_ENTITY_LABEL[entity] + '</th>'
+    + '<th class="bar-col">Medal mix</th>'
+    + '<th class="' + totalSortedCls + '" data-key="total" style="cursor:pointer">Total<span class="iv-arrow">' + totalArrow + '</span></th>'
+    + '</tr></thead><tbody>';
+  for(var j = 0; j < top.length; j++){
+    var r = top[j];
+    html += '<tr>'
+      + '<td class="rank-col">' + (j+1) + '</td>'
+      + '<td class="name-col" title="' + ivEscape(r.name) + '">' + ivEscape(r.name) + '</td>'
+      + '<td class="iv-bar-cell">' + ivBarHtml(r, maxTotal) + '</td>'
+      + '<td class="cell-total">' + r.total + '</td>'
+      + '</tr>';
+  }
+  html += '</tbody>';
+  var tbl = document.getElementById('iv-tbl');
+  tbl.innerHTML = html;
+
+  // Total header click → sort by total
+  var totalTh = tbl.querySelector('thead th[data-key="total"]');
+  if(totalTh) totalTh.addEventListener('click', function(){ ivApplySort('total'); });
+
+  // Segment clicks → sort by tier; highlight active tier
+  var segs = tbl.querySelectorAll('.iv-bar-seg');
+  for(var s = 0; s < segs.length; s++){
+    var seg = segs[s];
+    var tier = seg.dataset.tier;
+    if(tier === sortKey) seg.classList.add('iv-bar-seg-active');
+    seg.addEventListener('click', (function(t){ return function(e){ e.stopPropagation(); ivApplySort(t); }; })(tier));
+  }
+
+  // Row click → drill into grid filtered to that brand/agency/country
+  var rows = tbl.querySelectorAll('tbody tr');
+  for(var k = 0; k < rows.length; k++){
+    (function(name){
+      if(!name) return;
+      rows[k].addEventListener('click', function(){ setEntityFilter(entity, name); });
+    })(top[k] && top[k].name);
+  }
+
+  // Title + sub + sort indicator + meta
+  document.getElementById('iv-board-title').textContent = 'Top ' + IV_ENTITY_PLURAL_TITLE[entity];
+  var yearText = (curYear === 'all' || curYear == null) ? 'all years' : curYear;
+  document.getElementById('iv-board-sub').textContent = yearText + ' · all categories';
+  var sortLabel = sortKey === 'total' ? 'Total' : (IV_TIER_LABEL[sortKey] || sortKey);
+  document.getElementById('iv-sort-key').textContent = sortLabel;
+  document.getElementById('iv-sort-arrow').textContent = dir === -1 ? '▼' : '▲';
+  document.getElementById('iv-meta').textContent = all.length.toLocaleString() + ' unique ' + IV_ENTITY_PLURAL[entity] + ' · showing top ' + Math.min(top.length, IV_TOP_N);
+}
+
+// Entity filter (set when a leaderboard row is clicked, cleared by the topbar chip × button)
+function setEntityFilter(field, value){
+  curEntityFilter = {field:field, value:value};
+  mode = 'grid';
+  // exit Cannesalytics visually
+  var sbc = document.getElementById('sb-cannes');
+  if(sbc) sbc.classList.remove('on');
+  document.getElementById('main').classList.remove('mode-insights');
+  // entity filter overrides category — show "All" as the active category to give the user a clear way back
+  document.querySelectorAll('.sb-cat').forEach(function(c){ c.classList.remove('on'); });
+  var allCat = document.querySelector('.sb-cat[data-cat="All"]');
+  if(allCat) allCat.classList.add('on');
+  curCat = 'All';
+  curTier = 'all';
+  document.querySelectorAll('.fb').forEach(function(b){ b.classList.remove('on'); });
+  var allFb = document.querySelector('.fb[data-t="all"]');
+  if(allFb) allFb.classList.add('on');
+  curIdx = 0;
+  updateEntityFilterChip();
+  refresh();
+}
+
+function clearEntityFilter(){
+  curEntityFilter = null;
+  curIdx = 0;
+  updateEntityFilterChip();
+  refresh();
+}
+
+function updateEntityFilterChip(){
+  var chip = document.getElementById('entity-filter-chip');
+  if(!chip) return;
+  if(curEntityFilter){
+    var labels = {brand:'Brand', agency:'Agency', country:'Country'};
+    var safeVal = String(curEntityFilter.value).replace(/"/g,'&quot;');
+    chip.innerHTML =
+      '<span class="ef-chip-label">' + labels[curEntityFilter.field] + ':</span>' +
+      '<span class="ef-chip-value" title="' + safeVal + '">' + curEntityFilter.value + '</span>' +
+      '<button class="ef-chip-x" onclick="clearEntityFilter()" aria-label="Clear filter">&times;</button>';
+    chip.classList.add('on');
+  } else {
+    chip.classList.remove('on');
+  }
+}
+
+// Entity pill toggle (Brand / Agency / Country)
+(function(){
+  var pills = document.querySelectorAll('#iv-pills .iv-pill');
+  for(var i = 0; i < pills.length; i++){
+    (function(p){
+      p.addEventListener('click', function(){
+        if(p.classList.contains('on')) return;
+        var all = document.querySelectorAll('#iv-pills .iv-pill');
+        for(var j = 0; j < all.length; j++) all[j].classList.remove('on');
+        p.classList.add('on');
+        insightsState.entity = p.dataset.entity;
+        renderInsights();
+      });
+    })(pills[i]);
+  }
+  var sortInd = document.getElementById('iv-sort-ind');
+  if(sortInd){
+    sortInd.addEventListener('click', function(){ ivApplySort(null, {toggleOnly:true}); });
+  }
+})();
 </script>
 
 <!-- ════════════════════════════════════════════════════════════════
