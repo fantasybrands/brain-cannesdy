@@ -489,6 +489,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 #main.mode-insights #topbar{display:none}
 #main.mode-insights #insights-view{display:flex}
 
+/* Back-to-grid button — only shown on mobile, where the topbar (and its menu
+   button) is hidden in insights mode, leaving no other way out. */
+.iv-back{display:none}
 .iv-head{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,.08)}
 .iv-head h1{font-family:var(--font);font-weight:800;font-size:clamp(26px,3.5vw,36px);letter-spacing:-.5px;line-height:1.1;color:#fff}
 .iv-head .iv-tag{font-size:13px;color:rgba(255,255,255,.55);margin-top:8px;letter-spacing:.2px;line-height:1.5;max-width:680px}
@@ -546,7 +549,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .iv-bar-right [data-tier="s"] {color:#a4b4cc}
 .iv-bar-right [data-tier="b"] {color:#d08e52}
 .iv-bar-right .sep{color:rgba(255,255,255,.15);font-weight:400}
-.iv-bar-right .iv-rabbr{display:none}  /* full tier words on desktop; abbreviations swap in on mobile */
 
 .iv-legend{display:flex;gap:14px;align-items:center;justify-content:flex-end;font-size:10px;color:rgba(255,255,255,.55);letter-spacing:.6px;text-transform:uppercase;font-weight:600;margin-top:14px;flex-wrap:wrap}
 .iv-legend .iv-item{display:inline-flex;align-items:center;gap:6px}
@@ -566,6 +568,12 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .ef-chip-value{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ef-chip-x{appearance:none;border:none;background:rgba(255,255,255,.15);color:rgba(255,255,255,.7);width:18px;height:18px;border-radius:50%;cursor:pointer;font-size:11px;display:inline-flex;align-items:center;justify-content:center;line-height:1;padding:0;margin-left:4px;flex-shrink:0}
 .ef-chip-x:hover{background:rgba(255,157,226,.4);color:#fff}
+
+@media(max-width:768px){
+  /* matches the breakpoint where the sidebar collapses into a drawer */
+  .iv-back{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;appearance:none;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:rgba(255,255,255,.85);font-family:var(--font);font-size:13px;font-weight:600;letter-spacing:.2px;padding:8px 15px 8px 12px;border-radius:50px;cursor:pointer;margin-bottom:16px;-webkit-tap-highlight-color:transparent}
+  .iv-back:active{background:rgba(255,157,226,.18);border-color:rgba(255,157,226,.45);color:#fff}
+}
 
 @media(max-width:760px){
   #insights-view{padding:20px 18px 40px}
@@ -588,8 +596,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   .iv-tbl tbody td.name-col{padding-left:6px}
   .iv-bar-cell{padding:8px 6px}
   .iv-bar-right{padding-left:6px;gap:4px;font-size:10px}
-  .iv-bar-right .iv-rword{display:none}
-  .iv-bar-right .iv-rabbr{display:inline}
+  .iv-bar-right .iv-rword{display:none}  /* gutter shows colored counts only on phones */
 }
 </style>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -774,6 +781,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
     <!-- CANNESALYTICS (insights view) -->
     <div id="insights-view">
+      <button class="iv-back" type="button" onclick="exitCannesalytics()" aria-label="Back to winners">&#8592; Winners</button>
       <div class="iv-head">
         <h1>Cannesalytics</h1>
         <div class="iv-tag">Top winning brands, agencies, and countries — click any bar segment to sort, click a row to drill into that work.</div>
@@ -11208,13 +11216,16 @@ var insightsState = {
 };
 var IV_TOP_N = 20;
 var IV_NARROW_PCT = 2.5;
+// On phones bars are scaled down against the leader, so a segment can be a big
+// share of its own row yet still too narrow in pixels to hold a readable number.
+// Use a higher threshold there so those values get annotated in the right gutter.
+var IV_MOBILE_NARROW_PCT = 10;
 var IV_FILL_CAP   = 100;
 // On phones the bar column is far narrower, so cap the fill lower to reserve a
 // right-hand gutter for the overflow medal labels (keeps them off the Total col).
 var IV_MOBILE_FILL_CAP = 58;
 var IV_TIER_KEYS  = ['gp','g','s','b'];
 var IV_TIER_LABEL = {gp:'Grand Prix', g:'Gold', s:'Silver', b:'Bronze'};
-var IV_TIER_ABBR  = {gp:'GP', g:'G', s:'S', b:'B'};
 function ivMobileBars(){ return window.innerWidth <= 600; }
 var IV_TIER_CLASS = {gp:'iv-bar-seg-gp', g:'iv-bar-seg-g', s:'iv-bar-seg-s', b:'iv-bar-seg-b'};
 var IV_ENTITY_LABEL = {brand:'Brand', agency:'Agency', country:'Country'};
@@ -11242,6 +11253,19 @@ function selCannesalytics(el){
   document.getElementById('main').classList.add('mode-insights');
   renderInsights();
   closeDrawer();
+}
+
+// Mobile exit from Cannesalytics back to the winners grid. On phones the topbar
+// (which holds the drawer menu button) is hidden in insights mode, so this is the
+// only way out. Reuses selCat('All') so all the grid/category state resets cleanly.
+function exitCannesalytics(){
+  var allCat = document.querySelector('.sb-cat[data-cat="All"]');
+  if(allCat){ selCat(allCat); return; }
+  mode = 'grid';
+  var sbc = document.getElementById('sb-cannes'); if(sbc) sbc.classList.remove('on');
+  var mn = document.getElementById('main'); if(mn) mn.classList.remove('mode-insights');
+  closeDrawer();
+  refresh();
 }
 
 // Pull all raw award rows from DATA, scoped by curYear only. Cannesalytics
@@ -11278,7 +11302,9 @@ function ivComputeLeaderboard(field){
 }
 
 function ivBarHtml(r, maxTotal){
-  var fillPct = (r.total / maxTotal) * (ivMobileBars() ? IV_MOBILE_FILL_CAP : IV_FILL_CAP);
+  var mobile = ivMobileBars();
+  var fillPct = (r.total / maxTotal) * (mobile ? IV_MOBILE_FILL_CAP : IV_FILL_CAP);
+  var narrowPct = mobile ? IV_MOBILE_NARROW_PCT : IV_NARROW_PCT;
   if(r.total === 0) return '<div class="iv-bar-area"><div class="iv-bar-track"></div></div>';
   var segData = [];
   for(var i = 0; i < IV_TIER_KEYS.length; i++){
@@ -11290,14 +11316,14 @@ function ivBarHtml(r, maxTotal){
     segData.push({tier:k, val:v, segPctOfRow:segPctOfRow, widthPctOfCol:widthPctOfCol});
   }
   var segs = segData.map(function(s){
-    var inside = s.widthPctOfCol >= IV_NARROW_PCT ? s.val : '';
+    var inside = s.widthPctOfCol >= narrowPct ? s.val : '';
     var title  = s.val + ' ' + IV_TIER_LABEL[s.tier];
     return '<div class="iv-bar-seg ' + IV_TIER_CLASS[s.tier] + '" style="flex-basis:' + s.segPctOfRow + '%" data-tier="' + s.tier + '" data-val="' + s.val + '" title="' + title + '">' + inside + '</div>';
   }).join('');
-  var narrow = segData.filter(function(s){ return s.widthPctOfCol < IV_NARROW_PCT; });
+  var narrow = segData.filter(function(s){ return s.widthPctOfCol < narrowPct; });
   var right = '';
   if(narrow.length > 0){
-    var items = narrow.map(function(s){ return '<span data-tier="' + s.tier + '">' + s.val + '<span class="iv-rword"> ' + IV_TIER_LABEL[s.tier] + '</span><span class="iv-rabbr"> ' + IV_TIER_ABBR[s.tier] + '</span></span>'; });
+    var items = narrow.map(function(s){ return '<span data-tier="' + s.tier + '">' + s.val + '<span class="iv-rword"> ' + IV_TIER_LABEL[s.tier] + '</span></span>'; });
     right = '<div class="iv-bar-right" style="left:' + fillPct + '%">' + items.join('<span class="sep">·</span>') + '</div>';
   }
   return '<div class="iv-bar-area"><div class="iv-bar-track"><div class="iv-bar-fill" style="width:' + fillPct + '%">' + segs + '</div></div>' + right + '</div>';
